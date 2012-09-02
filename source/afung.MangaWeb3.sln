@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Server", "aspnetserver\afung.MangaWeb3.Server.csproj", "{90E30188-F434-4DEB-9E4F-051720BE6BB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Server.Install", "aspnetserverinstall\afung.MangaWeb3.Server.Install.csproj", "{0E9BAC79-12F0-4CBF-A01D-18CC7CBA2534}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Common", "csharpcommon\afung.MangaWeb3.Common.csproj", "{81F68F3B-5062-4C53-8F44-2268C03F41C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Client", "scriptsharp\afung.MangaWeb3.Client.csproj", "{53A8C0AB-E671-4B3B-AFCD-9E0D138CB184}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Client.Install", "scriptsharpinstall\afung.MangaWeb3.Client.Install.csproj", "{44177DCD-39AC-4AF7-9A79-DFA3BCA76880}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Common(script)", "csharpcommon\afung.MangaWeb3.Common(script).csproj", "{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90E30188-F434-4DEB-9E4F-051720BE6BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E30188-F434-4DEB-9E4F-051720BE6BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E30188-F434-4DEB-9E4F-051720BE6BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E30188-F434-4DEB-9E4F-051720BE6BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E9BAC79-12F0-4CBF-A01D-18CC7CBA2534}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E9BAC79-12F0-4CBF-A01D-18CC7CBA2534}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E9BAC79-12F0-4CBF-A01D-18CC7CBA2534}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E9BAC79-12F0-4CBF-A01D-18CC7CBA2534}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81F68F3B-5062-4C53-8F44-2268C03F41C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81F68F3B-5062-4C53-8F44-2268C03F41C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81F68F3B-5062-4C53-8F44-2268C03F41C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81F68F3B-5062-4C53-8F44-2268C03F41C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53A8C0AB-E671-4B3B-AFCD-9E0D138CB184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53A8C0AB-E671-4B3B-AFCD-9E0D138CB184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53A8C0AB-E671-4B3B-AFCD-9E0D138CB184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53A8C0AB-E671-4B3B-AFCD-9E0D138CB184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44177DCD-39AC-4AF7-9A79-DFA3BCA76880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44177DCD-39AC-4AF7-9A79-DFA3BCA76880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44177DCD-39AC-4AF7-9A79-DFA3BCA76880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44177DCD-39AC-4AF7-9A79-DFA3BCA76880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
