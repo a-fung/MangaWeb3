@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Client.Inst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Common(script)", "csharpcommon\afung.MangaWeb3.Common(script).csproj", "{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "afung.MangaWeb3.Client.Admin", "scriptsharpadmin\afung.MangaWeb3.Client.Admin.csproj", "{E133AAF3-2A31-4D8F-A876-7E2276551CE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E133AAF3-2A31-4D8F-A876-7E2276551CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E133AAF3-2A31-4D8F-A876-7E2276551CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E133AAF3-2A31-4D8F-A876-7E2276551CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E133AAF3-2A31-4D8F-A876-7E2276551CE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

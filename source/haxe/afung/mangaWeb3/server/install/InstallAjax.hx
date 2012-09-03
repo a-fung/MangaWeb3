@@ -7,8 +7,7 @@ package afung.mangaWeb3.server.install;
 
 class InstallAjax 
 {
-
-	public function new() 
+	public static function main() 
 	{
 	}
 }

@@ -33,6 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SevenZipSharp">
+      <HintPath>..\..\external_libraries\SevenZipSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -50,6 +53,26 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="admin.html" />
+    <Content Include="css\bootstrap-responsive.min.css" />
+    <Content Include="css\bootstrap.min.css" />
+    <Content Include="css\mangaweb.css" />
+    <Content Include="img\glyphicons-halflings-white.png" />
+    <Content Include="img\glyphicons-halflings.png" />
+    <Content Include="index.html" />
+    <Content Include="install.html" />
+    <Content Include="js\afung.MangaWeb3.Client.Admin.debug.js" />
+    <Content Include="js\afung.MangaWeb3.Client.Admin.js" />
+    <Content Include="js\afung.MangaWeb3.Client.debug.js" />
+    <Content Include="js\afung.MangaWeb3.Client.Install.debug.js" />
+    <Content Include="js\afung.MangaWeb3.Client.Install.js" />
+    <Content Include="js\afung.MangaWeb3.Client.js" />
+    <Content Include="js\afung.MangaWeb3.Common.debug.js" />
+    <Content Include="js\afung.MangaWeb3.Common.js" />
+    <Content Include="js\bootstrap.min.js" />
+    <Content Include="js\jquery-1.8.1.min.js" />
+    <Content Include="js\mscorlib.debug.js" />
+    <Content Include="js\mscorlib.js" />
     <Content Include="ServerAjax.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
