@@ -33,6 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\external_libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SevenZipSharp">
       <HintPath>..\..\external_libraries\SevenZipSharp.dll</HintPath>
     </Reference>

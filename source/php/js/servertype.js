@@ -1,0 +1,1 @@
+afung.MangaWeb3.Client.Environment.serverType = 1;
