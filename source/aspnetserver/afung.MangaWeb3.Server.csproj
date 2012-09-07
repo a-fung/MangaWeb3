@@ -33,6 +33,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\external_libraries\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\external_libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -76,6 +81,9 @@
     <Content Include="js\jquery-1.8.1.min.js" />
     <Content Include="js\mscorlib.debug.js" />
     <Content Include="js\mscorlib.js" />
+    <Content Include="js\servertype.js" />
+    <Content Include="lang\en-us.html" />
+    <Content Include="lang\zh-hk.html" />
     <Content Include="ServerAjax.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -100,6 +108,9 @@
       <Project>{81F68F3B-5062-4C53-8F44-2268C03F41C4}</Project>
       <Name>afung.MangaWeb3.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="template\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

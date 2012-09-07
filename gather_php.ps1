@@ -8,14 +8,17 @@ if (!$dir.Exists) { $dir.Create(); }
 $path = $(get-location).ToString() + "\output\php";
 $dir = new-object "System.IO.DirectoryInfo" -argumentlist $path;
 if ($dir.Exists) { 
-	$dir.Delete($true);
+	Remove-Item $path\* -recurse;
 	Start-Sleep -s 1;
 }
-$dir.Create();
+else {
+	$dir.Create();
+}
 
 
 # copy files
 copy LICENSE $path
+copy NOTICE $path
 
 
 # HTML files
@@ -42,7 +45,7 @@ copy source\php\js\servertype.js $path\js
 
 
 # debug js files
-if ($false) {
+if ($true) {
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Admin.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Install.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.debug.js $path\js
@@ -54,6 +57,16 @@ copy source\aspnetserver\js\mscorlib.debug.js $path\js
 # img files
 mkdir $path\img
 copy source\aspnetserver\img\*.* $path\img
+
+
+# lang files
+mkdir $path\lang
+copy source\aspnetserver\lang\*.* $path\lang
+
+
+# template files
+mkdir $path\template
+copy source\aspnetserver\template\*.* $path\template
 
 
 # php files

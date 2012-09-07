@@ -167,3 +167,4 @@ pip-log.txt
 scriptbin/
 haxephp/
 output/
+copy*test.ps1

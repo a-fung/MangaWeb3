@@ -46,6 +46,7 @@
   <ItemGroup>
     <Content Include="Properties\afung.MangaWeb3.Client.Install.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.Install.script" />
+    <Compile Include="InstallApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

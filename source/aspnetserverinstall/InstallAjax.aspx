@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InstallAjax.aspx.cs" Inherits="afung.MangaWeb3.Server.Install.InstallAjax" %>

@@ -41,9 +41,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL" />
+    <Reference Include="Script.jQuery, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\ScriptSharp\v1.0\Framework\Script.jQuery.dll</HintPath>
+    </Reference>
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="HtmlConstants.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="Template.cs" />
     <Content Include="Properties\afung.MangaWeb3.Client.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.script" />
     <Compile Include="Environment.cs" />
@@ -54,6 +62,9 @@
       <Project>{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}</Project>
       <Name>afung.MangaWeb3.Common%28script%29</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Import\" />
   </ItemGroup>
   <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />
 </Project>
