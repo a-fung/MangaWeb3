@@ -48,8 +48,13 @@
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Import\Bootstrap.cs" />
+    <Compile Include="Modal\ErrorModal.cs" />
+    <Compile Include="Modal\ModalBase.cs" />
+    <Compile Include="Request.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="HtmlConstants.cs" />
+    <Compile Include="Module\ModuleBase.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="Template.cs" />
     <Content Include="Properties\afung.MangaWeb3.Client.ruleset" />
@@ -63,8 +68,6 @@
       <Name>afung.MangaWeb3.Common%28script%29</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Import\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />
 </Project>

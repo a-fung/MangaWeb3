@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace afung.MangaWeb3.Server
 {
-    public partial class ServerAjax : System.Web.UI.Page
+    public partial class ServerAjax : AjaxBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -46,6 +46,13 @@
   <ItemGroup>
     <Content Include="Properties\afung.MangaWeb3.Common.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Common.script" />
+    <Compile Include="CheckMySqlSettingRequest.cs" />
+    <Compile Include="CheckMySqlSettingResponse.cs" />
+    <Compile Include="ErrorResponse.cs" />
+    <Compile Include="JsonRequest.cs" />
+    <Compile Include="JsonResponse.cs" />
+    <Compile Include="PreInstallCheckRequest.cs" />
+    <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfoScript.cs" />
   </ItemGroup>
   <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />

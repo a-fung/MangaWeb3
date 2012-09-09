@@ -27,11 +27,27 @@ namespace afung.MangaWeb3.Client
         /// The IDs in template files to parse
         /// The order of the IDs matters!
         /// </summary>
-        public static Dictionary<string, string[]> TemplateIds = 
+        public static Dictionary<string, string[]> TemplateIds =
             new Dictionary<string, string[]>(
-                "client", 
+                "client",
                 new string[] {
+                    "error-modal"
                 });
+
+
+        private static jQueryObject _tempDivObject = null;
+
+        private static jQueryObject TempDivObject
+        {
+            get
+            {
+                if (_tempDivObject == null)
+                {
+                    _tempDivObject = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(jQuery.Select(HtmlConstants.TagBody)).AddClass(HtmlConstants.ClassTemp);
+                }
+                return _tempDivObject;
+            }
+        }
 
         /// <summary>
         /// The loaded template data
@@ -42,22 +58,27 @@ namespace afung.MangaWeb3.Client
         {
             int templateIndex = 0;
             string currentTemplateFile = string.Empty;
-            jQueryObject tempDiv = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(jQuery.Select(HtmlConstants.TagBody)).AddClass(HtmlConstants.ClassTemp);
             Action loadNextTemplate = delegate { };
 
             AjaxErrorCallback onError = delegate(jQueryXmlHttpRequest request, string textStatus, Exception error)
             {
-                failureCallback(error);
+                failureCallback(new Exception(String.Format(Strings.Get("TemplateLoadError"), currentTemplateFile, error)));
             };
 
             AjaxRequestCallback onFinish = delegate(object data, string textStatus, jQueryXmlHttpRequest request)
             {
-                jQueryObject templateDiv = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(tempDiv).Append(jQuery.FromHtml((string)data));
+                jQueryObject templateDiv = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(TempDivObject).Append(jQuery.FromHtml((string)data));
 
                 loadedTemplateData[currentTemplateFile] = new Dictionary<string, jQueryObject>();
                 foreach (string templateId in TemplateIds[currentTemplateFile])
                 {
                     jQueryObject selectedTemplate = jQuery.Select("#" + templateId, templateDiv);
+                    if (selectedTemplate.Length != 1)
+                    {
+                        failureCallback(new Exception(String.Format(Strings.Get("TemplateParseError"), currentTemplateFile, templateId)));
+                        return;
+                    }
+
                     loadedTemplateData[currentTemplateFile][templateId] = selectedTemplate.Clone();
                     selectedTemplate.Remove();
                 }
@@ -72,7 +93,6 @@ namespace afung.MangaWeb3.Client
             {
                 if (templateIndex >= Templates.Length)
                 {
-                    tempDiv.Remove();
                     successCallback();
                     return;
                 }
@@ -89,6 +109,45 @@ namespace afung.MangaWeb3.Client
             };
 
             loadNextTemplate();
+        }
+
+        public static jQueryObject Get(string template, string templateId)
+        {
+            if (loadedTemplateData.ContainsKey(template) && loadedTemplateData[template].ContainsKey(templateId))
+            {
+                jQueryObject obj = loadedTemplateData[template][templateId];
+                obj = obj.Clone().AppendTo(TempDivObject);
+
+                jQuery.Select(".msg", obj).Each(delegate(int index, Element element)
+                {
+                    jQueryObject msgObj = jQuery.FromElement(element);
+                    foreach (string className in msgObj.GetAttribute("class").Split(" "))
+                    {
+                        if (className.StartsWith("msg-"))
+                        {
+                            msgObj.Html(Strings.GetHtml(className.Substr(4)));
+                            break;
+                        }
+                    }
+                });
+
+                jQuery.Select(".plhdr", obj).Each(delegate(int index, Element element)
+                {
+                    jQueryObject msgObj = jQuery.FromElement(element);
+                    foreach (string className in msgObj.GetAttribute("class").Split(" "))
+                    {
+                        if (className.StartsWith("plhdr-"))
+                        {
+                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.GetHtml(className.Substr(6)));
+                            break;
+                        }
+                    }
+                });
+
+                return obj.Detach();
+            }
+
+            throw new Exception(String.Format(Strings.Get("TemplateGetError"), template, templateId));
         }
     }
 }

@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using afung.MangaWeb3.Client.Install.Module;
+
 
 namespace afung.MangaWeb3.Client.Install
 {
@@ -27,7 +29,15 @@ namespace afung.MangaWeb3.Client.Install
                 "install-mysql-error",
                 "install-module"
             };
+
+            Request.Endpoint = "InstallAjax";
+
             base.StartStage2();
+        }
+
+        protected override void LoadFirstModule()
+        {
+            new InstallModule();
         }
     }
 }

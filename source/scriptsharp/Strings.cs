@@ -56,7 +56,7 @@ namespace afung.MangaWeb3.Client
         public static void LoadUserLanguage(Action successCallback, Action<Exception> failureCallback)
         {
             // TODO: add option to change user language
-            LoadLanguageFile(DefaultLanguage, successCallback, failureCallback);
+            LoadLanguageFile(CurrentLanguage, successCallback, failureCallback);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace afung.MangaWeb3.Client
         /// </summary>
         /// <param name="stringId">String ID</param>
         /// <returns>The string to display</returns>
-        public static string Get(string stringId)
+        public static string GetHtml(string stringId)
         {
             if (CurrentLanguage != DefaultLanguage && loadedLanguageData.ContainsKey(CurrentLanguage) && loadedLanguageData[CurrentLanguage].ContainsKey(stringId))
             {
@@ -124,6 +124,11 @@ namespace afung.MangaWeb3.Client
             }
 
             return "String Not Defined";
+        }
+
+        public static string Get(string stringId)
+        {
+            return jQuery.FromHtml("<span>" + GetHtml(stringId) + "</span>").GetText();
         }
     }
 }

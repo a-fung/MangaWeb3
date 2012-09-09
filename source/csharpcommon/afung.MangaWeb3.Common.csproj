@@ -31,6 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CheckMySqlSettingRequest.cs" />
+    <Compile Include="CheckMySqlSettingResponse.cs" />
+    <Compile Include="ErrorResponse.cs" />
+    <Compile Include="JsonRequest.cs" />
+    <Compile Include="JsonResponse.cs" />
+    <Compile Include="PreInstallCheckRequest.cs" />
+    <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

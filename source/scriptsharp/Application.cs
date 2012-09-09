@@ -72,14 +72,20 @@ namespace afung.MangaWeb3.Client
             // Load default language first
             Action<Exception> templateLoadFailed = delegate(Exception error)
             {
-                ShowFatalError(String.Format("Unabled to load template file ({0}). Please check that you have the correct file on your server", error));
+                ShowFatalError(error.ToString());
             };
 
             Action templateLoadFinished = delegate()
             {
+                LoadFirstModule();
             };
 
             Template.LoadTemplateFile(templateLoadFinished, templateLoadFailed);
+        }
+
+        protected virtual void LoadFirstModule()
+        {
+
         }
 
         /// <summary>
