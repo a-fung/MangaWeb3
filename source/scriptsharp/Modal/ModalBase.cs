@@ -24,5 +24,18 @@ namespace afung.MangaWeb3.Client.Modal
         {
             ((jQueryBootstrap)attachedObject).Modal();
         }
+
+        protected void ShowStatic()
+        {
+            ((jQueryBootstrap)attachedObject).Modal(
+                new Dictionary<string, object>(
+                    "backdrop",
+                    "static"));
+        }
+
+        protected void Hide()
+        {
+            ((jQueryBootstrap)attachedObject).Modal("hide");
+        }
     }
 }

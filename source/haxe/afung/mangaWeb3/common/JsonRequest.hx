@@ -8,8 +8,4 @@ package afung.mangaWeb3.common;
 class JsonRequest 
 {
 	public var type:String;
-
-	public function new() 
-	{
-	}
 }

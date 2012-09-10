@@ -16,6 +16,9 @@ class Native {
 	public static function MySqlSetCharset($charset) {
 		mysql_set_charset($charset);
 	}
+	public static function AddSlashes($str) {
+		return addslashes($str);
+	}
 }
 
 ?>

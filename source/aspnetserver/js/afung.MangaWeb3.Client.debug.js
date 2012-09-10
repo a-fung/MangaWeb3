@@ -53,6 +53,14 @@ afung.MangaWeb3.Client.Modal.ModalBase.prototype = {
     
     show: function afung_MangaWeb3_Client_Modal_ModalBase$show() {
         (this.attachedObject).modal();
+    },
+    
+    showStatic: function afung_MangaWeb3_Client_Modal_ModalBase$showStatic() {
+        (this.attachedObject).modal({ backdrop: 'static' });
+    },
+    
+    hide: function afung_MangaWeb3_Client_Modal_ModalBase$hide() {
+        (this.attachedObject).modal('hide');
     }
 }
 

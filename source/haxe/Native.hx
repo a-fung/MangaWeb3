@@ -21,4 +21,5 @@ extern class Native
 	public static function ClassExists(name:String):Bool;
 	public static function Exec(cmd:String):String;
 	public static function MySqlSetCharset(charset:String):Void;
+	public static function AddSlashes(str:String):String;
 }

@@ -70,6 +70,10 @@ mkdir $path\template
 copy source\aspnetserver\template\*.* $path\template
 
 
+# empty pdf file needed during install
+copy source\aspnetserver\empty.pdf $path
+
+
 # php files
 robocopy source\php $path /E
 

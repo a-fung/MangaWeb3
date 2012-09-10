@@ -7,8 +7,4 @@ package afung.mangaWeb3.common;
 
 class PreInstallCheckRequest extends JsonRequest
 {
-	public function new() 
-	{
-		super();
-	}
 }

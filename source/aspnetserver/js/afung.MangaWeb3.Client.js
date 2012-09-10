@@ -4,7 +4,7 @@ Type.registerNamespace('afung.MangaWeb3.Client.Modal');afung.MangaWeb3.Client.Mo
 afung.MangaWeb3.Client.Modal.ErrorModal.showError=function(errorMsg){if(afung.MangaWeb3.Client.Modal.ErrorModal.$0==null){afung.MangaWeb3.Client.Modal.ErrorModal.$0=new afung.MangaWeb3.Client.Modal.ErrorModal();}afung.MangaWeb3.Client.Modal.ErrorModal.$0.internalShowError(errorMsg);}
 afung.MangaWeb3.Client.Modal.ErrorModal.prototype={initialize:function(){},internalShowError:function(errorMsg){$('#error-modal-msg',this.attachedObject).text(errorMsg);this.show();}}
 afung.MangaWeb3.Client.Modal.ModalBase=function(template,templateId){this.attachedObject=afung.MangaWeb3.Client.Template.get(template,templateId).appendTo($('body'));this.initialize();}
-afung.MangaWeb3.Client.Modal.ModalBase.prototype={attachedObject:null,show:function(){(this.attachedObject).modal();}}
+afung.MangaWeb3.Client.Modal.ModalBase.prototype={attachedObject:null,show:function(){(this.attachedObject).modal();},showStatic:function(){(this.attachedObject).modal({backdrop:'static'});},hide:function(){(this.attachedObject).modal('hide');}}
 Type.registerNamespace('afung.MangaWeb3.Client');afung.MangaWeb3.Client.ServerType=function(){};afung.MangaWeb3.Client.ServerType.prototype = {aspNet:0,php:1}
 afung.MangaWeb3.Client.ServerType.registerEnum('afung.MangaWeb3.Client.ServerType',false);afung.MangaWeb3.Client.Request=function(data,successCallback,failureCallback){this.$0=data;this.$1=successCallback;this.$2=failureCallback;}
 afung.MangaWeb3.Client.Request.send=function(data,successCallback,failureCallback){var $0=new afung.MangaWeb3.Client.Request(data,successCallback,failureCallback);$0.$3();}

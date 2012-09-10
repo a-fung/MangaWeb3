@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using afung.MangaWeb3.Client.Install.Modal;
+using afung.MangaWeb3.Client.Modal;
 using afung.MangaWeb3.Client.Module;
 using afung.MangaWeb3.Common;
 using jQueryApi;
@@ -128,6 +130,11 @@ namespace afung.MangaWeb3.Client.Install.Module
             {
                 CanEnableZip = CanEnableRar = CanEnablePdf = false;
                 AllRequiredComponentLoaded = true;
+
+                // other components text input
+                jQuery.Select("#install-sevenzip-dll").Change(OtherComponentInputChanged);
+                jQuery.Select("#install-pdfinfoexe").Change(OtherComponentInputChanged);
+                jQuery.Select("#install-mudraw-exe").Change(OtherComponentInputChanged);
             }
             else
             {
@@ -171,6 +178,7 @@ namespace afung.MangaWeb3.Client.Install.Module
                 }
             }
 
+            // MySql text inputs and button
             jQuery.Select("#install-mysql-check-setting").Click(MySqlCheckSettingClicked);
 
             jQuery.Select("#install-mysql-server").Change(MySqlCheckSettingChanged);
@@ -178,6 +186,14 @@ namespace afung.MangaWeb3.Client.Install.Module
             jQuery.Select("#install-mysql-username").Change(MySqlCheckSettingChanged);
             jQuery.Select("#install-mysql-password").Change(MySqlCheckSettingChanged);
             jQuery.Select("#install-mysql-database").Change(MySqlCheckSettingChanged);
+
+            // Admin Section
+            jQuery.Select("#install-admin-username").Change(AdminUserChanged);
+            jQuery.Select("#install-admin-password").Change(AdminPasswordChanged);
+            jQuery.Select("#install-admin-password2").Change(AdminConfirmPasswordChanged);
+
+            // Submit button
+            jQuery.Select("#install-submit-btn").Click(SubmitButtonClicked);
         }
 
         private bool _mySqlSettingChecking = false;
@@ -265,15 +281,363 @@ namespace afung.MangaWeb3.Client.Install.Module
             MySqlSettingOkay = response.pass;
             if (!response.pass)
             {
-                MySqlCheckFailed(new Exception(""));
+                MySqlCheckFailed();
             }
         }
 
-        private void MySqlCheckFailed(Exception error)
+        [AlternateSignature]
+        private extern void MySqlCheckFailed(Exception error);
+        private void MySqlCheckFailed()
         {
             MySqlSettingOkay = MySqlSettingChecking = false;
             Template.Get("install", "install-mysql-connect-error").AppendTo(jQuery.Select("#mysql-error-area"));
+        }
 
+        private bool _sevenZipSettingChecking = false;
+        private bool SevenZipSettingChecking
+        {
+            get
+            {
+                return _sevenZipSettingChecking;
+            }
+            set
+            {
+                _sevenZipSettingChecking = value;
+                if (value)
+                {
+                    jQuery.Select("#install-sevenzip-loading").Show();
+                    jQuery.Select("#install-sevenzip-dll").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                }
+                else
+                {
+                    jQuery.Select("#install-sevenzip-loading").Hide();
+                    jQuery.Select("#install-sevenzip-dll").RemoveAttr(HtmlConstants.AttributeDisabled);
+                }
+            }
+        }
+
+        private bool _sevenZipSettingOkay = false;
+        private bool SevenZipSettingOkay
+        {
+            get
+            {
+                return _sevenZipSettingOkay;
+            }
+            set
+            {
+                CanEnableZip = CanEnableRar = _sevenZipSettingOkay = value;
+                if (value)
+                {
+                    jQuery.Select("#install-sevenzip-check").Show();
+                }
+                else
+                {
+                    jQuery.Select("#install-sevenzip-check").Hide();
+                }
+            }
+        }
+
+        private bool _pdfinfoSettingChecking = false;
+        private bool PdfinfoSettingChecking
+        {
+            get
+            {
+                return _pdfinfoSettingChecking;
+            }
+            set
+            {
+                _pdfinfoSettingChecking = value;
+                if (value)
+                {
+                    jQuery.Select("#install-pdfinfoexe-loading").Show();
+                    jQuery.Select("#install-pdfinfoexe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                }
+                else
+                {
+                    jQuery.Select("#install-pdfinfoexe-loading").Hide();
+                    jQuery.Select("#install-pdfinfoexe").RemoveAttr(HtmlConstants.AttributeDisabled);
+                }
+            }
+        }
+
+        private bool _pdfinfoSettingOkay = false;
+        private bool PdfinfoSettingOkay
+        {
+            get
+            {
+                return _pdfinfoSettingOkay;
+            }
+            set
+            {
+                _pdfinfoSettingOkay = value;
+                CanEnablePdf = value && MudrawSettingOkay;
+                if (value)
+                {
+                    jQuery.Select("#install-pdfinfoexe-check").Show();
+                }
+                else
+                {
+                    jQuery.Select("#install-pdfinfoexe-check").Hide();
+                }
+            }
+        }
+
+        private bool _mudrawSettingChecking = false;
+        private bool MudrawSettingChecking
+        {
+            get
+            {
+                return _mudrawSettingChecking;
+            }
+            set
+            {
+                _mudrawSettingChecking = value;
+                if (value)
+                {
+                    jQuery.Select("#install-mudraw-loading").Show();
+                    jQuery.Select("#install-mudraw-exe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                }
+                else
+                {
+                    jQuery.Select("#install-mudraw-loading").Hide();
+                    jQuery.Select("#install-mudraw-exe").RemoveAttr(HtmlConstants.AttributeDisabled);
+                }
+            }
+        }
+
+        private bool _mudrawSettingOkay = false;
+        private bool MudrawSettingOkay
+        {
+            get
+            {
+                return _mudrawSettingOkay;
+            }
+            set
+            {
+                _mudrawSettingOkay = value;
+                CanEnablePdf = value && PdfinfoSettingOkay;
+                if (value)
+                {
+                    jQuery.Select("#install-mudraw-check").Show();
+                }
+                else
+                {
+                    jQuery.Select("#install-mudraw-check").Hide();
+                }
+            }
+        }
+
+        private int checkingComponent;
+
+        private void OtherComponentInputChanged(jQueryEvent e)
+        {
+            jQueryObject eventSource = jQuery.FromElement(e.Target);
+            string inputId = eventSource.GetAttribute(HtmlConstants.AttributeId);
+            bool checking = false;
+
+            switch (inputId)
+            {
+                case "install-sevenzip-dll":
+                    checking = SevenZipSettingChecking;
+                    break;
+                case "install-pdfinfoexe":
+                    checking = PdfinfoSettingChecking;
+                    break;
+                case "install-mudraw-exe":
+                    checking = MudrawSettingChecking;
+                    break;
+                default:
+                    return;
+            }
+
+            if (checking)
+            {
+                return;
+            }
+
+            string path = eventSource.GetValue();
+            checking = !String.IsNullOrEmpty(path);
+
+            CheckOtherComponentRequest request = new CheckOtherComponentRequest();
+            request.path = path;
+
+            switch (inputId)
+            {
+                case "install-sevenzip-dll":
+                    SevenZipSettingChecking = checking;
+                    SevenZipSettingOkay = false;
+                    request.component = 0;
+                    jQuery.Select("#install-sevenzip-error").Remove();
+                    break;
+                case "install-pdfinfoexe":
+                    PdfinfoSettingChecking = checking;
+                    PdfinfoSettingOkay = false;
+                    request.component = 1;
+                    jQuery.Select("#install-pdfinfoexe-error").Remove();
+                    break;
+                case "install-mudraw-exe":
+                    MudrawSettingChecking = checking;
+                    MudrawSettingOkay = false;
+                    request.component = 2;
+                    jQuery.Select("#install-mudraw-error").Remove();
+                    break;
+                default:
+                    return;
+            }
+
+            if (!checking)
+            {
+                return;
+            }
+
+            checkingComponent = request.component;
+            Request.Send(request, OtherComponentCheckSuccess, OtherComponentCheckFailed);
+        }
+
+        [AlternateSignature]
+        private extern void OtherComponentCheckSuccess(JsonResponse response);
+        private void OtherComponentCheckSuccess(CheckOtherComponentResponse response)
+        {
+            if (response.pass)
+            {
+                switch (checkingComponent)
+                {
+                    case 0:
+                        SevenZipSettingChecking = false;
+                        SevenZipSettingOkay = true;
+                        break;
+                    case 1:
+                        PdfinfoSettingChecking = false;
+                        PdfinfoSettingOkay = true;
+                        break;
+                    case 2:
+                        MudrawSettingChecking = false;
+                        MudrawSettingOkay = true;
+                        break;
+                    default:
+                        return;
+                }
+            }
+            else
+            {
+                OtherComponentCheckFailed();
+            }
+        }
+
+        [AlternateSignature]
+        private extern void OtherComponentCheckFailed(Exception error);
+        private void OtherComponentCheckFailed()
+        {
+            switch (checkingComponent)
+            {
+                case 0:
+                    SevenZipSettingOkay = SevenZipSettingChecking = false;
+                    Template.Get("install", "install-sevenzip-error").AppendTo(jQuery.Select("#sevenzip-error-area"));
+                    break;
+                case 1:
+                    PdfinfoSettingOkay = PdfinfoSettingChecking = false;
+                    Template.Get("install", "install-pdfinfoexe-error").AppendTo(jQuery.Select("#pdfinfo-error-area"));
+                    break;
+                case 2:
+                    MudrawSettingOkay = MudrawSettingChecking = false;
+                    Template.Get("install", "install-mudraw-error").AppendTo(jQuery.Select("#mudraw-error-area"));
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        private void AdminUserChanged(jQueryEvent e)
+        {
+            RegularExpression regex = new RegularExpression("[^a-zA-Z0-9]");
+
+            string username = jQuery.Select("#install-admin-username").GetValue();
+            if (username == "" || regex.Test(username))
+            {
+                jQuery.Select("#install-admin-username-check").Hide();
+            }
+            else
+            {
+                jQuery.Select("#install-admin-username-check").Show();
+            }
+        }
+
+        private void AdminPasswordChanged(jQueryEvent e)
+        {
+            if (jQuery.Select("#install-admin-password").GetValue().Length >= 8)
+            {
+                jQuery.Select("#install-admin-password-check").Show();
+            }
+            else
+            {
+                jQuery.Select("#install-admin-password-check").Hide();
+            }
+        }
+
+        private void AdminConfirmPasswordChanged(jQueryEvent e)
+        {
+            if (jQuery.Select("#install-admin-password2").GetValue().Length >= 8 && jQuery.Select("#install-admin-password").GetValue() == jQuery.Select("#install-admin-password2").GetValue())
+            {
+                jQuery.Select("#install-admin-password2-check").Show();
+            }
+            else
+            {
+                jQuery.Select("#install-admin-password2-check").Hide();
+            }
+        }
+
+        private void SubmitButtonClicked(jQueryEvent e)
+        {
+            // return if anything is checking
+            if (MySqlSettingChecking || SevenZipSettingChecking || PdfinfoSettingChecking || MudrawSettingChecking)
+            {
+                return;
+            }
+
+            if (!AllRequiredComponentLoaded)
+            {
+                ErrorModal.ShowError(Strings.Get("MissingRequiredComponent"));
+                return;
+            }
+
+            if (!CanEnableZip && !CanEnableRar && !CanEnablePdf)
+            {
+                ErrorModal.ShowError(Strings.Get("NeedFileSupport"));
+                return;
+            }
+
+            string username = jQuery.Select("#install-admin-username").GetValue();
+            string password = jQuery.Select("#install-admin-password").GetValue();
+            string password2 = jQuery.Select("#install-admin-password2").GetValue();
+
+            RegularExpression regex = new RegularExpression("[^a-zA-Z0-9]");
+
+            if (username == "" || regex.Test(username) || password.Length < 8 || password != password2)
+            {
+                ErrorModal.ShowError(Strings.Get("AdminUserSettingFailed"));
+                return;
+            }
+
+            InstallRequest request = new InstallRequest();
+            request.mysqlServer = jQuery.Select("#install-mysql-server").GetValue();
+            request.mysqlPort = int.Parse(jQuery.Select("#install-mysql-port").GetValue(), 10);
+            request.mysqlUser = jQuery.Select("#install-mysql-username").GetValue();
+            request.mysqlPassword = jQuery.Select("#install-mysql-password").GetValue();
+            request.mysqlDatabase = jQuery.Select("#install-mysql-database").GetValue();
+
+            request.sevenZipPath = jQuery.Select("#install-sevenzip-dll").GetValue();
+            request.pdfinfoPath = jQuery.Select("#install-pdfinfoexe").GetValue();
+            request.mudrawPath = jQuery.Select("#install-mudraw-exe").GetValue();
+
+            request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
+            request.rar = jQuery.Select("#install-rar-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
+            request.pdf = jQuery.Select("#install-pdf-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
+
+            request.admin = username;
+            request.password = password;
+            request.password2 = password2;
+
+            new InstallingModal(request);
         }
     }
 }

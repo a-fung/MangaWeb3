@@ -17,6 +17,7 @@ namespace afung.MangaWeb3.Server.Install
                 handlers = new HandlerBase[]{
                     new PreInstallCheckRequestHandler(),
                     new CheckMySqlSettingRequestHandler(),
+                    new CheckOtherComponentRequestHandler(),
                 };
             }
 

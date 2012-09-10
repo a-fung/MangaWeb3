@@ -32,11 +32,11 @@ class PreInstallCheckRequestHandler extends HandlerBase
 			response.zip = Native.ExtensionLoaded("zip");
 			response.rar = Native.ClassExists("RarArchive");
 			
-			Native.Exec("pdfinfo");
-			response.pdfinfo = 127 != Native.ExecReturnVar;
+			Native.Exec("pdfinfo empty.pdf");
+			response.pdfinfo = 0 == Native.ExecReturnVar;
 			
-			Native.Exec("pdfdraw");
-			response.pdfdraw = 127 != Native.ExecReturnVar;
+			Native.Exec("pdfdraw empty.pdf");
+			response.pdfdraw = 0 == Native.ExecReturnVar;
 		}
 		
 		ajax.ReturnJson(response);

@@ -3,6 +3,7 @@ package afung.mangaWeb3.server.install;
 import afung.mangaWeb3.server.AjaxBase;
 import afung.mangaWeb3.server.handler.HandlerBase;
 import afung.mangaWeb3.server.install.handler.CheckMySqlSettingRequestHandler;
+import afung.mangaWeb3.server.install.handler.InstallRequestHandler;
 import afung.mangaWeb3.server.install.handler.PreInstallCheckRequestHandler;
 
 /**
@@ -31,6 +32,7 @@ class InstallAjax extends AjaxBase
 			handlers = [
 				new PreInstallCheckRequestHandler(),
 				new CheckMySqlSettingRequestHandler(),
+				new InstallRequestHandler(),
 			];
 		}
 		
