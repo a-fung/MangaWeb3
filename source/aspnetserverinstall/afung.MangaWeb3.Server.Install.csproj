@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Handler\CheckMySqlSettingRequestHandler.cs" />
     <Compile Include="Handler\CheckOtherComponentRequestHandler.cs" />
+    <Compile Include="Handler\InstallRequestHandler.cs" />
     <Compile Include="Handler\PreInstallCheckRequestHandler.cs" />
     <Compile Include="InstallAjax.aspx.cs">
       <DependentUpon>InstallAjax.aspx</DependentUpon>
