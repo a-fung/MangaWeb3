@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -48,6 +49,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
             ConfigurationManager.RefreshSection("appSettings");
 
             // Import install.sql to MySQL
+            using (StreamReader sqlFile = new StreamReader(ajax.Server.MapPath("install.sql"))) Database.ExecuteSql(sqlFile.ReadToEnd());
 
             // Create Administrator
 

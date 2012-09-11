@@ -69,6 +69,7 @@
     <Content Include="img\glyphicons-halflings.png" />
     <Content Include="index.html" />
     <Content Include="install.html" />
+    <Content Include="install.sql" />
     <Content Include="js\afung.MangaWeb3.Client.Admin.debug.js" />
     <Content Include="js\afung.MangaWeb3.Client.Admin.js" />
     <Content Include="js\afung.MangaWeb3.Client.debug.js" />

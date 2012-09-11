@@ -27,7 +27,7 @@ class CheckMySqlSettingRequestHandler extends HandlerBase
 		var pass:Bool = false;
 		try
 		{
-			connection = Database.GetConnnection(
+			connection = Database.GetConnection(
 				request.server,
 				request.port,
 				request.username,

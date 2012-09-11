@@ -168,3 +168,5 @@ scriptbin/
 haxephp/
 output/
 copy*test.ps1
+afung.*.js
+mscorlib*js

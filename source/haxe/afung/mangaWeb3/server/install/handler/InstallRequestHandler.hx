@@ -1,6 +1,7 @@
 package afung.mangaWeb3.server.install.handler;
 
 import afung.mangaWeb3.common.InstallRequest;
+import afung.mangaWeb3.server.Database;
 import afung.mangaWeb3.server.handler.HandlerBase;
 import php.io.File;
 
@@ -45,6 +46,7 @@ class InstallRequestHandler extends HandlerBase
 		File.saveContent("config.php", configFileContent.toString());
 
 		// Import install.sql to MySQL
+		Database.ExecuteSql(File.getContent("install.sql"));
 
 		// Create Administrator
 

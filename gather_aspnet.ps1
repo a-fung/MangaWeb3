@@ -70,8 +70,9 @@ mkdir $path\template
 copy source\aspnetserver\template\*.* $path\template
 
 
-# empty pdf file needed during install
+# files needed during install
 copy source\aspnetserver\empty.pdf $path
+copy source\aspnetserver\install.sql $path
 
 
 # aspx files
