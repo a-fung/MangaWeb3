@@ -9,197 +9,198 @@
         <img src="img/loading.gif" />
     </div>
     <form class="form-horizontal" id="install-form">
-    <div class="well">
-        <legend class="msg msg-MySQL"></legend>
-        <div id="mysql-error-area">
-            <div class="alert alert-error" id="install-mysql-error">
-                <strong class="msg msg-Error"></strong>
-                <br />
-                <span class="msg msg-MySQLError"></span>
+        <div class="well">
+            <legend class="msg msg-MySQL"></legend>
+            <div id="mysql-error-area">
+                <div class="alert alert-error" id="install-mysql-error">
+                    <strong class="msg msg-Error"></strong>
+                    <br />
+                    <span class="msg msg-MySQLError"></span>
+                </div>
+                <div class="alert" id="install-mysql-connect-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-MySQLConnectError"></span>
+                </div>
             </div>
-            <div class="alert" id="install-mysql-connect-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-MySQLConnectError"></span>
+            <div class="control-group">
+                <label class="msg msg-Server control-label" for="install-mysql-server">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-mysql-server" value="localhost" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-Port control-label" for="install-mysql-port">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-mysql-port" value="3306" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-UserName control-label" for="install-mysql-username">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-mysql-username" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-Password control-label" for="install-mysql-password">
+                </label>
+                <div class="controls">
+                    <input type="password" id="install-mysql-password" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-Database control-label" for="install-mysql-database">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-mysql-database" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset2 span10">
+                    <a class="msg msg-CheckSetting btn" id="install-mysql-check-setting"></a><i class="icon-ok"
+                        id="install-mysql-check"></i>
+                    <img src="img/loading.gif" id="install-mysql-loading" />
+                </div>
             </div>
         </div>
-        <div class="control-group">
-            <label class="msg msg-Server control-label" for="install-mysql-server">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-mysql-server" value="localhost" />
+        <div class="well">
+            <legend class="msg msg-OtherComponents"></legend>
+            <div id="gd-error-area">
+                <div class="alert alert-error" id="install-gd-error">
+                    <strong class="msg msg-Error"></strong>
+                    <br />
+                    <span class="msg msg-GDError"></span>
+                </div>
+            </div>
+            <div id="sevenzip-error-area">
+                <div class="alert" id="install-sevenzip-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadSevenZipError"></span>
+                </div>
+            </div>
+            <div class="control-group" id="install-sevenzip">
+                <label class="msg msg-SevenZipDll control-label" for="install-sevenzip-dll">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-sevenzip-dll" />
+                    <i class="icon-ok" id="install-sevenzip-check"></i>
+                    <img src="img/loading.gif" id="install-sevenzip-loading" />
+                </div>
+            </div>
+            <div id="zip-error-area">
+                <div class="alert" id="install-zip-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-ZipExtensionError"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-EnableZip control-label" for="install-zip-checkbox">
+                </label>
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox" name="install-zip-checkbox" id="install-zip-checkbox" value="true"
+                            checked="checked" /></label>
+                </div>
+            </div>
+            <div id="rar-error-area">
+                <div class="alert" id="install-rar-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-RarExtensionError"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-EnableRar control-label" for="install-rar-checkbox">
+                </label>
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox" name="install-rar-checkbox" id="install-rar-checkbox" value="true"
+                            checked="checked" /></label>
+                </div>
+            </div>
+            <div id="pdfinfo-error-area">
+                <div class="alert" id="install-pdfinfoexe-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadPdfInfoError"></span>
+                </div>
+                <div class="alert" id="install-pdfinfo-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-PdfInfoError"></span>
+                </div>
+            </div>
+            <div class="control-group" id="install-pdfinfoexe">
+                <label class="msg msg-PdfInfoExe control-label" for="install-pdfinfoexe">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-pdfinfoexe" />
+                    <i class="icon-ok" id="install-pdfinfoexe-check"></i>
+                    <img src="img/loading.gif" id="install-pdfinfoexe-loading" />
+                </div>
+            </div>
+            <div id="mudraw-error-area">
+                <div class="alert" id="install-mudraw-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadMuDrawError"></span>
+                </div>
+                <div class="alert" id="install-pdfdraw-error">
+                    <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-PdfDrawError"></span>
+                </div>
+            </div>
+            <div class="control-group" id="install-mudraw">
+                <label class="msg msg-MuDrawExe control-label" for="install-mudraw-exe">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-mudraw-exe" />
+                    <i class="icon-ok" id="install-mudraw-check"></i>
+                    <img src="img/loading.gif" id="install-mudraw-loading" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="msg msg-EnablePdf control-label" for="install-pdf-checkbox">
+                </label>
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox" name="install-pdf-checkbox" id="install-pdf-checkbox" value="true"
+                            checked="checked" /></label>
+                </div>
             </div>
         </div>
-        <div class="control-group">
-            <label class="msg msg-Port control-label" for="install-mysql-port">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-mysql-port" value="3306" />
+        <div class="well">
+            <legend class="msg msg-Administrator"></legend>
+            <p class="msg msg-InstallCreateAdministrator">
+            </p>
+            <div class="control-group">
+                <label class="msg msg-UserName control-label" for="install-admin-username">
+                </label>
+                <div class="controls">
+                    <input type="text" id="install-admin-username" class="plhdr plhdr-AlphabetsDigitsOnly"
+                        maxlength="30" />
+                    <i class="icon-ok" id="install-admin-username-check"></i>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-UserName control-label" for="install-mysql-username">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-mysql-username" />
+            <div class="control-group">
+                <label class="msg msg-Password control-label" for="install-admin-password">
+                </label>
+                <div class="controls">
+                    <input type="password" id="install-admin-password" class="plhdr plhdr-AtLeastEightCharacters" />
+                    <i class="icon-ok" id="install-admin-password-check"></i>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-Password control-label" for="install-mysql-password">
-            </label>
-            <div class="controls">
-                <input type="password" id="install-mysql-password" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-Database control-label" for="install-mysql-database">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-mysql-database" />
+            <div class="control-group">
+                <label class="msg msg-ConfirmPassword control-label" for="install-admin-password2">
+                </label>
+                <div class="controls">
+                    <input type="password" id="install-admin-password2" class="plhdr plhdr-EnterPasswordAgain" />
+                    <i class="icon-ok" id="install-admin-password2-check"></i>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="offset2 span10">
-                <a class="msg msg-CheckSetting btn" id="install-mysql-check-setting"></a><i class="icon-ok"
-                    id="install-mysql-check"></i>
-                <img src="img/loading.gif" id="install-mysql-loading" />
+            <div class="offset5 span2">
+                <a class="msg msg-Submit btn btn-primary btn-block" id="install-submit-btn"></a>
             </div>
         </div>
-    </div>
-    <div class="well">
-        <legend class="msg msg-OtherComponents"></legend>
-        <div id="gd-error-area">
-            <div class="alert alert-error" id="install-gd-error">
-                <strong class="msg msg-Error"></strong>
-                <br />
-                <span class="msg msg-GDError"></span>
-            </div>
-        </div>
-        <div id="sevenzip-error-area">
-            <div class="alert" id="install-sevenzip-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadSevenZipError"></span>
-            </div>
-        </div>
-        <div class="control-group" id="install-sevenzip">
-            <label class="msg msg-SevenZipDll control-label" for="install-sevenzip-dll">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-sevenzip-dll" />
-                <i class="icon-ok" id="install-sevenzip-check"></i>
-                <img src="img/loading.gif" id="install-sevenzip-loading" />
-            </div>
-        </div>
-        <div id="zip-error-area">
-            <div class="alert" id="install-zip-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-ZipExtensionError"></span>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-EnableZip control-label" for="install-zip-checkbox">
-            </label>
-            <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="install-zip-checkbox" id="install-zip-checkbox" value="true"
-                        checked="checked" /></label>
-            </div>
-        </div>
-        <div id="rar-error-area">
-            <div class="alert" id="install-rar-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-RarExtensionError"></span>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-EnableRar control-label" for="install-rar-checkbox">
-            </label>
-            <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="install-rar-checkbox" id="install-rar-checkbox" value="true"
-                        checked="checked" /></label>
-            </div>
-        </div>
-        <div id="pdfinfo-error-area">
-            <div class="alert" id="install-pdfinfoexe-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadPdfInfoError"></span>
-            </div>
-            <div class="alert" id="install-pdfinfo-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-PdfInfoError"></span>
-            </div>
-        </div>
-        <div class="control-group" id="install-pdfinfoexe">
-            <label class="msg msg-PdfInfoExe control-label" for="install-pdfinfoexe">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-pdfinfoexe" />
-                <i class="icon-ok" id="install-pdfinfoexe-check"></i>
-                <img src="img/loading.gif" id="install-pdfinfoexe-loading" />
-            </div>
-        </div>
-        <div id="mudraw-error-area">
-            <div class="alert" id="install-mudraw-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-LoadMuDrawError"></span>
-            </div>
-            <div class="alert" id="install-pdfdraw-error">
-                <a href="#" class="close" data-dismiss="alert">×</a><span class="msg msg-PdfDrawError"></span>
-            </div>
-        </div>
-        <div class="control-group" id="install-mudraw">
-            <label class="msg msg-MuDrawExe control-label" for="install-mudraw-exe">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-mudraw-exe" />
-                <i class="icon-ok" id="install-mudraw-check"></i>
-                <img src="img/loading.gif" id="install-mudraw-loading" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-EnablePdf control-label" for="install-pdf-checkbox">
-            </label>
-            <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="install-pdf-checkbox" id="install-pdf-checkbox" value="true"
-                        checked="checked" /></label>
-            </div>
-        </div>
-    </div>
-    <div class="well">
-        <legend class="msg msg-Administrator"></legend>
-        <p class="msg msg-InstallCreateAdministrator">
-        </p>
-        <div class="control-group">
-            <label class="msg msg-UserName control-label" for="install-admin-username">
-            </label>
-            <div class="controls">
-                <input type="text" id="install-admin-username" class="plhdr plhdr-AlphabetsDigitsOnly"
-                    maxlength="30" />
-                <i class="icon-ok" id="install-admin-username-check"></i>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-Password control-label" for="install-admin-password">
-            </label>
-            <div class="controls">
-                <input type="password" id="install-admin-password" class="plhdr plhdr-AtLeastEightCharacters" />
-                <i class="icon-ok" id="install-admin-password-check"></i>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="msg msg-ConfirmPassword control-label" for="install-admin-password2">
-            </label>
-            <div class="controls">
-                <input type="password" id="install-admin-password2" class="plhdr plhdr-EnterPasswordAgain" />
-                <i class="icon-ok" id="install-admin-password2-check"></i>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="offset5 span2">
-            <a class="msg msg-Submit btn btn-primary btn-block" id="install-submit-btn"></a>
-        </div>
-    </div>
     </form>
 </div>
 <div id="installing-modal" class="modal hide fade">
     <div class="modal-body">
         <p>
             <span class="msg msg-Installing"></span>
-            <img src="img/loading.gif" /></p>
+            <img src="img/loading.gif" />
+        </p>
     </div>
 </div>
