@@ -165,4 +165,9 @@ class Database
 	{
 		DefaultConnection().request(sql);
 	}
+	
+	public static function LastInsertId():Int
+	{
+		return DefaultConnection().lastInsertId();
+	}
 }

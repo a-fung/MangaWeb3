@@ -52,6 +52,7 @@
     <Content Include="Properties\afung.MangaWeb3.Client.Install.script" />
     <Compile Include="InstallApp.cs" />
     <Compile Include="Modal\InstallingModal.cs" />
+    <Compile Include="Module\InstallFinishModule.cs" />
     <Compile Include="Module\InstallModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

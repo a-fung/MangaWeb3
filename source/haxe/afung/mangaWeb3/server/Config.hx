@@ -20,7 +20,7 @@ class Config
 	
 	public static var IsInstalled(get_IsInstalled, null):Bool;
 	
-	public static function get_IsInstalled():Bool
+	private static function get_IsInstalled():Bool
 	{
 		if (!ConfigExist)
 		{
@@ -33,7 +33,7 @@ class Config
 	
 	public static var MySQLServer(get_MySQLServer, null):String;
 	
-	public static function get_MySQLServer():String
+	private static function get_MySQLServer():String
 	{
 		if (!ConfigExist)
 		{
@@ -45,7 +45,7 @@ class Config
 	
 	public static var MySQLPort(get_MySQLPort, null):Int;
 	
-	public static function get_MySQLPort():Int
+	private static function get_MySQLPort():Int
 	{
 		if (!ConfigExist)
 		{
@@ -58,7 +58,7 @@ class Config
 	
 	public static var MySQLUser(get_MySQLUser, null):String;
 	
-	public static function get_MySQLUser():String
+	private static function get_MySQLUser():String
 	{
 		if (!ConfigExist)
 		{
@@ -70,7 +70,7 @@ class Config
 	
 	public static var MySQLPassword(get_MySQLPassword, null):String;
 	
-	public static function get_MySQLPassword():String
+	private static function get_MySQLPassword():String
 	{
 		if (!ConfigExist)
 		{
@@ -82,7 +82,7 @@ class Config
 	
 	public static var MySQLDatabase(get_MySQLDatabase, null):String;
 	
-	public static function get_MySQLDatabase():String
+	private static function get_MySQLDatabase():String
 	{
 		if (!ConfigExist)
 		{

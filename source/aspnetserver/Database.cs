@@ -178,5 +178,10 @@ namespace afung.MangaWeb3.Server
         {
             new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
         }
+
+        public static int LastInsertId()
+        {
+            return Convert.ToInt32(new MySqlCommand("SELECT LAST_INSERT_ID()", DefaultConnection()).ExecuteScalar());
+        }
     }
 }

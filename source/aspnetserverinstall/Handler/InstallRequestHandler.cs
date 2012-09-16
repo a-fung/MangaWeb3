@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using afung.MangaWeb3.Common;
@@ -33,6 +36,14 @@ namespace afung.MangaWeb3.Server.Install.Handler
             // Save MySQL setting, 7z, pdfinfo and mudraw to web.config
             Configuration configuration = WebConfigurationManager.OpenWebConfiguration("~");
             AppSettingsSection section = configuration.AppSettings;
+            foreach (string key in new string[] { "MangaWebInstalled", "MangaWebMySQLServer", "MangaWebMySQLPort", "MangaWebMySQLUser", "MangaWebMySQLPassword", "MangaWebMySQLDatabase", "MangaWeb7zDll", "MangaWebPdfinfo", "MangaWebMudraw" })
+            {
+                if (section.Settings.AllKeys.Contains(key))
+                {
+                    section.Settings.Remove(key);
+                }
+            }
+
             section.Settings.Add("MangaWebInstalled", true.ToString());
 
             section.Settings.Add("MangaWebMySQLServer", request.mysqlServer);
@@ -46,16 +57,58 @@ namespace afung.MangaWeb3.Server.Install.Handler
             section.Settings.Add("MangaWebMudraw", request.mudrawPath);
 
             configuration.Save();
+            NameValueCollection settings = new NameValueCollection();
+            foreach (string key in section.Settings.AllKeys)
+            {
+                settings[key] = section.Settings[key].Value;
+            }
+
             ConfigurationManager.RefreshSection("appSettings");
+            Config.Refresh(settings);
 
             // Import install.sql to MySQL
             using (StreamReader sqlFile = new StreamReader(ajax.Server.MapPath("install.sql"))) Database.ExecuteSql(sqlFile.ReadToEnd());
 
             // Create Administrator
+            User.CreateNewUser(request.admin, request.password, true).Save();
 
             // Save zip, rar, pdf to Settings table
+            Settings.UseZip = request.zip;
+            Settings.UseRar = request.rar;
+            Settings.UsePdf = request.pdf;
 
+            // Delete Install files
+            string[] filesToDelete = 
+            {
+                "install.html",
+                "install.sql",
+                "InstallAjax.aspx",
+                @"bin\afung.MangaWeb3.Server.Install.dll",
+                @"js\afung.MangaWeb3.Client.Install.js",
+                @"template\install.html",
+            };
 
+            StringBuilder argumentBuilder = new StringBuilder();
+            argumentBuilder.Append("/C ping 1.1.1.1 -n 1 -w 3000 > Nul");
+            foreach (string fileToDelete in filesToDelete)
+            {
+                argumentBuilder.AppendFormat(" & del \"{0}\"", ajax.Server.MapPath(fileToDelete));
+            }
+
+            string argument = argumentBuilder.ToString();
+            ThreadStart runDeleteFilesCmd = delegate()
+            {
+                string output;
+                int exitCode;
+                ProcessLauncher.Run("cmd.exe", argument, out output, out exitCode);
+            };
+
+            new Thread(runDeleteFilesCmd).Start();
+
+            InstallResponse response = new InstallResponse();
+            response.installsuccessful = true;
+
+            ajax.ReturnJson(response);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace afung.MangaWeb3.Client.Install
         {
             Template.Templates[Template.Templates.Length] = "install";
             Template.TemplateIds["install"] = new string[] {
+                "install-finish-module",
                 "installing-modal",
                 "install-mudraw-error",
                 "install-pdfdraw-error",

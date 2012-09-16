@@ -120,12 +120,12 @@ namespace afung.MangaWeb3.Client
 
                 jQuery.Select(".msg", obj).Each(delegate(int index, Element element)
                 {
-                    jQueryObject msgObj = jQuery.FromElement(element);
+                    jQueryObject msgObj = jQuery.FromElement(element).RemoveClass("msg");
                     foreach (string className in msgObj.GetAttribute("class").Split(" "))
                     {
                         if (className.StartsWith("msg-"))
                         {
-                            msgObj.Html(Strings.GetHtml(className.Substr(4)));
+                            msgObj.Html(Strings.GetHtml(className.Substr(4))).RemoveClass(className);
                             break;
                         }
                     }
@@ -133,12 +133,12 @@ namespace afung.MangaWeb3.Client
 
                 jQuery.Select(".plhdr", obj).Each(delegate(int index, Element element)
                 {
-                    jQueryObject msgObj = jQuery.FromElement(element);
+                    jQueryObject msgObj = jQuery.FromElement(element).RemoveClass("plhdr");
                     foreach (string className in msgObj.GetAttribute("class").Split(" "))
                     {
                         if (className.StartsWith("plhdr-"))
                         {
-                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.GetHtml(className.Substr(6)));
+                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.GetHtml(className.Substr(6))).RemoveClass(className);
                             break;
                         }
                     }

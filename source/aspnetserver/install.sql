@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
-  `password` varchar(30) NOT NULL,
+  `password` varchar(32) NOT NULL,
   `admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`),

@@ -86,6 +86,13 @@ copy source\aspnetserver\bin\*.dll $path\bin
 copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.dll $path\bin
 
 
+# pdf files
+if ($true) {
+copy source\aspnetserver\bin\*.pdb $path\bin
+copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.pdb $path\bin
+}
+
+
 # web.config
 copy source\aspnetserver\web.config $path
 

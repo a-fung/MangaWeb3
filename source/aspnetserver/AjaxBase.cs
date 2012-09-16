@@ -15,10 +15,16 @@ namespace afung.MangaWeb3.Server
             string jsonString = RequestParams("j");
             if (String.IsNullOrEmpty(jsonString) || String.IsNullOrEmpty(jsonString.Trim()))
             {
-                BadRequest(); return;
+                BadRequest();
+                return;
             }
 
             JsonRequest jsonRequest = Utility.ParseJson<JsonRequest>(jsonString);
+            if (jsonRequest == null || String.IsNullOrEmpty(jsonRequest.type))
+            {
+                BadRequest();
+                return;
+            }
 
             foreach (HandlerBase handler in handlers)
             {

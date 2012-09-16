@@ -113,6 +113,8 @@
     <Compile Include="ServerAjax.aspx.designer.cs">
       <DependentUpon>ServerAjax.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

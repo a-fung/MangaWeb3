@@ -28,6 +28,11 @@ class AjaxBase
 		}
 		
 		var jsonRequest:JsonRequest = Utility.ParseJson(jsonString);
+		if (jsonRequest == null || jsonRequest.type == null || StringTools.trim(jsonRequest.type) == "")
+		{
+			BadRequest();
+			return;
+		}
 		
 		for (handler in handlers)
 		{

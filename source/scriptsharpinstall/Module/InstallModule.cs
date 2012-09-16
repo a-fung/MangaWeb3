@@ -637,7 +637,7 @@ namespace afung.MangaWeb3.Client.Install.Module
             request.password = password;
             request.password2 = password2;
 
-            new InstallingModal(request);
+            new InstallingModal().SendInstallRequest(request);
         }
     }
 }

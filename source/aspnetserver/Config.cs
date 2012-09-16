@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Web;
@@ -8,11 +9,26 @@ namespace afung.MangaWeb3.Server
 {
     public class Config
     {
+        private static NameValueCollection __section = null;
+
+        private static NameValueCollection AppSettings
+        {
+            get
+            {
+                if (__section == null)
+                {
+                    ConfigurationManager.RefreshSection("appSettings");
+                    __section = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
+                }
+                return __section;
+            }
+        }
+
         public static bool IsInstalled
         {
             get
             {
-                string installed = ConfigurationManager.AppSettings["MangaWebInstalled"];
+                string installed = AppSettings["MangaWebInstalled"];
                 return String.IsNullOrWhiteSpace(installed) ? false : Boolean.Parse(installed);
             }
         }
@@ -21,7 +37,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebMySQLServer"];
+                return AppSettings["MangaWebMySQLServer"];
             }
         }
 
@@ -29,7 +45,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                string port = ConfigurationManager.AppSettings["MangaWebMySQLPort"];
+                string port = AppSettings["MangaWebMySQLPort"];
                 return String.IsNullOrWhiteSpace(port) ? 0 : int.Parse(port);
             }
         }
@@ -38,7 +54,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebMySQLUser"];
+                return AppSettings["MangaWebMySQLUser"];
             }
         }
 
@@ -46,7 +62,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebMySQLPassword"];
+                return AppSettings["MangaWebMySQLPassword"];
             }
         }
 
@@ -54,7 +70,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebMySQLDatabase"];
+                return AppSettings["MangaWebMySQLDatabase"];
             }
         }
 
@@ -62,7 +78,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWeb7zDll"];
+                return AppSettings["MangaWeb7zDll"];
             }
         }
 
@@ -70,7 +86,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebPdfinfo"];
+                return AppSettings["MangaWebPdfinfo"];
             }
         }
 
@@ -78,8 +94,13 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return ConfigurationManager.AppSettings["MangaWebMudraw"];
+                return AppSettings["MangaWebMudraw"];
             }
+        }
+
+        public static void Refresh(NameValueCollection settings)
+        {
+            __section = settings;
         }
     }
 }
