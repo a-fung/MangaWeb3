@@ -83,8 +83,8 @@ namespace afung.MangaWeb3.Server.Install.Handler
                 "install.html",
                 "install.sql",
                 "InstallAjax.aspx",
-                @"bin\afung.MangaWeb3.Server.Install.dll",
-                @"js\afung.MangaWeb3.Client.Install.js",
+                @"bin\afung.MangaWeb3.Server.Install.*",
+                @"js\afung.MangaWeb3.Client.Install.*",
                 @"template\install.html",
             };
 

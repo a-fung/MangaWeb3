@@ -72,7 +72,7 @@ class InstallRequestHandler extends HandlerBase
 		Native.Exec("rm ./install.sql");
 		Native.Exec("rm ./template/install.html");
 		Native.Exec("rm ./InstallAjax.php");
-		Native.Exec("rm ./js/afung.MangaWeb3.Client.Install.js");
+		Native.Exec("rm ./js/afung.MangaWeb3.Client.Install.*");
 		Native.Exec("rm ./lib/afung/mangaWeb3/server/install -r");
 		
 		var response:InstallResponse = new InstallResponse();
