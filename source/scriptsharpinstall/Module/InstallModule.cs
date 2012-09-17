@@ -133,7 +133,7 @@ namespace afung.MangaWeb3.Client.Install.Module
 
                 // other components text input
                 jQuery.Select("#install-sevenzip-dll").Change(OtherComponentInputChanged);
-                jQuery.Select("#install-pdfinfoexe").Change(OtherComponentInputChanged);
+                jQuery.Select("#install-pdfinfo-exe").Change(OtherComponentInputChanged);
                 jQuery.Select("#install-mudraw-exe").Change(OtherComponentInputChanged);
             }
             else
@@ -350,12 +350,12 @@ namespace afung.MangaWeb3.Client.Install.Module
                 if (value)
                 {
                     jQuery.Select("#install-pdfinfoexe-loading").Show();
-                    jQuery.Select("#install-pdfinfoexe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-pdfinfo-exe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
                 }
                 else
                 {
                     jQuery.Select("#install-pdfinfoexe-loading").Hide();
-                    jQuery.Select("#install-pdfinfoexe").RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-pdfinfo-exe").RemoveAttr(HtmlConstants.AttributeDisabled);
                 }
             }
         }
@@ -440,7 +440,7 @@ namespace afung.MangaWeb3.Client.Install.Module
                 case "install-sevenzip-dll":
                     checking = SevenZipSettingChecking;
                     break;
-                case "install-pdfinfoexe":
+                case "install-pdfinfo-exe":
                     checking = PdfinfoSettingChecking;
                     break;
                 case "install-mudraw-exe":
@@ -469,7 +469,7 @@ namespace afung.MangaWeb3.Client.Install.Module
                     request.component = 0;
                     jQuery.Select("#install-sevenzip-error").Remove();
                     break;
-                case "install-pdfinfoexe":
+                case "install-pdfinfo-exe":
                     PdfinfoSettingChecking = checking;
                     PdfinfoSettingOkay = false;
                     request.component = 1;
@@ -626,7 +626,7 @@ namespace afung.MangaWeb3.Client.Install.Module
             request.mysqlDatabase = jQuery.Select("#install-mysql-database").GetValue();
 
             request.sevenZipPath = jQuery.Select("#install-sevenzip-dll").GetValue();
-            request.pdfinfoPath = jQuery.Select("#install-pdfinfoexe").GetValue();
+            request.pdfinfoPath = jQuery.Select("#install-pdfinfo-exe").GetValue();
             request.mudrawPath = jQuery.Select("#install-mudraw-exe").GetValue();
 
             request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;

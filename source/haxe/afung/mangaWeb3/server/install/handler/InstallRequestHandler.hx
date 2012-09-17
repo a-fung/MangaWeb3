@@ -68,12 +68,12 @@ class InstallRequestHandler extends HandlerBase
 		Settings.UsePdf = request.pdf;
 		
 		// Delete Install files
-		Native.Exec("rm ./install.html");
-		Native.Exec("rm ./install.sql");
-		Native.Exec("rm ./template/install.html");
-		Native.Exec("rm ./InstallAjax.php");
-		Native.Exec("rm ./js/afung.MangaWeb3.Client.Install.*");
-		Native.Exec("rm ./lib/afung/mangaWeb3/server/install -r");
+		Native.Exec("rm -f ./install.html");
+		Native.Exec("rm -f ./install.sql");
+		Native.Exec("rm -f ./template/install.html");
+		Native.Exec("rm -f ./InstallAjax.php");
+		Native.Exec("rm -f ./js/afung.MangaWeb3.Client.Install.*");
+		Native.Exec("rm -r -f ./lib/afung/mangaWeb3/server/install");
 		
 		var response:InstallResponse = new InstallResponse();
 		response.installsuccessful = true;

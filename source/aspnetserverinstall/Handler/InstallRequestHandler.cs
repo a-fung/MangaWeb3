@@ -92,7 +92,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
             argumentBuilder.Append("/C ping 1.1.1.1 -n 1 -w 3000 > Nul");
             foreach (string fileToDelete in filesToDelete)
             {
-                argumentBuilder.AppendFormat(" & del \"{0}\"", ajax.Server.MapPath(fileToDelete));
+                argumentBuilder.AppendFormat(" & del \"{0}\\{1}\"", ajax.Server.MapPath("."), filesToDelete);
             }
 
             string argument = argumentBuilder.ToString();

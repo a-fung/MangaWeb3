@@ -25,6 +25,7 @@ CREATE TABLE `manga` (
   `path` varchar(300) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `content` text NOT NULL,
+  `view` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`),
   KEY `type` (`type`)
