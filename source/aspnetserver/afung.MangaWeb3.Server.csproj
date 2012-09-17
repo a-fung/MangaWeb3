@@ -87,6 +87,7 @@
     <Content Include="lang\en-us.html" />
     <Content Include="lang\zh-hk.html" />
     <Content Include="ServerAjax.aspx" />
+    <Content Include="template\admin.html" />
     <Content Include="template\client.html" />
     <Content Include="template\install.html" />
     <Content Include="Web.config" />

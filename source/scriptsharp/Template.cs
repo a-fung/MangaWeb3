@@ -31,6 +31,7 @@ namespace afung.MangaWeb3.Client
             new Dictionary<string, string[]>(
                 "client",
                 new string[] {
+                    "login-modal",
                     "error-modal"
                 });
 

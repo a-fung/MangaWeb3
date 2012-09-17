@@ -45,7 +45,7 @@ namespace afung.MangaWeb3.Client.Install.Modal
         private void InstallRequestFailed(Exception error)
         {
             this.Hide();
-            ErrorModal.ShowError(String.Format(Strings.Get("InstallFailed"), error.Message));
+            ErrorModal.ShowError(String.Format(Strings.Get("InstallFailed"), error));
         }
     }
 }

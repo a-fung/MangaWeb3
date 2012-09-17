@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Import\Bootstrap.cs" />
     <Compile Include="Modal\ErrorModal.cs" />
+    <Compile Include="Modal\LoginModal.cs" />
     <Compile Include="Modal\ModalBase.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Application.cs" />

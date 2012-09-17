@@ -46,6 +46,8 @@
   <ItemGroup>
     <Content Include="Properties\afung.MangaWeb3.Client.Admin.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.Admin.script" />
+    <Compile Include="AdminApp.cs" />
+    <Compile Include="Module\AdminModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

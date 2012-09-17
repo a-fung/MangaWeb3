@@ -40,6 +40,7 @@
     <Compile Include="InstallResponse.cs" />
     <Compile Include="JsonRequest.cs" />
     <Compile Include="JsonResponse.cs" />
+    <Compile Include="LoginResponse.cs" />
     <Compile Include="PreInstallCheckRequest.cs" />
     <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
