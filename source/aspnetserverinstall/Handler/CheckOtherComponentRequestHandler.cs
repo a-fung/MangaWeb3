@@ -43,7 +43,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
                     case 2:
                         int exitCode;
                         string output;
-                        ProcessLauncher.Run(request.path, ajax.Server.MapPath("empty.pdf"), out output, out exitCode);
+                        ProcessLauncher.Run(request.path, Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), out output, out exitCode);
                         if (exitCode == 0)
                         {
                             if (request.component == 1)

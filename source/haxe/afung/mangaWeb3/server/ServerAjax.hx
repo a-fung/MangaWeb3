@@ -21,7 +21,7 @@ class ServerAjax extends AjaxBase
 		new ServerAjax().Page_Load();
 	}
 	
-	private function Page_Load():Void
+	public override function PageLoad():Void 
 	{
 	}
 }

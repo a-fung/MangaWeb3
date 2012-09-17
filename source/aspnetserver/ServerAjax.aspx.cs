@@ -9,7 +9,7 @@ namespace afung.MangaWeb3.Server
 {
     public partial class ServerAjax : AjaxBase
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void PageLoad()
         {
         }
     }

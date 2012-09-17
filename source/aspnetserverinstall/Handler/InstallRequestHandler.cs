@@ -67,7 +67,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
             Config.Refresh(settings);
 
             // Import install.sql to MySQL
-            using (StreamReader sqlFile = new StreamReader(ajax.Server.MapPath("install.sql"))) Database.ExecuteSql(sqlFile.ReadToEnd());
+            using (StreamReader sqlFile = new StreamReader(Path.Combine(AjaxBase.DirectoryPath, "install.sql"))) Database.ExecuteSql(sqlFile.ReadToEnd());
 
             // Create Administrator
             User.CreateNewUser(request.admin, request.password, true).Save();
@@ -92,7 +92,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
             argumentBuilder.Append("/C ping 1.1.1.1 -n 1 -w 3000 > Nul");
             foreach (string fileToDelete in filesToDelete)
             {
-                argumentBuilder.AppendFormat(" & del \"{0}\\{1}\"", ajax.Server.MapPath("."), filesToDelete);
+                argumentBuilder.AppendFormat(" & del \"{0}\"", Path.Combine(AjaxBase.DirectoryPath, fileToDelete));
             }
 
             string argument = argumentBuilder.ToString();

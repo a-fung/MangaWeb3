@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using SevenZip;
 
 namespace afung.MangaWeb3.Server
 {
@@ -40,7 +42,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return GetSettings()["use_zip"] == "true";
+                return GetSettings()["use_zip"] == "true" && SevenZipConfigOk;
             }
             set
             {
@@ -52,7 +54,7 @@ namespace afung.MangaWeb3.Server
         {
             get
             {
-                return GetSettings()["use_rar"] == "true";
+                return GetSettings()["use_rar"] == "true" && SevenZipConfigOk;
             }
             set
             {
@@ -60,15 +62,86 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        private static bool? _usePdf = null;
+
         public static bool UsePdf
         {
             get
             {
-                return GetSettings()["use_pdf"] == "true";
+                if (_usePdf == null)
+                {
+                    _usePdf = GetSettings()["use_pdf"] == "true";
+
+                    if (_usePdf.Value)
+                    {
+                        try
+                        {
+                            int exitCode;
+                            string output;
+                            ProcessLauncher.Run(Config.PdfinfoPath, Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), out output, out exitCode);
+                            if (exitCode != 0)
+                            {
+                                return (_usePdf = false).Value;
+                            }
+
+                            if (!output.Contains("Pages"))
+                            {
+                                return (_usePdf = false).Value;
+                            }
+
+                            ProcessLauncher.Run(Config.MudrawPath, Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), out output, out exitCode);
+                            if (exitCode != 0)
+                            {
+                                return (_usePdf = false).Value;
+                            }
+
+                            if (!output.Contains("nothing to do"))
+                            {
+                                return (_usePdf = false).Value;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            return (_usePdf = false).Value;
+                        }
+                    }
+                }
+
+                return _usePdf.Value;
             }
             set
             {
                 SetSetting("use_pdf", value ? "true" : "false");
+            }
+        }
+
+        private static bool? _sevenZipConfigOk = null;
+
+        private static bool SevenZipConfigOk
+        {
+            get
+            {
+                if (_sevenZipConfigOk == null)
+                {
+                    _sevenZipConfigOk = false;
+                    try
+                    {
+                        SevenZipBase.SetLibraryPath(Config.SevenZipDllPath);
+                        SevenZipCompressor c = new SevenZipCompressor();
+                        using (System.IO.MemoryStream m1 = new MemoryStream()) using (System.IO.MemoryStream m2 = new MemoryStream())
+                        {
+                            byte[] b = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                            m1.Write(b, 0, b.Length);
+                            c.CompressStream(m1, m2);
+                        }
+                        _sevenZipConfigOk = true;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                return _sevenZipConfigOk.Value;
             }
         }
     }

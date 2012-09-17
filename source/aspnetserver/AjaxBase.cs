@@ -8,8 +8,24 @@ using Newtonsoft.Json;
 
 namespace afung.MangaWeb3.Server
 {
-    public class AjaxBase : System.Web.UI.Page
+    public abstract class AjaxBase : System.Web.UI.Page
     {
+        public static string DirectoryPath
+        {
+            get;
+            private set;
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(DirectoryPath))
+            {
+                DirectoryPath = Server.MapPath(".");
+            }
+
+            PageLoad();
+        }
+
         protected void HandleRequest(HandlerBase[] handlers)
         {
             string jsonString = RequestParams("j");
@@ -66,5 +82,7 @@ namespace afung.MangaWeb3.Server
             Response.Write(output);
             Response.End();
         }
+
+        protected abstract void PageLoad();
     }
 }

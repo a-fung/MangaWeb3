@@ -40,7 +40,7 @@ class Settings
 	
 	private static function get_UseZip():Bool
 	{
-		return GetSettings().get("use_zip") == "true";
+		return GetSettings().get("use_zip") == "true" && Native.ExtensionLoaded("zip");
 	}
 	
 	private static function set_UseZip(value:Bool):Bool
@@ -53,7 +53,7 @@ class Settings
 	
 	private static function get_UseRar():Bool
 	{
-		return GetSettings().get("use_rar") == "true";
+		return GetSettings().get("use_rar") == "true" && Native.ClassExists("RarArchive");
 	}
 	
 	private static function set_UseRar(value:Bool):Bool
@@ -64,9 +64,31 @@ class Settings
 	
 	public static var UsePdf(get_UsePdf, set_UsePdf):Bool;
 	
+	private static var _usePdf:Null<Bool> = null;
+	
 	private static function get_UsePdf():Bool
 	{
-		return GetSettings().get("use_pdf") == "true";
+		if (_usePdf == null)
+		{
+			_usePdf = GetSettings().get("use_pdf") == "true";
+			
+			if (_usePdf)
+			{
+				Native.Exec("pdfinfo empty.pdf");
+				if (0 != Native.ExecReturnVar)
+				{
+					return _usePdf = false;
+				}
+				
+				Native.Exec("pdfdraw empty.pdf");
+				if (0 != Native.ExecReturnVar)
+				{
+					return _usePdf = false;
+				}
+			}
+		}
+		
+		return _usePdf;
 	}
 	
 	private static function set_UsePdf(value:Bool):Bool

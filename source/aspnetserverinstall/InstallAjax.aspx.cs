@@ -10,8 +10,14 @@ namespace afung.MangaWeb3.Server.Install
     {
         private static HandlerBase[] handlers = null;
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void PageLoad()
         {
+            if (Config.IsInstalled)
+            {
+                BadRequest();
+                return;
+            }
+
             if (handlers == null)
             {
                 handlers = new HandlerBase[]{

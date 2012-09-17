@@ -1,6 +1,7 @@
 package afung.mangaWeb3.server.install;
 
 import afung.mangaWeb3.server.AjaxBase;
+import afung.mangaWeb3.server.Config;
 import afung.mangaWeb3.server.handler.HandlerBase;
 import afung.mangaWeb3.server.install.handler.CheckMySqlSettingRequestHandler;
 import afung.mangaWeb3.server.install.handler.InstallRequestHandler;
@@ -25,8 +26,14 @@ class InstallAjax extends AjaxBase
 	
 	private static var handlers:Array<HandlerBase> = null;
 	
-	private function Page_Load():Void
+	public override function PageLoad():Void
 	{
+		if (Config.IsInstalled)
+		{
+			BadRequest();
+			return;
+		}
+		
 		if (handlers == null)
 		{
 			handlers = [

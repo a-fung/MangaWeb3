@@ -18,6 +18,11 @@ class AjaxBase
 	{
 	}
 	
+	public function Page_Load():Void
+	{
+		PageLoad();
+	}
+	
 	public function HandleRequest(handlers:Array<HandlerBase>):Void
 	{
 		var jsonString:String = RequestParams("j");
@@ -75,5 +80,9 @@ class AjaxBase
 		Web.setHeader("Content-Type", "application/json");
 		Lib.print(output);
 		Web.flush();
+	}
+	
+	public function PageLoad():Void
+	{
 	}
 }
