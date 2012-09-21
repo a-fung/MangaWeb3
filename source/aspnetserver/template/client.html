@@ -10,12 +10,12 @@
     </div>
 </div>
 <div id="login-modal" class="modal hide fade">
+    <form class="form-horizontal" id="login-modal-form">
     <div class="modal-header">
         <h3 class="msg msg-Login">
         </h3>
     </div>
     <div class="modal-body">
-        <form class="form-horizontal">
         <div class="control-group">
             <label class="msg msg-UserName control-label" for="login-modal-username">
             </label>
@@ -27,13 +27,13 @@
             <label class="msg msg-Password control-label" for="login-modal-password">
             </label>
             <div class="controls">
-                <input type="password" id="login-modal-username" />
+                <input type="password" id="login-modal-password" />
             </div>
         </div>
-        </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="msg msg-Submit btn btn-primary" id="login-modal-submit"></a><a
-            href="#" class="msg msg-Cancel btn" id="login-modal-cancel"></a>
+        <input class="val val-Submit btn btn-primary" id="login-modal-submit" type="submit" />
+        <a href="#" class="msg msg-Cancel btn" id="login-modal-cancel"></a>
     </div>
+    </form>
 </div>

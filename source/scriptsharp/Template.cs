@@ -139,7 +139,20 @@ namespace afung.MangaWeb3.Client
                     {
                         if (className.StartsWith("plhdr-"))
                         {
-                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.GetHtml(className.Substr(6))).RemoveClass(className);
+                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.Get(className.Substr(6))).RemoveClass(className);
+                            break;
+                        }
+                    }
+                });
+
+                jQuery.Select(".val", obj).Each(delegate(int index, Element element)
+                {
+                    jQueryObject msgObj = jQuery.FromElement(element).RemoveClass("val");
+                    foreach (string className in msgObj.GetAttribute("class").Split(" "))
+                    {
+                        if (className.StartsWith("val-"))
+                        {
+                            msgObj.Value(Strings.Get(className.Substr(4))).RemoveClass(className);
                             break;
                         }
                     }

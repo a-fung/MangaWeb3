@@ -24,7 +24,7 @@ namespace afung.MangaWeb3.Server
         public bool Admin
         {
             get;
-            set;
+            private set;
         }
 
         private User()
@@ -40,6 +40,36 @@ namespace afung.MangaWeb3.Server
             newUser.Admin = admin;
 
             return newUser;
+        }
+
+        private static User FromData(Dictionary<string, object> data)
+        {
+            User user = new User();
+            user.id = Convert.ToInt32(data["id"]);
+            user.username = Convert.ToString(data["username"]);
+            user.password = Convert.ToString(data["password"]);
+            user.Admin = Convert.ToInt32(data["admin"]) == 1;
+            return user;
+        }
+
+        public static User GetUser(string username)
+        {
+            return GetUser(username, null);
+        }
+
+        public static User GetUser(string username, string password)
+        {
+            if (username != null && username != "")
+            {
+                Dictionary<string, object>[] resultSet = Database.Select("user", "`username`=" + Database.Quote(username) + (password == null ? "" : " AND `password`=" + Database.Quote(Utility.Md5(password))));
+
+                if (resultSet.Length == 1)
+                {
+                    return FromData(resultSet[0]);
+                }
+            }
+
+            return null;
         }
 
         public void SetPassword(string password)
