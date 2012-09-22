@@ -22,6 +22,14 @@ textarea {
 	display: none;
 }
 
+.text-left {
+	text-align:left;
+}
+
+.text-center {
+	text-align:center;
+}
+
 .modal {
 	overflow: hidden;
 	
@@ -40,10 +48,10 @@ textarea {
 	}
 	
 	th.text-center, td.text-center {
-		text-align:center;
+		.text-center;
 	}
 	
-	td.td-tiny {
+	td.td-mini {
 		width:30px;
 	}
 	
@@ -57,7 +65,21 @@ textarea {
 }
 
 .row-after-table {
-	.btn-toolbar, .pagination {
+	.btn-toolbar {
 		margin-top: 0;
 	}
+	
+	.pagination {
+		margin-top: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.modal.fade.in {
+		top: 50%;
+	}
+}
+
+.typeahead {
+	z-index:2000;
 }

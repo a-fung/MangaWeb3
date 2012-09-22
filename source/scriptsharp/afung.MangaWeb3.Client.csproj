@@ -54,7 +54,6 @@
     <Compile Include="Modal\ModalBase.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="HtmlConstants.cs" />
     <Compile Include="Module\ModuleBase.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="Template.cs" />

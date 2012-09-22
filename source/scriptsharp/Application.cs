@@ -95,7 +95,7 @@ namespace afung.MangaWeb3.Client
         public static void ShowFatalError(string message)
         {
             jQueryObject errorMessageObject = jQuery.FromHtml(FatalErrorMessageHtml);
-            jQuery.Select(HtmlConstants.TagBody).Prepend(errorMessageObject);
+            jQuery.Select("body").Prepend(errorMessageObject);
             jQuery.Select(FatalErrorMessageClass, errorMessageObject).Text(message);
         }
     }

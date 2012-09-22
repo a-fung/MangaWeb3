@@ -3,8 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using jQueryApi;
 using System.Html;
+using System.Runtime.CompilerServices;
+using jQueryApi;
 
 namespace afung.MangaWeb3.Client
 {
@@ -31,6 +32,8 @@ namespace afung.MangaWeb3.Client
             new Dictionary<string, string[]>(
                 "client",
                 new string[] {
+                    "widget-pagination-page",
+                    "widget-pagination",
                     "login-modal",
                     "error-modal"
                 });
@@ -44,7 +47,7 @@ namespace afung.MangaWeb3.Client
             {
                 if (_tempDivObject == null)
                 {
-                    _tempDivObject = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(jQuery.Select(HtmlConstants.TagBody)).AddClass(HtmlConstants.ClassTemp);
+                    _tempDivObject = jQuery.FromElement(Document.CreateElement("div")).AppendTo(jQuery.Select("body")).AddClass("temp");
                 }
                 return _tempDivObject;
             }
@@ -68,7 +71,7 @@ namespace afung.MangaWeb3.Client
 
             AjaxRequestCallback onFinish = delegate(object data, string textStatus, jQueryXmlHttpRequest request)
             {
-                jQueryObject templateDiv = jQuery.FromElement(Document.CreateElement(HtmlConstants.TagDiv)).AppendTo(TempDivObject).Append(jQuery.FromHtml((string)data));
+                jQueryObject templateDiv = jQuery.FromElement(Document.CreateElement("div")).AppendTo(TempDivObject).Append(jQuery.FromHtml((string)data));
 
                 loadedTemplateData[currentTemplateFile] = new Dictionary<string, jQueryObject>();
                 foreach (string templateId in TemplateIds[currentTemplateFile])
@@ -112,7 +115,9 @@ namespace afung.MangaWeb3.Client
             loadNextTemplate();
         }
 
-        public static jQueryObject Get(string template, string templateId)
+        [AlternateSignature]
+        public extern static jQueryObject Get(string template, string templateId);
+        public static jQueryObject Get(string template, string templateId, bool removeId)
         {
             if (loadedTemplateData.ContainsKey(template) && loadedTemplateData[template].ContainsKey(templateId))
             {
@@ -139,7 +144,7 @@ namespace afung.MangaWeb3.Client
                     {
                         if (className.StartsWith("plhdr-"))
                         {
-                            msgObj.Attribute(HtmlConstants.AttributePlaceHolder, Strings.Get(className.Substr(6))).RemoveClass(className);
+                            msgObj.Attribute("placeholder", Strings.Get(className.Substr(6))).RemoveClass(className);
                             break;
                         }
                     }
@@ -157,6 +162,11 @@ namespace afung.MangaWeb3.Client
                         }
                     }
                 });
+
+                if (removeId)
+                {
+                    obj.RemoveAttr("id");
+                }
 
                 return obj.Detach();
             }

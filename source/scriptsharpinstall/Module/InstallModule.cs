@@ -25,13 +25,13 @@ namespace afung.MangaWeb3.Client.Install.Module
             {
                 if (value)
                 {
-                    jQuery.Select("#install-zip-checkbox", attachedObject).RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-zip-checkbox", attachedObject).RemoveAttr("disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-zip-checkbox", attachedObject)
-                        .Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled)
-                        .RemoveAttr(HtmlConstants.AttributeChecked);
+                        .Attribute("disabled", "disabled")
+                        .RemoveAttr("checked");
                 }
                 _canEnableZip = value;
             }
@@ -48,13 +48,13 @@ namespace afung.MangaWeb3.Client.Install.Module
             {
                 if (value)
                 {
-                    jQuery.Select("#install-rar-checkbox", attachedObject).RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-rar-checkbox", attachedObject).RemoveAttr("disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-rar-checkbox", attachedObject)
-                        .Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled)
-                        .RemoveAttr(HtmlConstants.AttributeChecked);
+                        .Attribute("disabled", "disabled")
+                        .RemoveAttr("checked");
                 }
                 _canEnableRar = value;
             }
@@ -71,13 +71,13 @@ namespace afung.MangaWeb3.Client.Install.Module
             {
                 if (value)
                 {
-                    jQuery.Select("#install-pdf-checkbox", attachedObject).RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-pdf-checkbox", attachedObject).RemoveAttr("disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-pdf-checkbox", attachedObject)
-                        .Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled)
-                        .RemoveAttr(HtmlConstants.AttributeChecked);
+                        .Attribute("disabled", "disabled")
+                        .RemoveAttr("checked");
                 }
                 _canEnablePdf = value;
             }
@@ -306,12 +306,12 @@ namespace afung.MangaWeb3.Client.Install.Module
                 if (value)
                 {
                     jQuery.Select("#install-sevenzip-loading").Show();
-                    jQuery.Select("#install-sevenzip-dll").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-sevenzip-dll").Attribute("disabled", "disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-sevenzip-loading").Hide();
-                    jQuery.Select("#install-sevenzip-dll").RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-sevenzip-dll").RemoveAttr("disabled");
                 }
             }
         }
@@ -350,12 +350,12 @@ namespace afung.MangaWeb3.Client.Install.Module
                 if (value)
                 {
                     jQuery.Select("#install-pdfinfoexe-loading").Show();
-                    jQuery.Select("#install-pdfinfo-exe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-pdfinfo-exe").Attribute("disabled", "disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-pdfinfoexe-loading").Hide();
-                    jQuery.Select("#install-pdfinfo-exe").RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-pdfinfo-exe").RemoveAttr("disabled");
                 }
             }
         }
@@ -395,12 +395,12 @@ namespace afung.MangaWeb3.Client.Install.Module
                 if (value)
                 {
                     jQuery.Select("#install-mudraw-loading").Show();
-                    jQuery.Select("#install-mudraw-exe").Attribute(HtmlConstants.AttributeDisabled, HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-mudraw-exe").Attribute("disabled", "disabled");
                 }
                 else
                 {
                     jQuery.Select("#install-mudraw-loading").Hide();
-                    jQuery.Select("#install-mudraw-exe").RemoveAttr(HtmlConstants.AttributeDisabled);
+                    jQuery.Select("#install-mudraw-exe").RemoveAttr("disabled");
                 }
             }
         }
@@ -432,7 +432,7 @@ namespace afung.MangaWeb3.Client.Install.Module
         private void OtherComponentInputChanged(jQueryEvent e)
         {
             jQueryObject eventSource = jQuery.FromElement(e.Target);
-            string inputId = eventSource.GetAttribute(HtmlConstants.AttributeId);
+            string inputId = eventSource.GetAttribute("id");
             bool checking = false;
 
             switch (inputId)
@@ -629,9 +629,9 @@ namespace afung.MangaWeb3.Client.Install.Module
             request.pdfinfoPath = jQuery.Select("#install-pdfinfo-exe").GetValue();
             request.mudrawPath = jQuery.Select("#install-mudraw-exe").GetValue();
 
-            request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
-            request.rar = jQuery.Select("#install-rar-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
-            request.pdf = jQuery.Select("#install-pdf-checkbox").GetAttribute(HtmlConstants.AttributeChecked) == HtmlConstants.AttributeChecked;
+            request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute("checked") == "checked";
+            request.rar = jQuery.Select("#install-rar-checkbox").GetAttribute("checked") == "checked";
+            request.pdf = jQuery.Select("#install-pdf-checkbox").GetAttribute("checked") == "checked";
 
             request.admin = username;
             request.password = password;

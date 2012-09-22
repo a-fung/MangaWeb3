@@ -85,9 +85,9 @@ namespace afung.MangaWeb3.Client
                 jQuery.FromHtml((string)data).Each(delegate(int index, Element element)
                 {
                     jQueryObject currentObject = jQuery.FromElement(element);
-                    if (String.Compare(element.TagName, HtmlConstants.TagParagraph, true) == 0)
+                    if (String.Compare(element.TagName, "p", true) == 0)
                     {
-                        string stringId = currentObject.GetAttribute(HtmlConstants.AttributeId);
+                        string stringId = currentObject.GetAttribute("id");
                         if (!String.IsNullOrEmpty(stringId))
                         {
                             loadedLanguageData[language][stringId] = currentObject.GetHtml();

@@ -13,7 +13,7 @@ namespace afung.MangaWeb3.Client.Modal
 
         public ModalBase(string template, string templateId)
         {
-            attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select(HtmlConstants.TagBody));
+            attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select("body"));
 
             Initialize();
         }
