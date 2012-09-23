@@ -14,8 +14,4 @@ class PreInstallCheckResponse extends JsonResponse
 	public var rar:Bool;
 	public var pdfinfo:Bool;
 	public var pdfdraw:Bool;
-	
-	public function new() 
-	{
-	}
 }

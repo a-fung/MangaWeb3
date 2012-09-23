@@ -12,6 +12,8 @@ namespace afung.MangaWeb3.Client
         /// Should be set from servertype.js
         /// </summary>
         public static ServerType ServerType;
+
+        public static int ElementsPerPage = 5;
     }
 
     /// <summary>

@@ -67,6 +67,14 @@ namespace afung.MangaWeb3.Server
             Response.End();
         }
 
+        public void Unauthorized()
+        {
+            Response.StatusCode = 401;
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Write("Unauthorized");
+            Response.End();
+        }
+
         public void Redirect(string url)
         {
             Response.Redirect(url, true);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using jQueryApi;
+using System.Html;
 
 namespace afung.MangaWeb3.Client
 {
@@ -97,6 +98,11 @@ namespace afung.MangaWeb3.Client
             jQueryObject errorMessageObject = jQuery.FromHtml(FatalErrorMessageHtml);
             jQuery.Select("body").Prepend(errorMessageObject);
             jQuery.Select(FatalErrorMessageClass, errorMessageObject).Text(message);
+        }
+
+        public static void Refresh()
+        {
+            Window.Location.Href = Window.Location.Pathname.Unescape();
         }
     }
 }

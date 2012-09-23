@@ -8,8 +8,4 @@ package afung.mangaWeb3.common;
 class InstallResponse extends JsonResponse
 {
 	public var installsuccessful:Bool;
-	
-	public function new()
-	{
-	}
 }

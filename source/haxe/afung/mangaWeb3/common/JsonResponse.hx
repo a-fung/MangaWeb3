@@ -7,4 +7,7 @@ package afung.mangaWeb3.common;
 
 class JsonResponse 
 {
+	public function new()
+	{
+	}
 }

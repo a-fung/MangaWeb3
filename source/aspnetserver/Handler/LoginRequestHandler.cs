@@ -25,10 +25,6 @@ namespace afung.MangaWeb3.Server.Handler
                 {
                     user = User.GetUser(SessionWrapper.GetUserName(ajax));
                 }
-                else if (request.password == "logout")
-                {
-                    SessionWrapper.SetUserName(ajax, "");
-                }
             }
             else
             {

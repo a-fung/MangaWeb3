@@ -1,4 +1,5 @@
 package afung.mangaWeb3.server;
+
 import afung.mangaWeb3.common.CheckMySqlSettingRequest;
 
 /**
@@ -8,30 +9,23 @@ import afung.mangaWeb3.common.CheckMySqlSettingRequest;
 
 class User 
 {
-    private var id:Int;
+    private var Id(default, null):Int;
     
-    private var username:String;
-    
-    public var Username(get_Username, null):String;
-    
-    private function get_Username():String
-    {
-        return username;
-    }
+    public var Username(default, null):String;
     
     private var password:String;
     
-    public var Admin(default, default):Bool;
+    public var Admin(default, null):Bool;
 
     private function new() 
     {
-        id = -1;
+        Id = -1;
     }
     
     public static function CreateNewUser(username:String, password:String, admin:Bool):User
     {
         var newUser:User = new User();
-        newUser.username = username;
+        newUser.Username = username;
         newUser.SetPassword(password);
         newUser.Admin = admin;
         
@@ -41,11 +35,16 @@ class User
     private static function FromData(data:Hash<Dynamic>):User
     {
         var user:User = new User();
-        user.id = Std.parseInt(data.get("id"));
-        user.username = Std.string(data.get("username"));
+        user.Id = Std.parseInt(data.get("id"));
+        user.Username = Std.string(data.get("username"));
         user.password = Std.string(data.get("password"));
         user.Admin = Std.parseInt(data.get("admin")) == 1;
         return user;
+    }
+    
+    public static function GetCurrentUser(ajax:AjaxBase):User
+    {
+        return GetUser(SessionWrapper.GetUserName(ajax));
     }
     
     public static function GetUser(username:String, password:String = null):User
@@ -63,6 +62,12 @@ class User
         return null;
     }
     
+    public static function IsAdminLoggedIn(ajax:AjaxBase):Bool
+    {
+        var currentUser:User = GetCurrentUser(ajax);
+        return currentUser != null && currentUser.Admin;
+    }
+    
     public function SetPassword(password:String):Void
     {
         this.password = Utility.Md5(password);
@@ -76,18 +81,18 @@ class User
     public function Save():Void
     {
         var userData:Hash<Dynamic> = new Hash<Dynamic>();
-        userData.set("username", username);
+        userData.set("username", Username);
         userData.set("password", password);
         userData.set("admin", Admin ? 1 : 0);
 
-        if (id == -1)
+        if (Id == -1)
         {
             Database.Insert("user", userData);
-            id = Database.LastInsertId();
+            Id = Database.LastInsertId();
         }
         else
         {
-            userData.set("id", id);
+            userData.set("id", Id);
             Database.Replace("user", userData);
         }
     }

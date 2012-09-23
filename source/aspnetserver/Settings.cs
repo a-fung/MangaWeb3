@@ -38,6 +38,18 @@ namespace afung.MangaWeb3.Server
             Database.Replace("setting", data);
         }
 
+        public static bool AllowGuest
+        {
+            get
+            {
+                return GetSettings()["allow_guest"] != "false";
+            }
+            set
+            {
+                SetSetting("allow_guest", value ? "true" : "false");
+            }
+        }
+
         public static bool UseZip
         {
             get
@@ -111,6 +123,7 @@ namespace afung.MangaWeb3.Server
             }
             set
             {
+                _usePdf = null;
                 SetSetting("use_pdf", value ? "true" : "false");
             }
         }

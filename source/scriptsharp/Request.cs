@@ -53,7 +53,33 @@ namespace afung.MangaWeb3.Client
 
         private void AjaxError(jQueryXmlHttpRequest request, string textStatus, Exception error)
         {
-            Failure(error);
+            if (request.Status == 401)
+            {
+                // hide all modals first
+                ((jQueryBootstrap)jQuery.Select(".modal")).Modal("hide");
+
+                // Show login modal & error message
+                LoginModal.GetUserName(
+                    delegate(LoginResponse response)
+                    {
+                        // logged in, retry the request
+                        SendRequest();
+                    },
+                    delegate(Exception error2)
+                    {
+                        // Login is cancelled, refresh the app
+                        Application.Refresh();
+                    },
+                    true,
+                    true);
+
+                // error modal
+                ErrorModal.ShowError(Strings.Get("UnauthorizedError"));
+            }
+            else
+            {
+                Failure(error);
+            }
         }
 
         private void AjaxSuccess(object responseData, string textStatus, jQueryXmlHttpRequest request)

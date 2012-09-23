@@ -102,8 +102,13 @@
     <Compile Include="AjaxBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Collection.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="Handler\AdminCollectionAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminCollectionsGetRequestHandler.cs" />
+    <Compile Include="Handler\AdminSettingsGetRequestHandler.cs" />
+    <Compile Include="Handler\AdminSettingsSetRequestHandler.cs" />
     <Compile Include="Handler\HandlerBase.cs" />
     <Compile Include="Handler\LoginRequestHandler.cs" />
     <Compile Include="ProcessLauncher.cs" />

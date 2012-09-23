@@ -8,8 +8,4 @@ package afung.mangaWeb3.common;
 class CheckMySqlSettingResponse extends JsonResponse
 {
 	public var pass:Bool;
-	
-	public function new() 
-	{
-	}
 }

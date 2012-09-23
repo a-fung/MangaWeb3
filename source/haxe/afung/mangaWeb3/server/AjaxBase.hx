@@ -65,6 +65,15 @@ class AjaxBase
 		Web.flush();
 	}
 	
+	public function Unauthorized():Void
+	{
+		Web.setReturnCode(401);
+		Web.setHeader("Cache-Control", "no-cache");
+		Web.setHeader("Pragma", "no-cache");
+		Lib.print("Unauthorized");
+		Web.flush();
+	}
+	
 	public function Redirect(url:String):Void
 	{
 		Web.redirect(url);

@@ -31,10 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AdminCollectionAddRequest.cs" />
+    <Compile Include="AdminCollectionAddResponse.cs" />
+    <Compile Include="AdminCollectionsGetRequest.cs" />
+    <Compile Include="AdminCollectionsGetResponse.cs" />
+    <Compile Include="AdminSettingsGetRequest.cs" />
+    <Compile Include="AdminSettingsGetResponse.cs" />
+    <Compile Include="AdminSettingsSetRequest.cs" />
     <Compile Include="CheckMySqlSettingRequest.cs" />
     <Compile Include="CheckMySqlSettingResponse.cs" />
     <Compile Include="CheckOtherComponentRequest.cs" />
     <Compile Include="CheckOtherComponentResponse.cs" />
+    <Compile Include="CollectionJson.cs" />
     <Compile Include="ErrorResponse.cs" />
     <Compile Include="InstallRequest.cs" />
     <Compile Include="InstallResponse.cs" />

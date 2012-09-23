@@ -9,8 +9,4 @@ class LoginResponse extends JsonResponse
 {
 	public var username:String;
 	public var admin:Bool;
-
-	public function new() 
-	{
-	}
 }

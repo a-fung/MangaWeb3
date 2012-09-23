@@ -25,7 +25,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             if (userInfo.admin)
             {
-
+                new AdminCollectionsModule();
             }
             else
             {

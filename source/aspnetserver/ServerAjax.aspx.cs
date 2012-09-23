@@ -23,7 +23,11 @@ namespace afung.MangaWeb3.Server
             if (handlers == null)
             {
                 handlers = new HandlerBase[]{
-                    new LoginRequestHandler()
+                    new LoginRequestHandler(),
+                    new AdminSettingsGetRequestHandler(),
+                    new AdminSettingsSetRequestHandler(),
+                    new AdminCollectionAddRequestHandler(),
+                    new AdminCollectionsGetRequestHandler()
                 };
             }
 

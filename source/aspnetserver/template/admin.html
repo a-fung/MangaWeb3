@@ -9,3 +9,322 @@
         <img src="img/loading.gif" />
     </div>
 </div>
+<div class="container" id="admin-collections-module">
+    <ul class="nav nav-pills nav-admin">
+        <li class="active"><a href="#" class="nav-admin-collections">
+            <i class="icon-inbox"></i>
+            <span class="msg msg-Collections"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-users">
+            <i class="icon-user"></i>
+            <span class="msg msg-Users"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+        <li class="pull-right"><a href="#" class="nav-admin-logout">
+            <i class="icon-off"></i>
+            <span class="msg msg-Logout"></span>
+        </a></li>
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="td-mini"></th>
+                <th class="msg msg-Name"></th>
+                <th class="msg msg-Path"></th>
+                <th class="msg msg-Public text-center td-small"></th>
+                <th class="msg msg-AutoAdd text-center td-small"></th>
+                <th class="msg msg-Users text-center td-small"></th>
+            </tr>
+        </thead>
+        <tbody id="admin-collections-tbody">
+            <tr class="vmiddle" id="admin-collections-trow">
+                <td class="text-center td-mini">
+                    <input type="checkbox" class="admin-collections-checkbox" />
+                </td>
+                <td class="break-word admin-collections-name"></td>
+                <td class="break-word admin-collections-path"></td>
+                <td class="text-center td-small admin-collections-public"></td>
+                <td class="text-center td-small admin-collections-autoadd"></td>
+                <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-collections-users"></a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row row-after-table">
+        <div class="span6">
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="msg msg-ActionOnSelected"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="admin-collections-delete-btn">
+                            <i class="icon-trash"></i>
+                            <span class="msg msg-Delete"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-collections-edit-btn">
+                            <i class="icon-edit"></i>
+                            <span class="msg msg-EditName"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-collections-public-btn">
+                            <i class="icon-folder-open"></i>
+                            <span class="msg msg-SetAsPublic"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-collections-private-btn">
+                            <i class="icon-folder-close"></i>
+                            <span class="msg msg-SetAsPrivate"></span>
+                        </a></li>
+                    </ul>
+                </div>
+                <a href="#" class="btn" id="admin-collections-add-btn">
+                    <i class="icon-plus-sign"></i>
+                    <span class="msg msg-Add"></span>
+                </a>
+            </div>
+        </div>
+        <div class="span6" id="admin-collections-pagination">
+        </div>
+    </div>
+</div>
+<div class="container" id="admin-mangas-module">
+    <ul class="nav nav-pills nav-admin">
+        <li><a href="#" class="nav-admin-collections">
+            <i class="icon-inbox"></i>
+            <span class="msg msg-Collections"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-admin-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-users">
+            <i class="icon-user"></i>
+            <span class="msg msg-Users"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+        <li class="pull-right"><a href="#" class="nav-admin-logout">
+            <i class="icon-off"></i>
+            <span class="msg msg-Logout"></span>
+        </a></li>
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="td-mini"></th>
+                <th class="msg msg-Title"></th>
+                <th class="msg msg-Collection"></th>
+                <th class="msg msg-Path"></th>
+                <th class="msg msg-Type text-center td-small"></th>
+                <th class="msg msg-Views text-center td-small"></th>
+                <th class="msg msg-Meta text-center td-small"></th>
+            </tr>
+        </thead>
+        <tbody id="admin-mangas-tbody">
+            <tr class="vmiddle" id="admin-mangas-trow">
+                <td class="text-center td-mini">
+                    <input type="checkbox" class="admin-mangas-checkbox" />
+                </td>
+                <td class="break-word admin-mangas-title"></td>
+                <td class="break-word admin-mangas-collection"></td>
+                <td class="break-word admin-mangas-path"></td>
+                <td class="text-center td-small admin-mangas-type"></td>
+                <td class="text-center td-small admin-mangas-views"></td>
+                <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-mangas-meta"></a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row row-after-table">
+        <div class="span6">
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="msg msg-ActionOnSelected"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="admin-mangas-delete-btn">
+                            <i class="icon-trash"></i>
+                            <span class="msg msg-Delete"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-mangas-refresh-btn">
+                            <i class="icon-refresh"></i>
+                            <span class="msg msg-RefreshContent"></span>
+                        </a></li>
+                    </ul>
+                </div>
+                <a href="#" class="btn" id="admin-mangas-add-btn">
+                    <i class="icon-plus-sign"></i>
+                    <span class="msg msg-Add"></span>
+                </a><a href="#" class="btn" id="admin-mangas-filter-btn">
+                    <i class="icon-filter"></i>
+                    <span class="msg msg-Filter"></span>
+                </a>
+            </div>
+        </div>
+        <div class="span6" id="admin-mangas-pagination">
+        </div>
+    </div>
+</div>
+<div class="container" id="admin-users-module">
+    <ul class="nav nav-pills nav-admin">
+        <li><a href="#" class="nav-admin-collections">
+            <i class="icon-inbox"></i>
+            <span class="msg msg-Collections"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-admin-users">
+            <i class="icon-user"></i>
+            <span class="msg msg-Users"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+        <li class="pull-right"><a href="#" class="nav-admin-logout">
+            <i class="icon-off"></i>
+            <span class="msg msg-Logout"></span>
+        </a></li>
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="td-mini"></th>
+                <th class="msg msg-UserName"></th>
+                <th class="msg msg-Administrator text-center td-small"></th>
+                <th class="msg msg-Collections text-center td-small"></th>
+            </tr>
+        </thead>
+        <tbody id="admin-users-tbody">
+            <tr class="vmiddle" id="admin-users-trow">
+                <td class="text-center td-mini">
+                    <input type="checkbox" class="admin-users-checkbox" />
+                </td>
+                <td class="break-word admin-users-username"></td>
+                <td class="text-center td-small admin-users-administrator"></td>
+                <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-users-collections"></a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row row-after-table">
+        <div class="span6">
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="msg msg-ActionOnSelected"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="admin-users-delete-btn">
+                            <i class="icon-trash"></i>
+                            <span class="msg msg-Delete"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-users-setasadmin-btn">
+                            <span class="msg msg-SetAsAdministrator"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-users-setasuser-btn">
+                            <span class="msg msg-SetAsUser"></span>
+                        </a></li>
+                    </ul>
+                </div>
+                <a href="#" class="btn" id="admin-users-add-btn">
+                    <i class="icon-plus-sign"></i>
+                    <span class="msg msg-Add"></span>
+                </a>
+            </div>
+        </div>
+        <div class="span6" id="admin-users-pagination">
+        </div>
+    </div>
+</div>
+<div id="admin-settings-modal" class="modal hide fade">
+    <form id="admin-settings-form" class="form-horizontal">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-Settings"></h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="msg msg-AllowGuest control-label" for="admin-settings-guest"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-settings-guest" /></label>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-EnableZip control-label" for="admin-settings-zip"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-settings-zip" /></label>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-EnableRar control-label" for="admin-settings-rar"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-settings-rar" /></label>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-EnablePdf control-label" for="admin-settings-pdf"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-settings-pdf" /></label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Apply btn btn-primary" id="admin-settings-submit" type="submit" />
+    </div>
+    </form>
+</div>
+<div id="admin-collection-add-modal" class="modal hide fade">
+    <form id="admin-collection-add-form" class="form-horizontal">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-AddCollection"></h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="msg msg-Name control-label" for="admin-collection-add-name"></label>
+            <div class="controls">
+                <input type="text" id="admin-collection-add-name" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-Path control-label" for="admin-collection-add-path"></label>
+            <div class="controls">
+                <input type="text" id="admin-collection-add-path" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-Public control-label" for="admin-collection-add-public"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-collection-add-public" /></label>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-AutoAdd control-label" for="admin-collection-add-autoadd"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-collection-add-autoadd" /></label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Submit btn btn-primary" id="admin-collection-add-submit" type="submit" />
+    </div>
+    </form>
+</div>

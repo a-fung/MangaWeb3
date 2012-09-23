@@ -41,13 +41,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL" />
+    <Reference Include="Script.jQuery, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\ScriptSharp\v1.0\Framework\Script.jQuery.dll</HintPath>
+    </Reference>
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\afung.MangaWeb3.Client.Admin.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.Admin.script" />
     <Compile Include="AdminApp.cs" />
+    <Compile Include="Modal\AdminCollectionAddModal.cs" />
+    <Compile Include="Modal\AdminSettingsModal.cs" />
+    <Compile Include="Module\AdminCollectionsModule.cs" />
+    <Compile Include="Module\AdminMangasModule.cs" />
     <Compile Include="Module\AdminModule.cs" />
+    <Compile Include="Module\AdminModuleBase.cs" />
+    <Compile Include="Module\AdminUsersModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

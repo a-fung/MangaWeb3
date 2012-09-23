@@ -24,8 +24,4 @@ class InstallRequest extends JsonRequest
 	public var admin:String;
 	public var password:String;
 	public var password2:String;
-	
-	public function new() 
-	{
-	}
 }

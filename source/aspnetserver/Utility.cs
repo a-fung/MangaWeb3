@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
@@ -32,6 +33,26 @@ namespace afung.MangaWeb3.Server
                 s.Append(b.ToString("x2").ToLower());
             }
             return s.ToString();
+        }
+
+        public static string GetFullPath(string path)
+        {
+            try
+            {
+                string combined = Path.Combine(AjaxBase.DirectoryPath, path);
+                string root = Path.GetPathRoot(combined);
+
+                if (root == "" || root == "/" || root == "\\")
+                {
+                    combined = Path.GetPathRoot(AjaxBase.DirectoryPath) + combined;
+                }
+
+                return new DirectoryInfo(combined).FullName;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

@@ -36,15 +36,17 @@ namespace afung.MangaWeb3.Client.Modal
         public extern static void GetUserName(Action<LoginResponse> successCallback);
         [AlternateSignature]
         public extern static void GetUserName(Action<LoginResponse> successCallback, Action<Exception> failureCallback);
-        public static void GetUserName(Action<LoginResponse> successCallback, Action<Exception> failureCallback, bool showPrompt)
+        [AlternateSignature]
+        public extern static void GetUserName(Action<LoginResponse> successCallback, Action<Exception> failureCallback, bool showPrompt);
+        public static void GetUserName(Action<LoginResponse> successCallback, Action<Exception> failureCallback, bool showPrompt, bool skipCurrentUserInfo)
         {
             LoginModal.successCallback = successCallback;
             LoginModal.failureCallback = failureCallback;
             LoginModal.showPrompt = showPrompt;
 
-            if (userInfo != null)
+            if (skipCurrentUserInfo || userInfo != null)
             {
-                CheckUserNameSuccess(userInfo);
+                CheckUserNameSuccess(userInfo, skipCurrentUserInfo);
             }
             else
             {
@@ -55,11 +57,11 @@ namespace afung.MangaWeb3.Client.Modal
 
         [AlternateSignature]
         private extern static void CheckUserNameSuccess(JsonResponse response);
-        private static void CheckUserNameSuccess(LoginResponse response)
+        private static void CheckUserNameSuccess(LoginResponse response, bool skipCurrentUserInfo)
         {
             userInfo = response;
 
-            if (String.IsNullOrEmpty(response.username) && showPrompt)
+            if (skipCurrentUserInfo || (String.IsNullOrEmpty(response.username) && showPrompt))
             {
                 Prompt();
             }
@@ -138,14 +140,7 @@ namespace afung.MangaWeb3.Client.Modal
 
             if (String.IsNullOrEmpty(response.username))
             {
-                if (Script.IsNullOrUndefined(failureCallback))
-                {
-                    ErrorModal.ShowError(Strings.Get("WrongUserNameOrPassword"));
-                }
-                else
-                {
-                    failureCallback(new Exception(Strings.Get("WrongUserNameOrPassword")));
-                }
+                ErrorModal.ShowError(Strings.Get("WrongUserNameOrPassword"));
             }
             else
             {
@@ -157,15 +152,7 @@ namespace afung.MangaWeb3.Client.Modal
         private void LoginFailure(Exception error)
         {
             loggingIn = false;
-
-            if (Script.IsNullOrUndefined(failureCallback))
-            {
-                ErrorModal.ShowError(String.Format(Strings.Get("LoginFailed"), error));
-            }
-            else
-            {
-                failureCallback(error);
-            }
+            ErrorModal.ShowError(String.Format(Strings.Get("LoginFailed"), error));
         }
     }
 }
