@@ -29,8 +29,15 @@ namespace afung.MangaWeb3.Client.Widget
             currentPage = 1;
         }
 
-        public void Refresh()
+        [AlternateSignature]
+        public extern void Refresh();
+        public void Refresh(bool resetPage)
         {
+            if (resetPage)
+            {
+                currentPage = 1;
+            }
+
             parent.Children().Remove();
 
             int totalPage = getTotalPage();

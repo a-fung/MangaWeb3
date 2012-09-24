@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using afung.MangaWeb3.Common;
 
@@ -114,7 +115,7 @@ namespace afung.MangaWeb3.Server
 
             Collection[] collections = GetAllCollections();
             StringComparison sc = StringComparison.InvariantCultureIgnoreCase;
-            
+
             foreach (Collection collection in collections)
             {
                 if (path.Equals(collection.Path, sc) || path.IndexOf(collection.Path, sc) == 0 || collection.Path.IndexOf(path, sc) == 0)
@@ -166,6 +167,21 @@ namespace afung.MangaWeb3.Server
             }
 
             return objs.ToArray();
+        }
+
+        public static void DeleteCollections(int[] ids)
+        {
+            Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
+            Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
+
+            // todo: delete mangas
+        }
+
+        public static void SetCollectionsPublic(int[] ids, bool public_)
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add("public", public_ ? 1 : 0);
+            Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
         }
     }
 }

@@ -170,4 +170,21 @@ class Database
 	{
 		return DefaultConnection().lastInsertId();
 	}
+    
+    public static function BuildWhereClauseOr(field:String, values:Array<Dynamic>):String
+    {
+        if (values == null || values.length == 0 || field == null || field == "")
+        {
+            return "FALSE";
+        }
+
+        var clauseBuilder:StringBuf = new StringBuf();
+
+        for (value in values)
+        {
+            clauseBuilder.add(" OR `" + field + "`=" + Quote(value.ToString()));
+        }
+
+        return "(" + clauseBuilder.toString().substr(4) + ")";
+    }
 }

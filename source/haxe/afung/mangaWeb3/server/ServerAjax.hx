@@ -1,9 +1,9 @@
 package afung.mangaWeb3.server;
 
-import afung.mangaWeb3.common.ErrorResponse;
-import afung.mangaWeb3.common.PreInstallCheckRequest;
 import afung.mangaWeb3.server.handler.AdminCollectionAddRequestHandler;
+import afung.mangaWeb3.server.handler.AdminCollectionsDeleteRequestHandler;
 import afung.mangaWeb3.server.handler.AdminCollectionsGetRequestHandler;
+import afung.mangaWeb3.server.handler.AdminCollectionsSetPublicRequestHandler;
 import afung.mangaWeb3.server.handler.AdminSettingsGetRequestHandler;
 import afung.mangaWeb3.server.handler.AdminSettingsSetRequestHandler;
 import afung.mangaWeb3.server.handler.HandlerBase;
@@ -44,7 +44,9 @@ class ServerAjax extends AjaxBase
                 new AdminSettingsGetRequestHandler(),
                 new AdminSettingsSetRequestHandler(),
                 new AdminCollectionAddRequestHandler(),
-                new AdminCollectionsGetRequestHandler()
+                new AdminCollectionsGetRequestHandler(),
+                new AdminCollectionsDeleteRequestHandler(),
+                new AdminCollectionsSetPublicRequestHandler()
             ];
         }
 

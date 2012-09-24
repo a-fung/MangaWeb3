@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 using afung.MangaWeb3.Client.Admin.Modal;
+using afung.MangaWeb3.Client.Modal;
 using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
 using jQueryApi;
@@ -25,6 +27,9 @@ namespace afung.MangaWeb3.Client.Admin.Module
         protected override void InnerInitialize()
         {
             jQuery.Select("#admin-collections-add-btn").Click(AddButtonClicked);
+            jQuery.Select("#admin-collections-delete-btn").Click(DeleteButtonClicked);
+            jQuery.Select("#admin-collections-public-btn").Click(SetPublicButtonClicked);
+            jQuery.Select("#admin-collections-private-btn").Click(SetPrivateButtonClicked);
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
             Refresh();
         }
@@ -32,9 +37,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void AddButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
-            AdminCollectionAddModal.ShowDialog();
+            AdminCollectionAddModal.ShowDialog(this);
         }
 
+        [AlternateSignature]
+        public extern void Refresh(JsonResponse response);
         public void Refresh()
         {
             Request.Send(new AdminCollectionsGetRequest(), GetRequestSuccess);
@@ -46,7 +53,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             collections = response.collections;
             ChangePage(1);
-            pagination.Refresh();
+            pagination.Refresh(true);
         }
 
         private void ChangePage(int page)
@@ -78,6 +85,70 @@ namespace afung.MangaWeb3.Client.Admin.Module
             }
 
             return Math.Ceil(collections.Length / Environment.ElementsPerPage);
+        }
+
+        private int[] GetSelectedIds()
+        {
+            int[] ids = { };
+            jQuery.Select(".admin-collections-checkbox:checked").Each(delegate(int index, Element element)
+            {
+                string id = jQuery.FromElement(element).GetValue();
+                if (!String.IsNullOrEmpty(id))
+                {
+                    ids[ids.Length] = int.Parse(id, 10);
+                }
+            });
+
+            return ids;
+        }
+
+        private void DeleteButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            int[] ids = GetSelectedIds();
+
+            if (ids.Length > 0)
+            {
+                ConfirmModal.Show(Strings.Get("DeleteCollectionsConfirm"), DeleteConfirm);
+            }
+        }
+
+        private void DeleteConfirm(bool confirm)
+        {
+            int[] ids = GetSelectedIds();
+
+            if (confirm && ids.Length > 0)
+            {
+                AdminCollectionsDeleteRequest request = new AdminCollectionsDeleteRequest();
+                request.ids = ids;
+                Request.Send(request, Refresh);
+            }
+        }
+
+        private void SetPublicButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            SetPublicOrPrivateClicked(true);
+        }
+
+        private void SetPrivateButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            SetPublicOrPrivateClicked(false);
+        }
+
+        private void SetPublicOrPrivateClicked(bool public_)
+        {
+            int[] ids = GetSelectedIds();
+
+            if (ids.Length > 0)
+            {
+                AdminCollectionsSetPublicRequest request = new AdminCollectionsSetPublicRequest();
+                request.ids = ids;
+                request.public_ = public_;
+                Request.Send(request, Refresh);
+            }
         }
     }
 }

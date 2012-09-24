@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using MySql.Data.MySqlClient;
+using System.Collections;
 
 namespace afung.MangaWeb3.Server
 {
@@ -182,6 +184,23 @@ namespace afung.MangaWeb3.Server
         public static int LastInsertId()
         {
             return Convert.ToInt32(new MySqlCommand("SELECT LAST_INSERT_ID()", DefaultConnection()).ExecuteScalar());
+        }
+
+        public static string BuildWhereClauseOr(string field, IEnumerable values)
+        {
+            if (values == null || String.IsNullOrEmpty(field))
+            {
+                return "FALSE";
+            }
+
+            StringBuilder clauseBuilder = new StringBuilder();
+
+            foreach (object value in values)
+            {
+                clauseBuilder.Append(" OR `" + field + "`=" + Quote(value.ToString()));
+            }
+
+            return clauseBuilder.Length == 0 ? "FALSE" : ("(" + clauseBuilder.ToString().Substring(4) + ")");
         }
     }
 }

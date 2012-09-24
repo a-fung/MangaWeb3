@@ -147,4 +147,19 @@ class Collection
         
         return objs;
     }
+    
+    public static function DeleteCollections(ids:Array<Int>):Void
+    {
+        Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
+        Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
+        
+        // todo: delete mangas
+    }
+    
+    public static function SetCollectionsPublic(ids:Array<Int>, public_:Bool):Void
+    {
+        var data:Hash<Dynamic> = new Hash<Dynamic>();
+        data.set("public", public_ ? 1 : 0);
+        Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
+    }
 }

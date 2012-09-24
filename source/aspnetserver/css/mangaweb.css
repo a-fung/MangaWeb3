@@ -1,1 +1,76 @@
-body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif,"Meiryo UI","MS UI Gothic","MS PGothic","ＭＳ Ｐゴシック","MS Gothic","ＭＳ ゴシック","Microsoft JHengHei UI","Microsoft JHengHei","微軟正黑體",MingLiU,"細明體"}code,pre{font-family:Monaco,Menlo,Consolas,"Courier New",monospace,"Meiryo UI","MS UI Gothic","MS PGothic","ＭＳ Ｐゴシック","MS Gothic","ＭＳ ゴシック","Microsoft JHengHei UI","Microsoft JHengHei","微軟正黑體",MingLiU,"細明體"}input,button,select,textarea{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif,"Meiryo UI","MS UI Gothic","MS PGothic","ＭＳ Ｐゴシック","MS Gothic","ＭＳ ゴシック","Microsoft JHengHei UI","Microsoft JHengHei","微軟正黑體",MingLiU,"細明體"}.navbar-search .search-query{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif,"Meiryo UI","MS UI Gothic","MS PGothic","ＭＳ Ｐゴシック","MS Gothic","ＭＳ ゴシック","Microsoft JHengHei UI","Microsoft JHengHei","微軟正黑體",MingLiU,"細明體"}.temp{display:none}.text-left{text-align:left}.text-center{text-align:center}.modal{overflow:hidden}.modal form{margin:0}.nav-admin{margin-top:15px}.select-tall{height:100px}.table tr.vmiddle td{vertical-align:middle}.table th.text-center,.table td.text-center{text-align:center}.table th.td-mini,.table td.td-mini{width:30px}.table th.td-small,.table td.td-small{width:100px}.table td.break-word{word-wrap:break-word}.row-after-table .btn-toolbar{margin-top:0}.row-after-table .pagination{margin-top:0}@media (max-width: 767px){.modal.fade.in{ top:50%}}#error-modal.modal{z-index:1500}.typeahead{z-index:2000}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Meiryo UI", "MS UI Gothic", "MS PGothic", "ＭＳ Ｐゴシック", "MS Gothic", "ＭＳ ゴシック", "Microsoft JHengHei UI", "Microsoft JHengHei", "微軟正黑體", MingLiU, "細明體";
+}
+code,
+pre {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace, "Meiryo UI", "MS UI Gothic", "MS PGothic", "ＭＳ Ｐゴシック", "MS Gothic", "ＭＳ ゴシック", "Microsoft JHengHei UI", "Microsoft JHengHei", "微軟正黑體", MingLiU, "細明體";
+}
+input,
+button,
+select,
+textarea {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Meiryo UI", "MS UI Gothic", "MS PGothic", "ＭＳ Ｐゴシック", "MS Gothic", "ＭＳ ゴシック", "Microsoft JHengHei UI", "Microsoft JHengHei", "微軟正黑體", MingLiU, "細明體";
+}
+.navbar-search .search-query {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Meiryo UI", "MS UI Gothic", "MS PGothic", "ＭＳ Ｐゴシック", "MS Gothic", "ＭＳ ゴシック", "Microsoft JHengHei UI", "Microsoft JHengHei", "微軟正黑體", MingLiU, "細明體";
+}
+.temp {
+  display: none;
+}
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.modal {
+  overflow: hidden;
+}
+.modal form {
+  margin: 0;
+}
+.nav-admin {
+  margin-top: 15px;
+}
+.select-tall {
+  height: 100px;
+}
+.table tr.vmiddle input[type="checkbox"] {
+  position: relative;
+  bottom: 2px;
+}
+.table tr.vmiddle td {
+  vertical-align: middle;
+}
+.table th.text-center,
+.table td.text-center {
+  text-align: center;
+}
+.table th.td-mini,
+.table td.td-mini {
+  width: 30px;
+}
+.table th.td-small,
+.table td.td-small {
+  width: 100px;
+}
+.table td.break-word {
+  word-wrap: break-word;
+}
+.row-after-table .btn-toolbar {
+  margin-top: 0;
+}
+.row-after-table .pagination {
+  margin-top: 0;
+}
+@media (max-width: 767px) {
+  .modal.fade.in {
+    top: 50%;
+  }
+}
+#error-modal.modal {
+  z-index: 1500;
+}
+.typeahead {
+  z-index: 2000;
+}

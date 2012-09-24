@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using afung.MangaWeb3.Client.Admin.Module;
 using afung.MangaWeb3.Client.Modal;
 using afung.MangaWeb3.Common;
 using jQueryApi;
@@ -13,6 +14,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
     public class AdminCollectionAddModal : ModalBase
     {
         private static AdminCollectionAddModal instance = null;
+
+        private static AdminCollectionsModule collectionsModule = null;
 
         private bool submittingForm = false;
 
@@ -27,13 +30,15 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-collection-add-form").Submit(SubmitForm);
         }
 
-        public static void ShowDialog()
+        public static void ShowDialog(AdminCollectionsModule collectionsModule)
         {
             if (instance == null)
             {
                 instance = new AdminCollectionAddModal();
             }
+
             instance.InternalShow();
+            AdminCollectionAddModal.collectionsModule = collectionsModule;
         }
 
         public void InternalShow()
@@ -79,6 +84,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             {
                 case 0:
                     Hide();
+                    collectionsModule.Refresh();
                     break;
                 case 1:
                     ErrorModal.ShowError(Strings.Get("DuplicateCollectionName"));

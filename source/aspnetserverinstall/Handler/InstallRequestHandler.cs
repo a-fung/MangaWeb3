@@ -76,6 +76,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
             Settings.UseZip = request.zip;
             Settings.UseRar = request.rar;
             Settings.UsePdf = request.pdf;
+            Settings.AllowGuest = true;
 
             // Delete Install files
             string[] filesToDelete = 
