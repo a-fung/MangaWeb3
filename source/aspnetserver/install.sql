@@ -26,9 +26,12 @@ CREATE TABLE `manga` (
   `type` tinyint(4) NOT NULL,
   `content` text NOT NULL,
   `view` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`),
-  KEY `type` (`type`)
+  KEY `path` (`path`),
+  KEY `type` (`type`),
+  KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `meta`;

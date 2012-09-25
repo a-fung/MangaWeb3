@@ -30,6 +30,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-collections-delete-btn").Click(DeleteButtonClicked);
             jQuery.Select("#admin-collections-public-btn").Click(SetPublicButtonClicked);
             jQuery.Select("#admin-collections-private-btn").Click(SetPrivateButtonClicked);
+            jQuery.Select("#admin-collections-edit-btn").Click(EditButtonClicked);
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
             Refresh();
         }
@@ -67,8 +68,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
                 jQuery.Select(".admin-collections-users", row).Attribute("data-id", collections[i].id.ToString()).Click(UsersButtonClicked);
                 jQuery.Select(".admin-collections-name", row).Text(collections[i].name);
                 jQuery.Select(".admin-collections-path", row).Text(collections[i].path);
-                jQuery.Select(".admin-collections-public", row).Text(Strings.Get(collections[i].public_ ? "Yes" : "No"));
-                jQuery.Select(".admin-collections-autoadd", row).Text(Strings.Get(collections[i].autoadd ? "Yes" : "No"));
+                jQuery.Select(".admin-collections-public", row).Text(Strings.Get(collections[i].public_ ? "Yes" : "No")).AddClass(collections[i].public_ ? "label-success" : "");
+                jQuery.Select(".admin-collections-autoadd", row).Text(Strings.Get(collections[i].autoadd ? "Yes" : "No")).AddClass(collections[i].autoadd ? "label-success" : "");
             }
         }
 
@@ -148,6 +149,22 @@ namespace afung.MangaWeb3.Client.Admin.Module
                 request.ids = ids;
                 request.public_ = public_;
                 Request.Send(request, Refresh);
+            }
+        }
+
+        private void EditButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            int[] ids = GetSelectedIds();
+
+            if (ids.Length > 1)
+            {
+                ErrorModal.ShowError(Strings.Get("SelectSingleItem"));
+            }
+            else if (ids.Length == 1)
+            {
+                AdminCollectionEditNameModal.ShowDialog(this, ids[0]);
             }
         }
     }

@@ -106,6 +106,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Handler\AdminCollectionAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminCollectionEditNameRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsDeleteRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsGetRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsSetPublicRequestHandler.cs" />

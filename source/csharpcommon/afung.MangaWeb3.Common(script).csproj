@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="AdminCollectionAddRequest.cs" />
     <Compile Include="AdminCollectionAddResponse.cs" />
+    <Compile Include="AdminCollectionEditNameRequest.cs" />
+    <Compile Include="AdminCollectionEditNameResponse.cs" />
     <Compile Include="AdminCollectionsDeleteRequest.cs" />
     <Compile Include="AdminCollectionsGetRequest.cs" />
     <Compile Include="AdminCollectionsGetResponse.cs" />

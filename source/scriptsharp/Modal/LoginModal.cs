@@ -154,5 +154,12 @@ namespace afung.MangaWeb3.Client.Modal
             loggingIn = false;
             ErrorModal.ShowError(String.Format(Strings.Get("LoginFailed"), error));
         }
+
+        private void InternalHide()
+        {
+            jQuery.Select("#login-modal-username").Value("");
+            jQuery.Select("#login-modal-password").Value("");
+            Hide();
+        }
     }
 }

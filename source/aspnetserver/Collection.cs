@@ -19,7 +19,7 @@ namespace afung.MangaWeb3.Server
         public string Name
         {
             get;
-            private set;
+            set;
         }
 
         public string Path
@@ -76,6 +76,18 @@ namespace afung.MangaWeb3.Server
                 {
                     return FromData(resultSet[0]);
                 }
+            }
+
+            return null;
+        }
+
+        public static Collection GetById(int id)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("collection", "`id`=" + Database.Quote(id.ToString()));
+
+            if (resultSet.Length > 0)
+            {
+                return FromData(resultSet[0]);
             }
 
             return null;

@@ -50,8 +50,12 @@
                 </td>
                 <td class="break-word admin-collections-name"></td>
                 <td class="break-word admin-collections-path"></td>
-                <td class="text-center td-small admin-collections-public"></td>
-                <td class="text-center td-small admin-collections-autoadd"></td>
+                <td class="text-center td-small">
+                    <span class="label admin-collections-public"></span>
+                </td>
+                <td class="text-center td-small">
+                    <span class="label admin-collections-autoadd"></span>
+                </td>
                 <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-collections-users"></a></td>
             </tr>
         </tbody>
@@ -325,6 +329,18 @@
     </div>
     <div class="modal-footer">
         <input class="val val-Submit btn btn-primary" id="admin-collection-add-submit" type="submit" />
+    </div>
+    </form>
+</div>
+<div id="admin-collection-editname-modal" class="modal hide fade">
+    <form id="admin-collection-editname-form" class="form-inline">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-EditName"></h3>
+    </div>
+    <div class="modal-body text-center">
+        <input type="text" id="admin-collection-editname-name" />
+        <input class="val val-Submit btn btn-primary" id="admin-collection-editname-submit" type="submit" />
     </div>
     </form>
 </div>

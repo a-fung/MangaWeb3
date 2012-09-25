@@ -29,7 +29,8 @@ namespace afung.MangaWeb3.Server
                     new AdminCollectionAddRequestHandler(),
                     new AdminCollectionsGetRequestHandler(),
                     new AdminCollectionsDeleteRequestHandler(),
-                    new AdminCollectionsSetPublicRequestHandler()
+                    new AdminCollectionsSetPublicRequestHandler(),
+                    new AdminCollectionEditNameRequestHandler()
                 };
             }
 

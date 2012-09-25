@@ -12,7 +12,7 @@ class Collection
 {
     public var Id(default, null):Int;
     
-    public var Name(default, null):String;
+    public var Name(default, default):String;
     
     public var Path(default, null):String;
     
@@ -56,6 +56,18 @@ class Collection
             {
                 return FromData(resultSet[0]);
             }
+        }
+        
+        return null;
+    }
+    
+    public static function GetById(id:Int):Collection
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", "`id`=" + Database.Quote(Std.string(id)));
+        
+        if (resultSet.length > 0)
+        {
+            return FromData(resultSet[0]);
         }
         
         return null;

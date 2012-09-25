@@ -52,6 +52,7 @@
     <Content Include="Properties\afung.MangaWeb3.Client.Admin.script" />
     <Compile Include="AdminApp.cs" />
     <Compile Include="Modal\AdminCollectionAddModal.cs" />
+    <Compile Include="Modal\AdminCollectionEditNameModal.cs" />
     <Compile Include="Modal\AdminSettingsModal.cs" />
     <Compile Include="Module\AdminCollectionsModule.cs" />
     <Compile Include="Module\AdminMangasModule.cs" />
