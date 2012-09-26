@@ -1,6 +1,7 @@
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.CheckMySqlSettingRequest;
+import afung.mangaWeb3.common.UserJson;
 
 /**
  * ...
@@ -62,6 +63,19 @@ class User
         return null;
     }
     
+    public static function GetAllUsers():Array<User>
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("user");
+        var users:Array<User> = new Array<User>();
+        
+        for (result in resultSet)
+        {
+            users.push(FromData(result));
+        }
+        
+        return users;
+    }
+    
     public static function IsAdminLoggedIn(ajax:AjaxBase):Bool
     {
         var currentUser:User = GetCurrentUser(ajax);
@@ -95,5 +109,52 @@ class User
             userData.set("id", Id);
             Database.Replace("user", userData);
         }
+    }
+    
+    public function ToJson():UserJson
+    {
+        var obj:UserJson = new UserJson();
+        obj.id = Id;
+        obj.username = Username;
+        obj.admin = Admin;
+        return obj;
+    }
+    
+    public static function ToJsonArray(users:Array<User>):Array<UserJson>
+    {
+        var objs:Array<UserJson> = new Array<UserJson>();
+        for (user in users)
+        {
+            objs.push(user.ToJson());
+        }
+        
+        return objs;
+    }
+    
+    public static function DeleteUsers(ids:Array<Int>, currentUser:User):Void
+    {
+        if (currentUser != null && currentUser.Id != -1)
+        {
+            while (ids.remove(currentUser.Id))
+            {
+            }
+        }
+        
+        Database.Delete("user", Database.BuildWhereClauseOr("id", ids));
+        Database.Delete("collectionuser", Database.BuildWhereClauseOr("uid", ids));
+    }
+    
+    public static function SetAdmin(ids:Array<Int>, admin:Bool, currentUser:User):Void
+    {
+        if (currentUser != null && currentUser.Id != -1)
+        {
+            while (ids.remove(currentUser.Id))
+            {
+            }
+        }
+        
+        var data:Hash<Dynamic> = new Hash<Dynamic>();
+        data.set("admin", admin ? 1 : 0);
+        Database.Update("user", data, Database.BuildWhereClauseOr("id", ids));
     }
 }

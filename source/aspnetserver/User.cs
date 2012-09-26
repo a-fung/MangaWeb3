@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using afung.MangaWeb3.Common;
 
 namespace afung.MangaWeb3.Server
 {
@@ -77,6 +78,19 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        public static User[] GetAllUsers()
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("user");
+            List<User> users = new List<User>();
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                users.Add(FromData(result));
+            }
+
+            return users.ToArray();
+        }
+
         public static bool IsAdminLoggedIn(AjaxBase ajax)
         {
             User currentUser = GetCurrentUser(ajax);
@@ -110,6 +124,59 @@ namespace afung.MangaWeb3.Server
                 userData.Add("id", Id);
                 Database.Replace("user", userData);
             }
+        }
+
+        public UserJson ToJson()
+        {
+            UserJson obj = new UserJson();
+            obj.id = Id;
+            obj.username = Username;
+            obj.admin = Admin;
+            return obj;
+        }
+
+        public static UserJson[] ToJsonArray(User[] users)
+        {
+            List<UserJson> objs = new List<UserJson>();
+            foreach (User user in users)
+            {
+                objs.Add(user.ToJson());
+            }
+
+            return objs.ToArray();
+        }
+
+        public static void DeleteUsers(int[] ids, User currentUser)
+        {
+            if (currentUser != null && currentUser.Id != -1)
+            {
+                List<int> newIds = new List<int>(ids);
+                while (newIds.Remove(currentUser.Id))
+                {
+                }
+
+                ids = newIds.ToArray();
+            }
+
+            Database.Delete("user", Database.BuildWhereClauseOr("id", ids));
+            Database.Delete("collectionuser", Database.BuildWhereClauseOr("uid", ids));
+        }
+
+        public static void SetAdmin(int[] ids, bool admin, User currentUser)
+        {
+            if (currentUser != null && currentUser.Id != -1)
+            {
+                List<int> newIds = new List<int>(ids);
+                while (newIds.Remove(currentUser.Id))
+                {
+                }
+
+                ids = newIds.ToArray();
+            }
+
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add("admin", admin ? 1 : 0);
+            Database.Update("user", data, Database.BuildWhereClauseOr("id", ids));
         }
     }
 }

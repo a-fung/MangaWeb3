@@ -112,6 +112,10 @@
     <Compile Include="Handler\AdminCollectionsSetPublicRequestHandler.cs" />
     <Compile Include="Handler\AdminSettingsGetRequestHandler.cs" />
     <Compile Include="Handler\AdminSettingsSetRequestHandler.cs" />
+    <Compile Include="Handler\AdminUserAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminUsersDeleteRequestHandler.cs" />
+    <Compile Include="Handler\AdminUsersGetRequestHandler.cs" />
+    <Compile Include="Handler\AdminUsersSetAdminRequestHandler.cs" />
     <Compile Include="Handler\HandlerBase.cs" />
     <Compile Include="Handler\LoginRequestHandler.cs" />
     <Compile Include="ProcessLauncher.cs" />

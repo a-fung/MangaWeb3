@@ -62,11 +62,12 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         {
             e.PreventDefault();
             string name = jQuery.Select("#admin-collection-editname-name").GetValue();
-            if (name != "")
+            if (name != "" && !submittingForm)
             {
                 AdminCollectionEditNameRequest request = new AdminCollectionEditNameRequest();
                 request.id = collectionId;
                 request.name = name;
+                submittingForm = true;
 
                 Request.Send(request, SubmitSuccess, SubmitFailure);
             }

@@ -55,9 +55,16 @@
     <Compile Include="AdminSettingsGetRequest.cs" />
     <Compile Include="AdminSettingsGetResponse.cs" />
     <Compile Include="AdminSettingsSetRequest.cs" />
+    <Compile Include="AdminUserAddRequest.cs" />
+    <Compile Include="AdminUserAddResponse.cs" />
+    <Compile Include="AdminUsersDeleteRequest.cs" />
+    <Compile Include="AdminUsersGetRequest.cs" />
+    <Compile Include="AdminUsersGetResponse.cs" />
+    <Compile Include="AdminUsersSetAdminRequest.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="UserJson.cs" />
     <Content Include="Properties\afung.MangaWeb3.Common.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Common.script" />
     <Compile Include="CheckMySqlSettingRequest.cs" />

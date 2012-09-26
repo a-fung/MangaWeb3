@@ -216,7 +216,9 @@
                     <input type="checkbox" class="admin-users-checkbox" />
                 </td>
                 <td class="break-word admin-users-username"></td>
-                <td class="text-center td-small admin-users-administrator"></td>
+                <td class="text-center td-small">
+                    <span class="label admin-users-administrator"></span>
+                </td>
                 <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-users-collections"></a></td>
             </tr>
         </tbody>
@@ -341,6 +343,44 @@
     <div class="modal-body text-center">
         <input type="text" id="admin-collection-editname-name" />
         <input class="val val-Submit btn btn-primary" id="admin-collection-editname-submit" type="submit" />
+    </div>
+    </form>
+</div>
+<div id="admin-user-add-modal" class="modal hide fade">
+    <form id="admin-user-add-form" class="form-horizontal">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-AddUser"></h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="msg msg-UserName control-label" for="admin-user-add-name"></label>
+            <div class="controls">
+                <input type="text" id="admin-user-add-name" class="plhdr plhdr-AlphabetsDigitsOnly" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-Password control-label" for="admin-user-add-password"></label>
+            <div class="controls">
+                <input type="password" id="admin-user-add-password" class="plhdr plhdr-AtLeastEightCharacters" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-ConfirmPassword control-label" for="admin-user-add-password2"></label>
+            <div class="controls">
+                <input type="password" id="admin-user-add-password2" class="plhdr plhdr-EnterPasswordAgain" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-Administrator control-label" for="admin-user-add-administrator"></label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" id="admin-user-add-administrator" /></label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Submit btn btn-primary" id="admin-user-add-submit" type="submit" />
     </div>
     </form>
 </div>

@@ -182,7 +182,7 @@ class Database
 
         for (value in values)
         {
-            clauseBuilder.add(" OR `" + field + "`=" + Quote(value.ToString()));
+            clauseBuilder.add(" OR `" + field + "`=" + Quote(Std.string(value)));
         }
 
         return "(" + clauseBuilder.toString().substr(4) + ")";
