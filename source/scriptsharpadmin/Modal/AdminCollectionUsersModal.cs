@@ -18,11 +18,17 @@ namespace afung.MangaWeb3.Client.Admin.Modal
 
         private int cid;
 
+        private string collectionName;
+
+        private string[] usernames;
+
         private Pagination pagination;
 
         private CollectionUserJson[] data;
 
         private int currentPage;
+
+        private bool submittingForm;
 
         private AdminCollectionUsersModal()
             : base("admin", "admin-collection-users-modal")
@@ -32,7 +38,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         protected override void Initialize()
         {
             pagination = new Pagination(jQuery.Select("#admin-collection-users-pagination"), ChangePage, GetTotalPage, "right");
-            Refresh();
+            jQuery.Select("#admin-collection-users-add-submit").Click(SubmitAddForm);
+            jQuery.Select("#admin-collection-users-form").Submit(SubmitAddForm);
         }
 
         private int GetTotalPage()
@@ -77,8 +84,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminCollectionsUsersGetResponse response)
         {
-            jQuery.Select("#admin-collection-users-name").Text(response.name);
-            ((jQueryBootstrap)jQuery.Select("admin-collection-users-add-user")).Typeahead(new Dictionary<string, object>("source", response.names));
+            jQuery.Select("#admin-collection-users-name").Text(collectionName = response.name);
+            ((jQueryBootstrap)jQuery.Select("#admin-collection-users-add-user").Value("")).Typeahead(new Dictionary<string, object>("source", usernames = response.names));
 
             data = response.data;
             ChangePage(1);
@@ -96,6 +103,37 @@ namespace afung.MangaWeb3.Client.Admin.Modal
                 jQuery.Select(".admin-collection-users-username", row).Text(data[i].username);
                 jQuery.Select(".admin-collection-users-access", row).Text(Strings.Get(data[i].access ? "Yes" : "No")).AddClass(data[i].access ? "label-success" : "");
             }
+            Show();
+        }
+
+        private void SubmitAddForm(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            string username = jQuery.Select("#admin-collection-users-add-user").GetValue();
+            if (usernames.Contains(username) && !submittingForm)
+            {
+                submittingForm = true;
+
+                AdminCollectionUserAddRequest request = new AdminCollectionUserAddRequest();
+                request.username = username;
+                request.collectionName = collectionName;
+                request.access = jQuery.Select("#admin-collection-users-add-access").GetValue() == "true";
+
+                Request.Send(request, SubmitAddFormSuccess, SubmitAddFormFailure);
+            }
+        }
+
+        private void SubmitAddFormSuccess(JsonResponse response)
+        {
+            submittingForm = false;
+            Refresh();
+        }
+
+        private void SubmitAddFormFailure(Exception error)
+        {
+            submittingForm = false;
+            ErrorModal.ShowError(error.ToString());
         }
     }
 }

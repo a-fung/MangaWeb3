@@ -51,6 +51,50 @@ namespace afung.MangaWeb3.Server
             return cu;
         }
 
+        public static CollectionUser[] GetByCollection(Collection collection)
+        {
+            if (collection != null && collection.Id != -1)
+            {
+                return GetMultiple("`cid`=" + Database.Quote(collection.Id.ToString()));
+            }
+
+            return new CollectionUser[] { };
+        }
+
+        public static CollectionUser[] GetByUser(User user)
+        {
+            if (user != null && user.Id != -1)
+            {
+                return GetMultiple("`uid`=" + Database.Quote(user.Id.ToString()));
+            }
+
+            return new CollectionUser[] { };
+        }
+
+        private static CollectionUser[] GetMultiple(string where)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("collectionuser", where);
+            List<CollectionUser> cus = new List<CollectionUser>();
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                cus.Add(FromData(result));
+            }
+
+            return cus.ToArray();
+        }
+
+        public static CollectionUser Get(Collection collection, User user)
+        {
+            CollectionUser[] cus = GetMultiple("`cid`=" + Database.Quote(collection.Id.ToString()) + " AND `uid`=" + Database.Quote(user.Id.ToString()));
+            if (cus.Length > 0)
+            {
+                return cus[0];
+            }
+
+            return null;
+        }
+
         public void Save()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();

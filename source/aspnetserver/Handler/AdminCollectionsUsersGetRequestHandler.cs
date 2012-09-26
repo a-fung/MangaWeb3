@@ -34,6 +34,24 @@ namespace afung.MangaWeb3.Server.Handler
                 }
 
                 response.name = collection.Name;
+                response.data = CollectionUser.ToJsonArray(CollectionUser.GetByCollection(collection));
+
+                List<string> newNames = new List<string>();
+                List<string> exNames = new List<string>();
+                foreach (CollectionUserJson cu in response.data)
+                {
+                    exNames.Add(cu.username);
+                }
+
+                foreach (User user in User.GetAllUsers())
+                {
+                    if (!exNames.Contains(user.Username))
+                    {
+                        newNames.Add(user.Username);
+                    }
+                }
+
+                response.names = newNames.ToArray();
             }
             else if (request.t == 1)
             {
@@ -45,6 +63,24 @@ namespace afung.MangaWeb3.Server.Handler
                 }
 
                 response.name = user.Username;
+                response.data = CollectionUser.ToJsonArray(CollectionUser.GetByUser(user));
+
+                List<string> newNames = new List<string>();
+                List<string> exNames = new List<string>();
+                foreach (CollectionUserJson cu in response.data)
+                {
+                    exNames.Add(cu.collectionName);
+                }
+
+                foreach (Collection collection in Collection.GetAllCollections())
+                {
+                    if (!exNames.Contains(collection.Name))
+                    {
+                        newNames.Add(collection.Name);
+                    }
+                }
+
+                response.names = newNames.ToArray();
             }
             else
             {

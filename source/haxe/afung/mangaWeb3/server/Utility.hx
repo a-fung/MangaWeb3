@@ -31,4 +31,17 @@ class Utility
 	{
 		return untyped __call__("md5", input);
 	}
+    
+    public static function ArrayContains(array:Array<Dynamic>, value:Dynamic):Bool
+    {
+        for (e in array)
+        {
+            if (e == value)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

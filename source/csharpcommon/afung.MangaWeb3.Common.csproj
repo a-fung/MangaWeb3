@@ -41,6 +41,7 @@
     <Compile Include="AdminCollectionsSetPublicRequest.cs" />
     <Compile Include="AdminCollectionsUsersGetRequest.cs" />
     <Compile Include="AdminCollectionsUsersGetResponse.cs" />
+    <Compile Include="AdminCollectionUserAddRequest.cs" />
     <Compile Include="AdminSettingsGetRequest.cs" />
     <Compile Include="AdminSettingsGetResponse.cs" />
     <Compile Include="AdminSettingsSetRequest.cs" />
