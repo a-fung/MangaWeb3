@@ -19,6 +19,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
         private int currentPage;
         private Pagination pagination;
+        private string currentUserName;
 
         public AdminUsersModule()
             : base("admin-users-module")
@@ -27,6 +28,10 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
         protected override void InnerInitialize()
         {
+            LoginModal.GetUserName(delegate(LoginResponse response)
+            {
+                currentUserName = response.username;
+            });
             jQuery.Select("#admin-users-add-btn").Click(AddButtonClicked);
             jQuery.Select("#admin-users-delete-btn").Click(DeleteButtonClicked);
             jQuery.Select("#admin-users-setasadmin-btn").Click(SetAsAdminButtonClicked);
@@ -43,6 +48,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
             {
                 jQueryObject row = Template.Get("admin", "admin-users-trow", true).AppendTo(jQuery.Select("#admin-users-tbody"));
                 jQuery.Select(".admin-users-checkbox", row).Value(users[i].id.ToString());
+                if (currentUserName == users[i].username)
+                {
+                    jQuery.Select(".admin-users-checkbox", row).Attribute("disabled", "disabled");
+                }
+
                 jQuery.Select(".admin-users-collections", row).Attribute("data-id", users[i].id.ToString()).Click(CollectionsButtonClicked);
                 jQuery.Select(".admin-users-username", row).Text(users[i].username);
                 jQuery.Select(".admin-users-administrator", row).Text(Strings.Get(users[i].admin ? "Yes" : "No")).AddClass(users[i].admin ? "label-info" : "");

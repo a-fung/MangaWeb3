@@ -15,4 +15,10 @@ public abstract class jQueryBootstrap : jQueryObject
 
     [ScriptName("modal")]
     public abstract jQueryObject Modal(object options);
+
+    [ScriptName("typeahead")]
+    public abstract jQueryObject Typeahead();
+
+    [ScriptName("typeahead")]
+    public abstract jQueryObject Typeahead(object options);
 }

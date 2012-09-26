@@ -52,6 +52,8 @@
     <Compile Include="AdminCollectionsGetRequest.cs" />
     <Compile Include="AdminCollectionsGetResponse.cs" />
     <Compile Include="AdminCollectionsSetPublicRequest.cs" />
+    <Compile Include="AdminCollectionsUsersGetRequest.cs" />
+    <Compile Include="AdminCollectionsUsersGetResponse.cs" />
     <Compile Include="AdminSettingsGetRequest.cs" />
     <Compile Include="AdminSettingsGetResponse.cs" />
     <Compile Include="AdminSettingsSetRequest.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="AdminUsersGetResponse.cs" />
     <Compile Include="AdminUsersSetAdminRequest.cs" />
     <Compile Include="CollectionJson.cs" />
+    <Compile Include="CollectionUserJson.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
     <Compile Include="UserJson.cs" />

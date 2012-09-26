@@ -78,6 +78,18 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        public static User GetById(int id)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("user", "`id`=" + Database.Quote(id.ToString()));
+
+            if (resultSet.Length > 0)
+            {
+                return FromData(resultSet[0]);
+            }
+
+            return null;
+        }
+
         public static User[] GetAllUsers()
         {
             Dictionary<string, object>[] resultSet = Database.Select("user");

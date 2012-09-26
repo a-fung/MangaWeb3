@@ -10,7 +10,7 @@ import afung.mangaWeb3.common.UserJson;
 
 class User 
 {
-    private var Id(default, null):Int;
+    public var Id(default, null):Int;
     
     public var Username(default, null):String;
     
@@ -58,6 +58,18 @@ class User
             {
                 return FromData(resultSet[0]);
             }
+        }
+        
+        return null;
+    }
+    
+    public static function GetById(id:Int):User
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("user", "`id`=" + Database.Quote(Std.string(id)));
+        
+        if (resultSet.length > 0)
+        {
+            return FromData(resultSet[0]);
         }
         
         return null;

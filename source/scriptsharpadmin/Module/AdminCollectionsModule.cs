@@ -76,6 +76,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void UsersButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
+            string id = jQuery.FromElement(e.Target).GetAttribute("data-id");
+            if (!String.IsNullOrEmpty(id))
+            {
+                AdminCollectionUsersModal.ShowDialog(int.Parse(id, 10));
+            }
         }
 
         private int GetTotalPage()
