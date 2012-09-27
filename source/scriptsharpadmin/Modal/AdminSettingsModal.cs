@@ -25,6 +25,11 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-settings-form").Submit(SubmitForm);
         }
 
+        protected override void OnTransitionEnd()
+        {
+            jQuery.Select("#admin-settings-guest").Focus();
+        }
+
         public static void ShowDialog()
         {
             if (instance == null)
@@ -44,6 +49,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminSettingsGetResponse response)
         {
+            jQuery.Select("#admin-settings-guest").Focus();
+
             if (response.guest)
             {
                 jQuery.Select("#admin-settings-guest").Attribute("checked", "checked");

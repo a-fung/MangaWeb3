@@ -121,4 +121,23 @@ class CollectionUser
         
         return objs;
     }
+    
+    public static function DeleteRelations(t:Int, id:Int, ids:Array<Int>):Void
+    {
+        var primaryId:String = t == 0 ? "cid" : "uid";
+        var secondaryId:String = t == 0 ? "uid" : "cid";
+
+        Database.Delete("collectionuser", "`" + primaryId + "`=" + Database.Quote(Std.string(id)) + " AND " + Database.BuildWhereClauseOr(secondaryId, ids));
+    }
+    
+    public static function SetRelationsAccess(t:Int, id:Int, ids:Array<Int>, access:Bool):Void
+    {
+        var data:Hash<Dynamic> = new Hash<Dynamic>();
+        data.set("access", access ? 1 : 0);
+        
+        var primaryId:String = t == 0 ? "cid" : "uid";
+        var secondaryId:String = t == 0 ? "uid" : "cid";
+
+        Database.Update("collectionuser", data, "`" + primaryId + "`=" + Database.Quote(Std.string(id)) + " AND " + Database.BuildWhereClauseOr(secondaryId, ids));
+    }
 }

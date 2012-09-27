@@ -31,6 +31,11 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-collection-editname-form").Submit(SubmitForm);
         }
 
+        protected override void OnTransitionEnd()
+        {
+            jQuery.Select("#admin-collection-editname-name").Focus();
+        }
+
         public static void ShowDialog(AdminCollectionsModule collectionsModule, int id)
         {
             if (instance == null)
@@ -55,7 +60,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private void GetNameSuccess(AdminCollectionEditNameResponse response)
         {
             Show();
-            jQuery.Select("#admin-collection-editname-name").Value(response.name);
+            jQuery.Select("#admin-collection-editname-name").Value(response.name).Focus();
         }
 
         private void SubmitForm(jQueryEvent e)

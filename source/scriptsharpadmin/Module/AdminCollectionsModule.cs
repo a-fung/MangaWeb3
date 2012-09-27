@@ -95,17 +95,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
         private int[] GetSelectedIds()
         {
-            int[] ids = { };
-            jQuery.Select(".admin-collections-checkbox:checked").Each(delegate(int index, Element element)
-            {
-                string id = jQuery.FromElement(element).GetValue();
-                if (!String.IsNullOrEmpty(id))
-                {
-                    ids[ids.Length] = int.Parse(id, 10);
-                }
-            });
-
-            return ids;
+            return Utility.GetSelectedCheckboxIds("admin-collections-checkbox");
         }
 
         private void DeleteButtonClicked(jQueryEvent e)

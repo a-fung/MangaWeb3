@@ -30,6 +30,11 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-user-add-form").Submit(SubmitForm);
         }
 
+        protected override void OnTransitionEnd()
+        {
+            jQuery.Select("#admin-user-add-name").Focus();
+        }
+
         public static void ShowDialog(AdminUsersModule usersModule)
         {
             if (instance == null)
@@ -45,7 +50,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         {
             Show();
 
-            jQuery.Select("#admin-user-add-name").Value("");
+            jQuery.Select("#admin-user-add-name").Value("").Focus();
             jQuery.Select("#admin-user-add-password").Value("");
             jQuery.Select("#admin-user-add-password2").Value("");
             jQuery.Select("#admin-user-add-administrator").RemoveAttr("checked");

@@ -16,9 +16,21 @@ namespace afung.MangaWeb3.Client.Modal
             attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select("body"));
 
             Initialize();
+
+            attachedObject.Bind("webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd", delegate(jQueryEvent e)
+            {
+                if (e.Target == attachedObject.GetElement(0))
+                {
+                    OnTransitionEnd();
+                }
+            });
         }
 
         protected abstract void Initialize();
+
+        protected virtual void OnTransitionEnd()
+        {
+        }
 
         protected void Show()
         {

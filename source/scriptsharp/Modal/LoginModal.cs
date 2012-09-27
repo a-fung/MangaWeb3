@@ -32,6 +32,11 @@ namespace afung.MangaWeb3.Client.Modal
             jQuery.Select("#login-modal-cancel").Click(CancelButtonClicked);
         }
 
+        protected override void OnTransitionEnd()
+        {
+            jQuery.Select("#login-modal-username").Focus();
+        }
+
         [AlternateSignature]
         public extern static void GetUserName(Action<LoginResponse> successCallback);
         [AlternateSignature]
@@ -91,6 +96,7 @@ namespace afung.MangaWeb3.Client.Modal
         public void InternalPrompt()
         {
             ShowStatic();
+            jQuery.Select("#login-modal-username").Focus();
         }
 
         private void SubmitLogin(jQueryEvent e)
@@ -124,7 +130,7 @@ namespace afung.MangaWeb3.Client.Modal
                 return;
             }
 
-            Hide();
+            InternalHide();
             if (!Script.IsNullOrUndefined(failureCallback))
             {
                 failureCallback(new Exception(Strings.Get("LoginCancelled")));
@@ -144,7 +150,7 @@ namespace afung.MangaWeb3.Client.Modal
             }
             else
             {
-                Hide();
+                InternalHide();
                 successCallback(response);
             }
         }

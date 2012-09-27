@@ -14,6 +14,8 @@ namespace afung.MangaWeb3.Client
         public static ServerType ServerType;
 
         public static int ElementsPerPage = 20;
+
+        public static int ModalElementsPerPage = 7;
     }
 
     /// <summary>

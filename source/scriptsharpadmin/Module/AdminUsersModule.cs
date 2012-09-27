@@ -88,6 +88,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void CollectionsButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
+            string id = jQuery.FromElement(e.Target).GetAttribute("data-id");
+            if (!String.IsNullOrEmpty(id))
+            {
+                AdminUserCollectionsModal.ShowDialog(int.Parse(id, 10));
+            }
         }
 
         private void AddButtonClicked(jQueryEvent e)
@@ -122,17 +127,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
         private int[] GetSelectedIds()
         {
-            int[] ids = { };
-            jQuery.Select(".admin-users-checkbox:checked").Each(delegate(int index, Element element)
-            {
-                string id = jQuery.FromElement(element).GetValue();
-                if (!String.IsNullOrEmpty(id))
-                {
-                    ids[ids.Length] = int.Parse(id, 10);
-                }
-            });
-
-            return ids;
+            return Utility.GetSelectedCheckboxIds("admin-users-checkbox");
         }
 
         private void SetAsAdminButtonClicked(jQueryEvent e)

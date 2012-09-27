@@ -133,5 +133,24 @@ namespace afung.MangaWeb3.Server
 
             return objs.ToArray();
         }
+
+        public static void DeleteRelations(int t, int id, int[] ids)
+        {
+            string primaryId = t == 0 ? "cid" : "uid";
+            string secondaryId = t == 0 ? "uid" : "cid";
+
+            Database.Delete("collectionuser", "`" + primaryId + "`=" + Database.Quote(id.ToString()) + " AND " + Database.BuildWhereClauseOr(secondaryId, ids));
+        }
+
+        public static void SetRelationsAcess(int t, int id, int[] ids, bool access)
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add("access", access ? 1 : 0);
+
+            string primaryId = t == 0 ? "cid" : "uid";
+            string secondaryId = t == 0 ? "uid" : "cid";
+
+            Database.Update("collectionuser", data, "`" + primaryId + "`=" + Database.Quote(id.ToString()) + " AND " + Database.BuildWhereClauseOr(secondaryId, ids));
+        }
     }
 }

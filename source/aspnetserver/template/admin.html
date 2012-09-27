@@ -443,3 +443,62 @@
         </form>
     </div>
 </div>
+<div id="admin-user-collections-modal" class="modal hide fade">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 id="admin-user-collections-name"></h3>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="msg msg-Collection"></th>
+                    <th class="msg msg-Access text-center"></th>
+                </tr>
+            </thead>
+            <tbody id="admin-user-collections-tbody">
+                <tr class="vmiddle" id="admin-user-collections-trow">
+                    <td class="text-center td-mini">
+                        <input type="checkbox" class="admin-user-collections-checkbox" />
+                    </td>
+                    <td class="break-word admin-user-collections-collection"></td>
+                    <td class="text-center td-small">
+                        <span class="label admin-user-collections-access"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn-group dropup pull-left">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="msg msg-ActionOnSelected"></span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="admin-user-collections-delete-btn">
+                    <i class="icon-trash"></i>
+                    <span class="msg msg-Delete"></span>
+                </a></li>
+                <li><a href="#" id="admin-user-collections-allow-btn">
+                    <i class="icon-ok-circle"></i>
+                    <span class="msg msg-AllowAccess"></span>
+                </a></li>
+                <li><a href="#" id="admin-user-collections-deny-btn">
+                    <i class="icon-ban-circle"></i>
+                    <span class="msg msg-DenyAccess"></span>
+                </a></li>
+            </ul>
+        </div>
+        <span id="admin-user-collections-pagination"></span>
+    </div>
+    <div class="modal-footer text-left">
+        <form class="form-inline" id="admin-user-collections-form">
+        <input type="text" id="admin-user-collections-add-collection" class="plhdr plhdr-Collection" />
+        <select id="admin-user-collections-add-access" class="input-medium">
+            <option value="true" class="msg msg-AllowAccess"></option>
+            <option value="false" class="msg msg-DenyAccess"></option>
+        </select>
+        <input class="val val-Add btn btn-primary" id="admin-user-collections-add-submit" type="submit" />
+        </form>
+    </div>
+</div>

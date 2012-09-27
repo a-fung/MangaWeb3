@@ -30,6 +30,11 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-collection-add-form").Submit(SubmitForm);
         }
 
+        protected override void OnTransitionEnd()
+        {
+            jQuery.Select("#admin-collection-add-name").Focus();
+        }
+
         public static void ShowDialog(AdminCollectionsModule collectionsModule)
         {
             if (instance == null)
@@ -45,7 +50,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         {
             Show();
 
-            jQuery.Select("#admin-collection-add-name").Value("");
+            jQuery.Select("#admin-collection-add-name").Value("").Focus();
             jQuery.Select("#admin-collection-add-path").Value("");
             jQuery.Select("#admin-collection-add-public").Attribute("checked", "checked");
             jQuery.Select("#admin-collection-add-autoadd").Attribute("checked", "checked");

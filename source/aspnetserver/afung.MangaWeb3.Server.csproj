@@ -111,6 +111,8 @@
     <Compile Include="Handler\AdminCollectionsDeleteRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsGetRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsSetPublicRequestHandler.cs" />
+    <Compile Include="Handler\AdminCollectionsUsersAccessRequestHandler.cs" />
+    <Compile Include="Handler\AdminCollectionsUsersDeleteRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsUsersGetRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionUserAddRequestHandler.cs" />
     <Compile Include="Handler\AdminSettingsGetRequestHandler.cs" />

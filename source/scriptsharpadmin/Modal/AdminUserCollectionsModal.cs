@@ -1,4 +1,4 @@
-// AdminCollectionUsersModal.cs
+// AdminUserCollectionsModal.cs
 //
 
 using System;
@@ -13,15 +13,15 @@ using jQueryApi;
 
 namespace afung.MangaWeb3.Client.Admin.Modal
 {
-    public class AdminCollectionUsersModal : ModalBase
+    public class AdminUserCollectionsModal : ModalBase
     {
-        private static AdminCollectionUsersModal instance = null;
+        private static AdminUserCollectionsModal instance = null;
 
-        private int cid;
+        private int uid;
 
-        private string collectionName;
+        private string username;
 
-        private string[] usernames;
+        private string[] collectionNames;
 
         private Pagination pagination;
 
@@ -31,19 +31,19 @@ namespace afung.MangaWeb3.Client.Admin.Modal
 
         private bool submittingForm;
 
-        private AdminCollectionUsersModal()
-            : base("admin", "admin-collection-users-modal")
+        private AdminUserCollectionsModal()
+            : base("admin", "admin-user-collections-modal")
         {
         }
 
         protected override void Initialize()
         {
-            pagination = new Pagination(jQuery.Select("#admin-collection-users-pagination"), ChangePage, GetTotalPage, "right");
-            jQuery.Select("#admin-collection-users-add-submit").Click(SubmitAddForm);
-            jQuery.Select("#admin-collection-users-form").Submit(SubmitAddForm);
-            jQuery.Select("#admin-collection-users-delete-btn").Click(DeleteButtonClicked);
-            jQuery.Select("#admin-collection-users-allow-btn").Click(AllowButtonClicked);
-            jQuery.Select("#admin-collection-users-deny-btn").Click(DenyButtonClicked);
+            pagination = new Pagination(jQuery.Select("#admin-user-collections-pagination"), ChangePage, GetTotalPage, "right");
+            jQuery.Select("#admin-user-collections-form").Submit(SubmitAddForm);
+            jQuery.Select("#admin-user-collections-add-submit").Click(SubmitAddForm);
+            jQuery.Select("#admin-user-collections-delete-btn").Click(DeleteButtonClicked);
+            jQuery.Select("#admin-user-collections-allow-btn").Click(AllowButtonClicked);
+            jQuery.Select("#admin-user-collections-deny-btn").Click(DenyButtonClicked);
         }
 
         private int GetTotalPage()
@@ -56,20 +56,20 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             return Math.Ceil(data.Length / Environment.ModalElementsPerPage);
         }
 
-        public static void ShowDialog(int cid)
+        public static void ShowDialog(int uid)
         {
             if (instance == null)
             {
-                instance = new AdminCollectionUsersModal();
+                instance = new AdminUserCollectionsModal();
             }
 
-            instance.InternalShow(cid);
+            instance.InternalShow(uid);
         }
 
-        public void InternalShow(int cid)
+        public void InternalShow(int uid)
         {
             Show();
-            this.cid = cid;
+            this.uid = uid;
             Refresh();
         }
 
@@ -78,8 +78,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         public void Refresh()
         {
             AdminCollectionsUsersGetRequest request = new AdminCollectionsUsersGetRequest();
-            request.t = 0;
-            request.id = cid;
+            request.t = 1;
+            request.id = uid;
 
             Request.Send(request, GetRequestSuccess);
         }
@@ -88,8 +88,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminCollectionsUsersGetResponse response)
         {
-            jQuery.Select("#admin-collection-users-name").Text(collectionName = response.name);
-            ((BootstrapTypeahead)((jQueryBootstrap)jQuery.Select("#admin-collection-users-add-user").Value("")).Typeahead().GetDataValue("typeahead")).Source = usernames = response.names;
+            jQuery.Select("#admin-user-collections-name").Text(username = response.name);
+            ((BootstrapTypeahead)((jQueryBootstrap)jQuery.Select("#admin-user-collections-add-collection").Value("")).Typeahead().GetDataValue("typeahead")).Source = collectionNames = response.names;
 
             data = response.data;
             ChangePage(1);
@@ -99,13 +99,13 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private void ChangePage(int page)
         {
             currentPage = page;
-            jQuery.Select("#admin-collection-users-tbody").Children().Remove();
+            jQuery.Select("#admin-user-collections-tbody").Children().Remove();
             for (int i = (page - 1) * Environment.ModalElementsPerPage; i < data.Length && i < page * Environment.ModalElementsPerPage; i++)
             {
-                jQueryObject row = Template.Get("admin", "admin-collection-users-trow", true).AppendTo(jQuery.Select("#admin-collection-users-tbody"));
-                jQuery.Select(".admin-collection-users-checkbox", row).Value(data[i].uid.ToString());
-                jQuery.Select(".admin-collection-users-username", row).Text(data[i].username);
-                jQuery.Select(".admin-collection-users-access", row).Text(Strings.Get(data[i].access ? "Yes" : "No")).AddClass(data[i].access ? "label-success" : "");
+                jQueryObject row = Template.Get("admin", "admin-user-collections-trow", true).AppendTo(jQuery.Select("#admin-user-collections-tbody"));
+                jQuery.Select(".admin-user-collections-checkbox", row).Value(data[i].cid.ToString());
+                jQuery.Select(".admin-user-collections-collection", row).Text(data[i].collectionName);
+                jQuery.Select(".admin-user-collections-access", row).Text(Strings.Get(data[i].access ? "Yes" : "No")).AddClass(data[i].access ? "label-success" : "");
             }
             Show();
         }
@@ -114,15 +114,15 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         {
             e.PreventDefault();
 
-            string username = jQuery.Select("#admin-collection-users-add-user").GetValue();
-            if (usernames.Contains(username) && !submittingForm)
+            string collectionName = jQuery.Select("#admin-user-collections-add-collection").GetValue();
+            if (collectionNames.Contains(collectionName) && !submittingForm)
             {
                 submittingForm = true;
 
                 AdminCollectionUserAddRequest request = new AdminCollectionUserAddRequest();
                 request.username = username;
                 request.collectionName = collectionName;
-                request.access = jQuery.Select("#admin-collection-users-add-access").GetValue() == "true";
+                request.access = jQuery.Select("#admin-user-collections-add-access").GetValue() == "true";
 
                 Request.Send(request, SubmitAddFormSuccess, SubmitAddFormFailure);
             }
@@ -158,8 +158,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             if (ids.Length > 0)
             {
                 AdminCollectionsUsersAccessRequest request = new AdminCollectionsUsersAccessRequest();
-                request.t = 0;
-                request.id = cid;
+                request.t = 1;
+                request.id = uid;
                 request.ids = ids;
                 request.access = access;
                 Request.Send(request, Refresh);
@@ -184,8 +184,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             if (confirm && ids.Length > 0)
             {
                 AdminCollectionsUsersDeleteRequest request = new AdminCollectionsUsersDeleteRequest();
-                request.t = 0;
-                request.id = cid;
+                request.t = 1;
+                request.id = uid;
                 request.ids = ids;
                 Request.Send(request, Refresh);
             }
@@ -193,7 +193,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
 
         private int[] GetSelectedIds()
         {
-            return Utility.GetSelectedCheckboxIds("admin-collection-users-checkbox");
+            return Utility.GetSelectedCheckboxIds("admin-user-collections-checkbox");
         }
     }
 }
