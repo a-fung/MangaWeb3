@@ -54,5 +54,14 @@ namespace afung.MangaWeb3.Server
                 return null;
             }
         }
+
+        public static string CleanPath(string path)
+        {
+            foreach (char c in Path.GetInvalidPathChars())
+            {
+                path = path.Replace(new string(c, 1), string.Empty);
+            }
+            return path;
+        }
     }
 }

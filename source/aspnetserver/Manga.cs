@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using afung.MangaWeb3.Server.Provider;
 
 namespace afung.MangaWeb3.Server
 {
@@ -79,17 +80,17 @@ namespace afung.MangaWeb3.Server
         {
             string extension = Path.GetExtension(path).ToLowerInvariant();
 
-            if (Settings.UseZip && extension == ".zip")
+            if (Settings.UseZip && extension == ZipProvider.Extension && new ZipProvider().TryOpen(path))
             {
                 return 0;
             }
 
-            if (Settings.UseRar && extension == ".rar")
+            if (Settings.UseRar && extension == RarProvider.Extension && new RarProvider().TryOpen(path))
             {
                 return 1;
             }
 
-            if (Settings.UsePdf && extension == ".pdf")
+            if (Settings.UsePdf && extension == PdfProvider.Extension && new PdfProvider().TryOpen(path))
             {
                 return 2;
             }

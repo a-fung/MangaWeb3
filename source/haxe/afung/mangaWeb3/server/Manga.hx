@@ -1,5 +1,8 @@
 package afung.mangaWeb3.server;
 
+import afung.mangaWeb3.server.provider.PdfProvider;
+import afung.mangaWeb3.server.provider.RarProvider;
+import afung.mangaWeb3.server.provider.ZipProvider;
 import php.FileSystem;
 import php.io.Path;
 
@@ -45,17 +48,17 @@ class Manga
     {
         var extension:String = "." + Path.extension(path).toLowerCase();
         
-        if (Settings.UseZip && extension == ".zip")
+        if (Settings.UseZip && extension == ZipProvider.Extension && new ZipProvider().TryOpen(path))
         {
             return 0;
         }
         
-        if (Settings.UseRar && extension == ".rar")
+        if (Settings.UseRar && extension == RarProvider.Extension && new RarProvider().TryOpen(path))
         {
             return 1;
         }
         
-        if (Settings.UsePdf && extension == ".pdf")
+        if (Settings.UsePdf && extension == PdfProvider.Extension && new PdfProvider().TryOpen(path))
         {
             return 2;
         }

@@ -127,6 +127,12 @@
     <Compile Include="Manga.cs" />
     <Compile Include="ProcessLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\Constants.cs" />
+    <Compile Include="Provider\IMangaProvider.cs" />
+    <Compile Include="Provider\PdfProvider.cs" />
+    <Compile Include="Provider\RarProvider.cs" />
+    <Compile Include="Provider\SevenZipProvider.cs" />
+    <Compile Include="Provider\ZipProvider.cs" />
     <Compile Include="ServerAjax.aspx.cs">
       <DependentUpon>ServerAjax.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

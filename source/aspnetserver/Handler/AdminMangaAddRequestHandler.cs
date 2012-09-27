@@ -40,6 +40,10 @@ namespace afung.MangaWeb3.Server.Handler
             {
                 response.status = 2;
             }
+            else if (Manga.CheckMangaType(request.path) == -1)
+            {
+                response.status = 3;
+            }
             else
             {
                 response.status = 0;
