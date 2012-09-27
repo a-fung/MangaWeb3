@@ -22,3 +22,12 @@ public abstract class jQueryBootstrap : jQueryObject
     [ScriptName("typeahead")]
     public abstract jQueryObject Typeahead(object options);
 }
+
+
+[Imported]
+[IgnoreNamespace]
+public abstract class BootstrapTypeahead
+{
+    [ScriptName("source")]
+    public object[] Source;
+}

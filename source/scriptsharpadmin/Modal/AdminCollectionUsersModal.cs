@@ -85,7 +85,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private void GetRequestSuccess(AdminCollectionsUsersGetResponse response)
         {
             jQuery.Select("#admin-collection-users-name").Text(collectionName = response.name);
-            ((jQueryBootstrap)jQuery.Select("#admin-collection-users-add-user").Value("")).Typeahead(new Dictionary<string, object>("source", usernames = response.names));
+            ((BootstrapTypeahead)((jQueryBootstrap)jQuery.Select("#admin-collection-users-add-user").Value("")).Typeahead().GetDataValue("typeahead")).Source = usernames = response.names;
 
             data = response.data;
             ChangePage(1);
