@@ -28,9 +28,10 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         {
             jQuery.Select("#admin-manga-add-submit").Click(SubmitForm);
             jQuery.Select("#admin-manga-add-form").Submit(SubmitForm);
+            jQuery.Select("#admin-manga-add-browse-btn").Click(BrowseButtonClicked);
         }
 
-        protected override void OnTransitionEnd()
+        protected override void OnShown()
         {
             jQuery.Select("#admin-manga-add-path").Focus();
         }
@@ -115,6 +116,20 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             submittingForm = false;
 
             ErrorModal.ShowError(error.ToString());
+        }
+
+        private void BrowseButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            string cidString = jQuery.Select("#admin-manga-add-collection").GetValue();
+
+            if (cidString == null || cidString == "" || submittingForm)
+            {
+                return;
+            }
+
+            AdminFinderModal.ShowDialog(jQuery.Select("#admin-manga-add-path"), int.Parse(cidString, 10));
         }
     }
 }

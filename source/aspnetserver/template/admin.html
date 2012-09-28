@@ -68,7 +68,7 @@
                         <span class="msg msg-ActionOnSelected"></span>
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" id="admin-collections-action-dropdown">
                         <li><a href="#" id="admin-collections-delete-btn">
                             <i class="icon-trash"></i>
                             <span class="msg msg-Delete"></span>
@@ -154,7 +154,7 @@
                         <span class="msg msg-ActionOnSelected"></span>
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" id="admin-mangas-action-dropdown">
                         <li><a href="#" id="admin-mangas-delete-btn">
                             <i class="icon-trash"></i>
                             <span class="msg msg-Delete"></span>
@@ -231,7 +231,7 @@
                         <span class="msg msg-ActionOnSelected"></span>
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" id="admin-users-action-dropdown">
                         <li><a href="#" id="admin-users-delete-btn">
                             <i class="icon-trash"></i>
                             <span class="msg msg-Delete"></span>
@@ -311,7 +311,12 @@
         <div class="control-group">
             <label class="msg msg-Path control-label" for="admin-collection-add-path"></label>
             <div class="controls">
-                <input type="text" id="admin-collection-add-path" />
+                <div class="input-append">
+                    <input type="text" id="admin-collection-add-path" />
+                    <a href="#" class="btn" id="admin-collection-add-browse-btn">
+                        <i class="icon-folder-open"></i>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="control-group">
@@ -415,7 +420,7 @@
                 <span class="msg msg-ActionOnSelected"></span>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" id="admin-collection-users-action-dropdown">
                 <li><a href="#" id="admin-collection-users-delete-btn">
                     <i class="icon-trash"></i>
                     <span class="msg msg-Delete"></span>
@@ -474,7 +479,7 @@
                 <span class="msg msg-ActionOnSelected"></span>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" id="admin-user-collections-action-dropdown">
                 <li><a href="#" id="admin-user-collections-delete-btn">
                     <i class="icon-trash"></i>
                     <span class="msg msg-Delete"></span>
@@ -512,7 +517,12 @@
         <div class="control-group">
             <label class="msg msg-Path control-label" for="admin-manga-add-path"></label>
             <div class="controls">
+                <div class="input-append">
                 <input type="text" id="admin-manga-add-path" />
+                    <a href="#" class="btn" id="admin-manga-add-browse-btn">
+                        <i class="icon-folder-open"></i>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="control-group">
@@ -526,4 +536,15 @@
         <input class="val val-Add btn btn-primary" id="admin-manga-add-submit" type="submit" />
     </div>
     </form>
+</div>
+<div id="admin-finder-modal" class="modal hide fade">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-FileBrowser"></h3>
+    </div>
+    <div class="modal-body" id="admin-finder-body">
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="msg msg-Select btn btn-primary" id="admin-finder-select"></a>
+    </div>
 </div>

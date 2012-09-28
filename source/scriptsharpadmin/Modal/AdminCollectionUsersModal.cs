@@ -44,6 +44,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-collection-users-delete-btn").Click(DeleteButtonClicked);
             jQuery.Select("#admin-collection-users-allow-btn").Click(AllowButtonClicked);
             jQuery.Select("#admin-collection-users-deny-btn").Click(DenyButtonClicked);
+            Utility.FixDropdownTouch(jQuery.Select("#admin-collection-users-action-dropdown"));
         }
 
         private int GetTotalPage()

@@ -32,7 +32,7 @@ namespace afung.MangaWeb3.Client.Modal
             jQuery.Select("#login-modal-cancel").Click(CancelButtonClicked);
         }
 
-        protected override void OnTransitionEnd()
+        protected override void OnShown()
         {
             jQuery.Select("#login-modal-username").Focus();
         }

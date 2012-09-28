@@ -9,6 +9,7 @@ import afung.mangaWeb3.server.handler.AdminCollectionsUsersAccessRequestHandler;
 import afung.mangaWeb3.server.handler.AdminCollectionsUsersDeleteRequestHandler;
 import afung.mangaWeb3.server.handler.AdminCollectionsUsersGetRequestHandler;
 import afung.mangaWeb3.server.handler.AdminCollectionUserAddRequestHandler;
+import afung.mangaWeb3.server.handler.AdminFinderRequestHandler;
 import afung.mangaWeb3.server.handler.AdminMangaAddRequestHandler;
 import afung.mangaWeb3.server.handler.AdminSettingsGetRequestHandler;
 import afung.mangaWeb3.server.handler.AdminSettingsSetRequestHandler;
@@ -67,6 +68,7 @@ class ServerAjax extends AjaxBase
                 new AdminCollectionsUsersDeleteRequestHandler(),
                 new AdminCollectionsUsersAccessRequestHandler(),
                 new AdminMangaAddRequestHandler(),
+                new AdminFinderRequestHandler(),
             ];
         }
 

@@ -57,6 +57,8 @@
     <Compile Include="AdminCollectionsUsersGetRequest.cs" />
     <Compile Include="AdminCollectionsUsersGetResponse.cs" />
     <Compile Include="AdminCollectionUserAddRequest.cs" />
+    <Compile Include="AdminFinderRequest.cs" />
+    <Compile Include="AdminFinderResponse.cs" />
     <Compile Include="AdminMangaAddRequest.cs" />
     <Compile Include="AdminMangaAddResponse.cs" />
     <Compile Include="AdminSettingsGetRequest.cs" />

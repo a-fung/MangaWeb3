@@ -31,7 +31,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-collection-editname-form").Submit(SubmitForm);
         }
 
-        protected override void OnTransitionEnd()
+        protected override void OnShown()
         {
             jQuery.Select("#admin-collection-editname-name").Focus();
         }

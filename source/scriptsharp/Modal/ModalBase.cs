@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using jQueryApi;
 
 namespace afung.MangaWeb3.Client.Modal
@@ -17,18 +18,14 @@ namespace afung.MangaWeb3.Client.Modal
 
             Initialize();
 
-            attachedObject.Bind("webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd", delegate(jQueryEvent e)
-            {
-                if (e.Target == attachedObject.GetElement(0))
-                {
-                    OnTransitionEnd();
-                }
-            });
+            attachedObject.Bind("shown", OnShown);
         }
 
         protected abstract void Initialize();
 
-        protected virtual void OnTransitionEnd()
+        [AlternateSignature]
+        protected extern void OnShown(jQueryEvent e);
+        protected virtual void OnShown()
         {
         }
 

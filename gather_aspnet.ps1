@@ -86,7 +86,7 @@ copy source\aspnetserver\bin\*.dll $path\bin
 copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.dll $path\bin
 
 
-# pdf files
+# debug files
 if ($true) {
 copy source\aspnetserver\bin\*.pdb $path\bin
 copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.pdb $path\bin
@@ -95,5 +95,16 @@ copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.pdb $path\bin
 
 # web.config
 copy source\aspnetserver\web.config $path
+
+
+# ckfinder
+if ($true) {
+mkdir $path\ckfinder
+Copy-Item external_libraries\ckfinder_aspnet\* $path\ckfinder -recurse -force;
+
+copy source\ckfinder\config.js $path\ckfinder -force
+copy source\ckfinder\config.ascx $path\ckfinder -force
+copy external_libraries\ckfinder_aspnet\bin\Release\CKFinder.dll $path\bin -force
+}
 
 

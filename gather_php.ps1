@@ -84,3 +84,13 @@ del source\haxephp\index.php
 robocopy source\haxephp $path /E
 
 
+# ckfinder
+if ($true) {
+mkdir $path\ckfinder
+Copy-Item external_libraries\ckfinder_php\* $path\ckfinder -recurse -force;
+
+copy source\ckfinder\config.js $path\ckfinder -force
+copy source\ckfinder\config.php $path\ckfinder -force
+}
+
+

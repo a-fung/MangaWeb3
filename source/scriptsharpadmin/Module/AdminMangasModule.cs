@@ -18,6 +18,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         protected override void InnerInitialize()
         {
             jQuery.Select("#admin-mangas-add-btn").Click(AddButtonClicked);
+            Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
         }
 
         private void AddButtonClicked(jQueryEvent e)

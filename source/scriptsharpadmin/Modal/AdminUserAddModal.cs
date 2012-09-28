@@ -30,7 +30,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-user-add-form").Submit(SubmitForm);
         }
 
-        protected override void OnTransitionEnd()
+        protected override void OnShown()
         {
             jQuery.Select("#admin-user-add-name").Focus();
         }

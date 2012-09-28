@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Import\Bootstrap.cs" />
+    <Compile Include="Import\CKFinder.cs" />
     <Compile Include="Modal\ConfirmModal.cs" />
     <Compile Include="Modal\ErrorModal.cs" />
     <Compile Include="Modal\LoginModal.cs" />

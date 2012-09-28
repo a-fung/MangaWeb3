@@ -25,7 +25,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-settings-form").Submit(SubmitForm);
         }
 
-        protected override void OnTransitionEnd()
+        protected override void OnShown()
         {
             jQuery.Select("#admin-settings-guest").Focus();
         }

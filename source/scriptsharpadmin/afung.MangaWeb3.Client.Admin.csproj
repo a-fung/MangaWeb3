@@ -54,6 +54,7 @@
     <Compile Include="Modal\AdminCollectionAddModal.cs" />
     <Compile Include="Modal\AdminCollectionEditNameModal.cs" />
     <Compile Include="Modal\AdminCollectionUsersModal.cs" />
+    <Compile Include="Modal\AdminFinderModal.cs" />
     <Compile Include="Modal\AdminMangaAddModal.cs" />
     <Compile Include="Modal\AdminSettingsModal.cs" />
     <Compile Include="Modal\AdminUserAddModal.cs" />

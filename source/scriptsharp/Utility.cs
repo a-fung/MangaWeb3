@@ -24,5 +24,10 @@ namespace afung.MangaWeb3.Client
 
             return ids;
         }
+
+        public static void FixDropdownTouch(jQueryObject dropdown)
+        {
+            dropdown.Bind("touchstart", delegate(jQueryEvent e) { e.StopPropagation(); });
+        }
     }
 }

@@ -30,6 +30,19 @@ namespace afung.MangaWeb3.Server
             Set(ajax, "username", value);
         }
 
+        public static void SetFinderData(AjaxBase ajax, string token, string[][] finderData)
+        {
+            Dictionary<string, string[][]> dict = (Dictionary<string, string[][]>)Get(ajax, "finder");
+            if (dict == null)
+            {
+                dict = new Dictionary<string, string[][]>();
+            }
+
+            dict[token] = finderData;
+
+            Set(ajax, "finder", dict);
+        }
+
         private static object Get(AjaxBase ajax, string name)
         {
             return ajax.Session["afung.MangaWeb3.Server.Session." + name];

@@ -1,5 +1,7 @@
 package afung.mangaWeb3.server;
 
+import php.Lib;
+import php.NativeArray;
 import php.Session;
 
 
@@ -24,7 +26,7 @@ class SessionWrapper
         }
     }
     
-    public static function SetUserName(ajax:AjaxBase, value:String)
+    public static function SetUserName(ajax:AjaxBase, value:String):Void
     {
         if (value == null)
         {
@@ -32,6 +34,20 @@ class SessionWrapper
         }
 
         Set(ajax, "username", value);
+    }
+    
+    public static function SetFinderData(ajax:AjaxBase, token:String, finderData:NativeArray):Void
+    {
+        var array:NativeArray = Get(ajax, "finder");
+        if (array == null)
+        {
+            array = Lib.toPhpArray([]);
+        }
+        
+        var dict:Hash<NativeArray> = Lib.hashOfAssociativeArray(array);
+        dict.set(token, finderData);
+        
+        Set(ajax, "finder", Lib.associativeArrayOfHash(dict));
     }
     
     private static function Get(ajax:AjaxBase, name:String):Dynamic
