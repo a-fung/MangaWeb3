@@ -36,13 +36,17 @@ class AdminMangaAddRequestHandler extends HandlerBase
         
         var response:AdminMangaAddResponse = new AdminMangaAddResponse();
 
-        if ((request.path = Manga.CheckMangaPath(request.path)) == null)
+        if ((request.path = Manga.CheckMangaPath(request.path)) == null || !Utility.IsValidStringForDatabase(request.path))
         {
             response.status = 1;
         }
         else if (request.path.indexOf(collection.Path) != 0)
         {
             response.status = 2;
+        }
+        else if (Manga.CheckMangaType(request.path) == -1)
+        {
+            response.status = 3;
         }
         else
         {

@@ -30,12 +30,13 @@ namespace afung.MangaWeb3.Server.Handler
             }
 
             AdminCollectionAddResponse response = new AdminCollectionAddResponse();
+            request.name = Utility.Remove4PlusBytesUtf8Chars(request.name);
 
             if (!Collection.CheckNewCollectionName(request.name))
             {
                 response.status = 1;
             }
-            else if ((request.path = Collection.CheckNewCollectionPath(request.path)) == null)
+            else if ((request.path = Collection.CheckNewCollectionPath(request.path)) == null || !Utility.IsValidStringForDatabase(request.path))
             {
                 response.status = 2;
             }

@@ -11,7 +11,12 @@ class Native {
 		return class_exists($name);
 	}
 	public static function Exec($cmd) {
-		return exec($cmd, Native::$ExecOutput, Native::$ExecReturnVar);
+		$output = array();
+		$ll = exec($cmd, $output, $rtnVar);
+		Native::$ExecOutput = $output;
+		Native::$ExecReturnVar = $rtnVar;
+		unset($output, $rtnVar);
+		return $ll;
 	}
 	public static function MySqlSetCharset($charset) {
 		mysql_set_charset($charset);

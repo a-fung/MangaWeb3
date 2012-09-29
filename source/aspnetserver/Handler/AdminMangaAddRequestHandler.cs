@@ -32,7 +32,7 @@ namespace afung.MangaWeb3.Server.Handler
 
             AdminMangaAddResponse response = new AdminMangaAddResponse();
 
-            if ((request.path = Manga.CheckMangaPath(request.path)) == null)
+            if ((request.path = Manga.CheckMangaPath(request.path)) == null || !Utility.IsValidStringForDatabase(request.path))
             {
                 response.status = 1;
             }

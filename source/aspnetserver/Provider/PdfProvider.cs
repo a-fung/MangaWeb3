@@ -22,7 +22,7 @@ namespace afung.MangaWeb3.Server.Provider
             string output;
             int exitCode;
 
-            ProcessLauncher.Run(Config.PdfinfoPath, path, out output, out exitCode);
+            ProcessLauncher.Run(Config.PdfinfoPath, "\"" + path + "\"", out output, out exitCode);
 
             if (exitCode == 0)
             {

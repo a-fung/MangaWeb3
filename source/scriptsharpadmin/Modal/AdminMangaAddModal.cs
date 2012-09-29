@@ -105,6 +105,9 @@ namespace afung.MangaWeb3.Client.Admin.Modal
                 case 2:
                     ErrorModal.ShowError(Strings.Get("PathNotUnderCollection"));
                     break;
+                case 3:
+                    ErrorModal.ShowError(Strings.Get("InvalidFileType"));
+                    break;
                 default:
                     ErrorModal.ShowError(Strings.Get("UnknownError"));
                     break;

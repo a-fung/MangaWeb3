@@ -46,10 +46,6 @@ class Database
 	
 	public static function Quote(str:String):String
 	{
-		//if (Std.is(str, String))
-		//{
-		//	str = Util.RemoveNonUtf8Chars(str);
-		//}
 		return DefaultConnection().quote(str);
 	}
 	

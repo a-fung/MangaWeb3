@@ -9,9 +9,9 @@ class Constants
 {
     public static var FileExtensionsInArchive:Array<String> =
     [
-        "jpg",
-        "jpeg",
-        "png",
-        "gif",
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
     ];
 }

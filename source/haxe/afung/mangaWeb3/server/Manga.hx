@@ -1,8 +1,10 @@
 package afung.mangaWeb3.server;
 
+import afung.mangaWeb3.server.provider.IMangaProvider;
 import afung.mangaWeb3.server.provider.PdfProvider;
 import afung.mangaWeb3.server.provider.RarProvider;
 import afung.mangaWeb3.server.provider.ZipProvider;
+import php.Exception;
 import php.FileSystem;
 import php.io.Path;
 
@@ -27,9 +29,43 @@ class Manga
     
     public var Status(default, null):Int;
     
+    private var provider:IMangaProvider;
+    
+    private var Provider(default, never):IMangaProvider;
+    
+    private function get_Provider():IMangaProvider
+    {
+        if (provider == null)
+        {
+            switch(MangaType)
+            {
+                case 0:
+                    provider = new ZipProvider();
+                case 1:
+                    provider = new RarProvider();
+                case 2:
+                    provider = new PdfProvider();
+                default:
+                    throw new Exception("Invalid MangaType");
+            }
+        }
+        
+        return provider;
+    }
+    
     private function new()
     {
         Id = -1;
+    }
+    
+    public static function CreateNewManga(collection:Collection, path:String):Manga
+    {
+        var newManga:Manga = new Manga();
+        newManga.ParentCollection = collection;
+        newManga.MangaPath = path;
+        newManga.MangaType = CheckMangaType(path);
+        newManga.View = newManga.Status = 0;
+        return newManga;
     }
     
     public static function CheckMangaPath(path:String):String

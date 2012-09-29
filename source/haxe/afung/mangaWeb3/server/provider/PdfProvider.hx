@@ -22,7 +22,8 @@ class PdfProvider implements IMangaProvider
     
     private function GetNumberOfPages(path:String):Int
     {
-        var output:String = Native.Exec("pdfinfo " + path);
+        Native.Exec("pdfinfo \"" + path + "\"");
+        var output:String = Utility.JoinNativeArray(Native.ExecOutput);
         var exitCode:Int = Native.ExecReturnVar;
         
         if (exitCode == 0)

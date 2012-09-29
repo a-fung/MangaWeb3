@@ -38,6 +38,8 @@ namespace afung.MangaWeb3.Server.Handler
             }
             else
             {
+                request.name = Utility.Remove4PlusBytesUtf8Chars(request.name);
+
                 if (!Collection.CheckNewCollectionName(request.name))
                 {
                     response.status = 1;

@@ -31,7 +31,7 @@ class RarProvider implements IMangaProvider
         var rar:RarArchive = RarArchive.open(path);
         var result:Dynamic = rar;
         
-        if (result == true && !rar.isBroken())
+        if (result != false && !rar.isBroken())
         {
             var entries:Array<RarEntry> = cast Lib.toHaxeArray(rar.getEntries());
             

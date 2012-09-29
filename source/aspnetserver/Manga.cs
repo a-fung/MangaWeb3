@@ -51,6 +51,34 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        private IMangaProvider provider;
+
+        private IMangaProvider Provider
+        {
+            get
+            {
+                if (provider == null)
+                {
+                    switch (MangaType)
+                    {
+                        case 0:
+                            provider = new ZipProvider();
+                            break;
+                        case 1:
+                            provider = new RarProvider();
+                            break;
+                        case 2:
+                            provider = new PdfProvider();
+                            break;
+                        default:
+                            throw new InvalidOperationException("Invalid MangaType");
+                    }
+                }
+
+                return provider;
+            }
+        }
+
         private Manga()
         {
             Id = -1;
@@ -61,6 +89,8 @@ namespace afung.MangaWeb3.Server
             Manga newManga = new Manga();
             newManga.ParentCollection = collection;
             newManga.MangaPath = path;
+            newManga.MangaType = CheckMangaType(path);
+            newManga.View = newManga.Status = 0;
             return newManga;
         }
 
@@ -78,7 +108,7 @@ namespace afung.MangaWeb3.Server
 
         public static int CheckMangaType(string path)
         {
-            string extension = Path.GetExtension(path).ToLowerInvariant();
+            string extension = Utility.GetExtension(path).ToLowerInvariant();
 
             if (Settings.UseZip && extension == ZipProvider.Extension && new ZipProvider().TryOpen(path))
             {

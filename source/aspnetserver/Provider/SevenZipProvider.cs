@@ -29,7 +29,7 @@ namespace afung.MangaWeb3.Server.Provider
 
                     foreach (string fileName in fileNames)
                     {
-                        string extension = Path.GetExtension(Utility.CleanPath(fileName)).ToLowerInvariant();
+                        string extension = Utility.GetExtension(fileName).ToLowerInvariant();
 
                         if (Constants.FileExtensionsInArchive.Contains(extension))
                         {
