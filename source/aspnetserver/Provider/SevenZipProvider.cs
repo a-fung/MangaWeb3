@@ -25,9 +25,7 @@ namespace afung.MangaWeb3.Server.Provider
             {
                 using (SevenZipExtractor extractor = new SevenZipExtractor(path))
                 {
-                    string[] fileNames = extractor.ArchiveFileNames.ToArray();
-
-                    foreach (string fileName in fileNames)
+                    foreach (string fileName in extractor.ArchiveFileNames)
                     {
                         string extension = Utility.GetExtension(fileName).ToLowerInvariant();
 
@@ -44,6 +42,35 @@ namespace afung.MangaWeb3.Server.Provider
             }
 
             return validFile;
+        }
+
+
+        public string[] GetContent(string path)
+        {
+            List<string> content = new List<string>();
+
+            try
+            {
+                using (SevenZipExtractor extractor = new SevenZipExtractor(path))
+                {
+                    foreach (string fileName in extractor.ArchiveFileNames)
+                    {
+                        string extension = Utility.GetExtension(fileName).ToLowerInvariant();
+
+                        if (Constants.FileExtensionsInArchive.Contains(extension))
+                        {
+                            content.Add(Utility.Remove4PlusBytesUtf8Chars(fileName));
+                        }
+                    }
+                }
+
+                content.Sort((f1, f2) => Utility.StrCmpLogicalW(f1, f2));
+            }
+            catch (SevenZipException)
+            {
+            }
+
+            return content.ToArray();
         }
     }
 }

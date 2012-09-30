@@ -43,4 +43,16 @@ class PdfProvider implements IMangaProvider
     {
         return GetNumberOfPages(path) > 0;
     }
+    
+    public function GetContent(path:String):Array<String>
+    {
+        var pages:Int = GetNumberOfPages(path);
+        var content:Array<String> = new Array<String>();
+        for (p in 1...(pages + 1))
+        {
+            content.push(Std.string(p));
+        }
+        
+        return content;
+    }
 }

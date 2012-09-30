@@ -8,5 +8,7 @@ namespace afung.MangaWeb3.Server.Provider
     interface IMangaProvider
     {
         bool TryOpen(string path);
+
+        string[] GetContent(string path);
     }
 }

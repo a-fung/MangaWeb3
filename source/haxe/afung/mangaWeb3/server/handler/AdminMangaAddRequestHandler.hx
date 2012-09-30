@@ -51,6 +51,7 @@ class AdminMangaAddRequestHandler extends HandlerBase
         else
         {
             response.status = 0;
+            Manga.CreateNewManga(collection, request.path).Save();
         }
         
         ajax.ReturnJson(response);

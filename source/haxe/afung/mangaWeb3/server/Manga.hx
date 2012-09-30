@@ -7,6 +7,8 @@ import afung.mangaWeb3.server.provider.ZipProvider;
 import php.Exception;
 import php.FileSystem;
 import php.io.Path;
+import php.Lib;
+import sys.FileStat;
 
 /**
  * ...
@@ -23,7 +25,13 @@ class Manga
     
     public var MangaType(default, null):Int;
     
-    public var Content(default, null):String;
+    public var Content(default, null):Array<String>;
+    
+    public var ModifiedTime(default, null):Int;
+    
+    public var Size(default, null):Int;
+    
+    public var NumberOfPages(default, null):Int;
     
     public var View(default, null):Int;
     
@@ -31,7 +39,7 @@ class Manga
     
     private var provider:IMangaProvider;
     
-    private var Provider(default, never):IMangaProvider;
+    private var Provider(get_Provider, never):IMangaProvider;
     
     private function get_Provider():IMangaProvider
     {
@@ -64,6 +72,7 @@ class Manga
         newManga.ParentCollection = collection;
         newManga.MangaPath = path;
         newManga.MangaType = CheckMangaType(path);
+        newManga.RefreshContent();
         newManga.View = newManga.Status = 0;
         return newManga;
     }
@@ -100,5 +109,39 @@ class Manga
         }
         
         return -1;
+    }
+    
+    public function RefreshContent():Void
+    {
+        var info:FileStat = FileSystem.stat(MangaPath);
+        ModifiedTime = Math.round(info.mtime.getTime());
+        Size = info.size;
+        Content = Provider.GetContent(MangaPath);
+        NumberOfPages = Content.length;
+    }
+    
+    public function Save():Void
+    {
+        var data:Hash<Dynamic> = new Hash<Dynamic>();
+        data.set("cid", ParentCollection.Id);
+        data.set("path", MangaPath);
+        data.set("type", MangaType);
+        data.set("content", untyped __call__("json_encode", Lib.toPhpArray(Content)));
+        data.set("time", ModifiedTime);
+        data.set("size", Size);
+        data.set("numpages", NumberOfPages);
+        data.set("view", View);
+        data.set("status", Status);
+
+        if (Id == -1)
+        {
+            Database.Insert("user", data);
+            Id = Database.LastInsertId();
+        }
+        else
+        {
+            data.set("id", Id);
+            Database.Replace("user", data);
+        }
     }
 }

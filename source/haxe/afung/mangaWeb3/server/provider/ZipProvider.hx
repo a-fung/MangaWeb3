@@ -4,6 +4,8 @@ import afung.mangaWeb3.server.Settings;
 import afung.mangaWeb3.server.Utility;
 import php.Exception;
 import php.io.Path;
+import php.Lib;
+import php.NativeArray;
 import ZipArchive;
 
 /**
@@ -47,5 +49,33 @@ class ZipProvider implements IMangaProvider
         }
         
         return validFile;
+    }
+    
+    public function GetContent(path:String):Array<String>
+    {
+        var content:Array<String> = new Array<String>();
+        var zip:ZipArchive = new ZipArchive();
+        var result:Dynamic = zip.open(path);
+        
+        if (result == true)
+        {
+            for (index in 0...zip.numFiles)
+            {
+                var fileName:String = zip.getNameIndex(index);
+                var extension:String = "." + Path.extension(fileName).toLowerCase();
+                
+                if (Utility.ArrayContains(Constants.FileExtensionsInArchive, extension))
+                {
+                    content.push(Utility.Remove4PlusBytesUtf8Chars(fileName));
+                }
+            }
+            
+            zip.close();
+            var nContent:NativeArray = Lib.toPhpArray(content);
+            untyped __call__("natsort", nContent);
+            content = cast Lib.toHaxeArray(nContent);
+        }
+        
+        return content;
     }
 }

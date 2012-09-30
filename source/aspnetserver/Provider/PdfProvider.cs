@@ -41,5 +41,18 @@ namespace afung.MangaWeb3.Server.Provider
         {
             return GetNumberOfPages(path) > 0;
         }
+
+
+        public string[] GetContent(string path)
+        {
+            int pages = GetNumberOfPages(path);
+            string[] content = new string[pages];
+            for (int p = 0; p < pages; p++)
+            {
+                content[p] = (p + 1).ToString();
+            }
+
+            return content;
+        }
     }
 }

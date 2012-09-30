@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using afung.MangaWeb3.Server.Provider;
+using Newtonsoft.Json;
 
 namespace afung.MangaWeb3.Server
 {
@@ -33,7 +34,25 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
-        public string Content
+        public string[] Content
+        {
+            get;
+            private set;
+        }
+
+        public int ModifiedTime
+        {
+            get;
+            private set;
+        }
+
+        public long Size
+        {
+            get;
+            private set;
+        }
+
+        public int NumberOfPages
         {
             get;
             private set;
@@ -50,7 +69,6 @@ namespace afung.MangaWeb3.Server
             get;
             private set;
         }
-
         private IMangaProvider provider;
 
         private IMangaProvider Provider
@@ -90,6 +108,7 @@ namespace afung.MangaWeb3.Server
             newManga.ParentCollection = collection;
             newManga.MangaPath = path;
             newManga.MangaType = CheckMangaType(path);
+            newManga.RefreshContent();
             newManga.View = newManga.Status = 0;
             return newManga;
         }
@@ -126,6 +145,40 @@ namespace afung.MangaWeb3.Server
             }
 
             return -1;
+        }
+
+        public void RefreshContent()
+        {
+            FileInfo info = new FileInfo(MangaPath);
+            ModifiedTime = Utility.ToUnixTimeStamp(info.LastWriteTimeUtc);
+            Size = info.Length;
+            Content = Provider.GetContent(MangaPath);
+            NumberOfPages = Content.Length;
+        }
+
+        public void Save()
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add("cid", ParentCollection.Id);
+            data.Add("path", MangaPath);
+            data.Add("type", MangaType);
+            data.Add("content", JsonConvert.SerializeObject(Content));
+            data.Add("time", ModifiedTime);
+            data.Add("size", Size);
+            data.Add("numpages", NumberOfPages);
+            data.Add("view", View);
+            data.Add("status", Status);
+
+            if (Id == -1)
+            {
+                Database.Insert("user", data);
+                Id = Database.LastInsertId();
+            }
+            else
+            {
+                data.Add("id", Id);
+                Database.Replace("user", data);
+            }
         }
     }
 }

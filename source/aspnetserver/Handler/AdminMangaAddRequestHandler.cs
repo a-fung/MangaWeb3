@@ -47,6 +47,7 @@ namespace afung.MangaWeb3.Server.Handler
             else
             {
                 response.status = 0;
+                Manga.CreateNewManga(collection, request.path).Save();
             }
 
             ajax.ReturnJson(response);

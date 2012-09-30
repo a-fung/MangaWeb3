@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json;
@@ -161,5 +162,15 @@ namespace afung.MangaWeb3.Server
                 return path.Substring(index - 1);
             }
         }
+
+        public static int ToUnixTimeStamp(DateTime date)
+        {
+            DateTime timeStampZero = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            TimeSpan diff = date - timeStampZero;
+            return (int)Math.Round(diff.TotalSeconds);
+        }
+
+        [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern int StrCmpLogicalW(string x, string y);
     }
 }
