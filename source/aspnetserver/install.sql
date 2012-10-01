@@ -55,8 +55,8 @@ CREATE TABLE `meta` (
   KEY `author` (`author`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `metatag`;
-CREATE TABLE `metatag` (
+DROP TABLE IF EXISTS `mangatag`;
+CREATE TABLE `mangatag` (
   `mid` int(11) NOT NULL,
   `tid` int(11) NOT NULL,
   KEY `mid` (`mid`,`tid`)

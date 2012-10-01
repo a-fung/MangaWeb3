@@ -165,6 +165,10 @@
                             <i class="icon-trash"></i>
                             <span class="msg msg-Delete"></span>
                         </a></li>
+                        <li><a href="#" id="admin-mangas-edit-btn">
+                            <i class="icon-edit"></i>
+                            <span class="msg msg-EditPath"></span>
+                        </a></li>
                         <li><a href="#" id="admin-mangas-refresh-btn">
                             <i class="icon-refresh"></i>
                             <span class="msg msg-RefreshContent"></span>
@@ -311,14 +315,14 @@
         <div class="control-group">
             <label class="msg msg-Name control-label" for="admin-collection-add-name"></label>
             <div class="controls">
-                <input type="text" id="admin-collection-add-name" />
+                <input type="text" id="admin-collection-add-name" maxlength="50" />
             </div>
         </div>
         <div class="control-group">
             <label class="msg msg-Path control-label" for="admin-collection-add-path"></label>
             <div class="controls">
                 <div class="input-append">
-                    <input type="text" id="admin-collection-add-path" />
+                    <input type="text" id="admin-collection-add-path" maxlength="300" />
                     <a href="#" class="btn" id="admin-collection-add-browse-btn">
                         <i class="icon-folder-open"></i>
                     </a>
@@ -352,7 +356,7 @@
         <h3 class="msg msg-EditName"></h3>
     </div>
     <div class="modal-body text-center">
-        <input type="text" id="admin-collection-editname-name" />
+        <input type="text" id="admin-collection-editname-name" maxlength="50" />
         <input class="val val-Submit btn btn-primary" id="admin-collection-editname-submit" type="submit" />
     </div>
     </form>
@@ -367,7 +371,7 @@
         <div class="control-group">
             <label class="msg msg-UserName control-label" for="admin-user-add-name"></label>
             <div class="controls">
-                <input type="text" id="admin-user-add-name" class="plhdr plhdr-AlphabetsDigitsOnly" />
+                <input type="text" id="admin-user-add-name" class="plhdr plhdr-AlphabetsDigitsOnly" maxlength="30" />
             </div>
         </div>
         <div class="control-group">
@@ -445,7 +449,7 @@
     </div>
     <div class="modal-footer text-left">
         <form class="form-inline" id="admin-collection-users-form">
-        <input type="text" id="admin-collection-users-add-user" class="plhdr plhdr-UserName" autocomplete="off" />
+        <input type="text" id="admin-collection-users-add-user" class="plhdr plhdr-UserName" autocomplete="off" maxlength="30" />
         <select id="admin-collection-users-add-access" class="input-medium">
             <option value="true" class="msg msg-AllowAccess"></option>
             <option value="false" class="msg msg-DenyAccess"></option>
@@ -504,7 +508,7 @@
     </div>
     <div class="modal-footer text-left">
         <form class="form-inline" id="admin-user-collections-form">
-        <input type="text" id="admin-user-collections-add-collection" class="plhdr plhdr-Collection" />
+        <input type="text" id="admin-user-collections-add-collection" class="plhdr plhdr-Collection" autocomplete="off" maxlength="50" />
         <select id="admin-user-collections-add-access" class="input-medium">
             <option value="true" class="msg msg-AllowAccess"></option>
             <option value="false" class="msg msg-DenyAccess"></option>
@@ -524,7 +528,7 @@
             <label class="msg msg-Path control-label" for="admin-manga-add-path"></label>
             <div class="controls">
                 <div class="input-append">
-                    <input type="text" id="admin-manga-add-path" />
+                    <input type="text" id="admin-manga-add-path" maxlength="300" />
                     <a href="#" class="btn" id="admin-manga-add-browse-btn">
                         <i class="icon-folder-open"></i>
                     </a>
@@ -553,4 +557,28 @@
     <div class="modal-footer">
         <a href="#" class="msg msg-Select btn btn-primary" id="admin-finder-select"></a>
     </div>
+</div>
+<div id="admin-manga-edit-path-modal" class="modal hide fade">
+    <form id="admin-manga-edit-path-form" class="form-horizontal">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-EditPath"></h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="msg msg-Path control-label" for="admin-manga-edit-path"></label>
+            <div class="controls">
+                <div class="input-append">
+                    <input type="text" id="admin-manga-edit-path" maxlength="300" />
+                    <a href="#" class="btn" id="admin-manga-edit-path-browse-btn">
+                        <i class="icon-folder-open"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Submit btn btn-primary" id="admin-manga-edit-path-submit" type="submit" />
+    </div>
+    </form>
 </div>

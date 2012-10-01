@@ -62,6 +62,8 @@ class Manga
         return provider;
     }
     
+    public var Meta(default, null):MangaMeta;
+    
     private function new()
     {
         Id = -1;
@@ -75,6 +77,7 @@ class Manga
         newManga.MangaType = CheckMangaType(path);
         newManga.InnerRefreshContent();
         newManga.View = newManga.Status = 0;
+        newManga.Meta = MangaMeta.CreateNewMeta(newManga);
         return newManga;
     }
     
@@ -92,6 +95,18 @@ class Manga
         newManga.View = Std.parseInt(data.get("view"));
         newManga.Status = Std.parseInt(data.get("status"));
         return newManga;
+    }
+    
+    public static function GetById(id:Int):Manga
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`id`=" + Database.Quote(Std.string(id)));
+        
+        if (resultSet.length > 0)
+        {
+            return FromData(resultSet[0]);
+        }
+        
+        return null;
     }
     
     public static function GetByPath(path:String):Manga
@@ -193,6 +208,15 @@ class Manga
         NumberOfPages = Content.length;
     }
     
+    public function ChangePath(newPath:String, newType:Int):Void
+    {
+        MangaPath = newPath;
+        MangaType = newType;
+        InnerRefreshContent();
+        Status = 0;
+        Save();
+    }
+    
     public function Save():Void
     {
         var data:Hash<Dynamic> = new Hash<Dynamic>();
@@ -210,6 +234,7 @@ class Manga
         {
             Database.Insert("manga", data);
             Id = Database.LastInsertId();
+            Meta.Save();
         }
         else
         {
@@ -244,8 +269,9 @@ class Manga
     public function Delete():Void
     {
         Database.Delete("manga", "`id`=" + Database.Quote(Std.string(Id)));
+        Database.Delete("meta", "`mid`=" + Database.Quote(Std.string(Id)));
 
-        // TODO: delete meta
+        // TODO: delete tags
     }
     
     public static function DeleteMangas(mangas:Array<Manga>):Void

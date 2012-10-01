@@ -70,6 +70,7 @@ namespace afung.MangaWeb3.Server
             get;
             private set;
         }
+
         private IMangaProvider provider;
 
         private IMangaProvider Provider
@@ -98,6 +99,12 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public MangaMeta Meta
+        {
+            get;
+            private set;
+        }
+
         private Manga()
         {
             Id = -1;
@@ -111,6 +118,7 @@ namespace afung.MangaWeb3.Server
             newManga.MangaType = CheckMangaType(path);
             newManga.InnerRefreshContent();
             newManga.View = newManga.Status = 0;
+            newManga.Meta = MangaMeta.CreateNewMeta(newManga);
             return newManga;
         }
 
@@ -128,6 +136,18 @@ namespace afung.MangaWeb3.Server
             newManga.View = Convert.ToInt32(data["view"]);
             newManga.Status = Convert.ToInt32(data["status"]);
             return newManga;
+        }
+
+        public static Manga GetById(int id)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("manga", "`id`=" + Database.Quote(id.ToString()));
+
+            if (resultSet.Length > 0)
+            {
+                return FromData(resultSet[0]);
+            }
+
+            return null;
         }
 
         public static Manga GetByPath(string path)
@@ -229,6 +249,15 @@ namespace afung.MangaWeb3.Server
             NumberOfPages = Content.Length;
         }
 
+        public void ChangePath(string newPath, int newType)
+        {
+            MangaPath = newPath;
+            MangaType = newType;
+            InnerRefreshContent();
+            Status = 0;
+            Save();
+        }
+
         public void Save()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -246,6 +275,7 @@ namespace afung.MangaWeb3.Server
             {
                 Database.Insert("manga", data);
                 Id = Database.LastInsertId();
+                Meta.Save();
             }
             else
             {
@@ -280,8 +310,9 @@ namespace afung.MangaWeb3.Server
         public void Delete()
         {
             Database.Delete("manga", "`id`=" + Database.Quote(Id.ToString()));
+            Database.Delete("meta", "`mid`=" + Database.Quote(Id.ToString()));
 
-            // TODO: delete meta
+            // TODO: delete tags
         }
 
         public static void DeleteMangas(Manga[] mangas)

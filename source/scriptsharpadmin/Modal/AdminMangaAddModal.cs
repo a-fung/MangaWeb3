@@ -100,7 +100,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
                     mangasModule.Refresh();
                     break;
                 case 1:
-                    ErrorModal.ShowError(Strings.Get("FileNotFound"));
+                    ErrorModal.ShowError(Strings.Get("FileNotFoundOrAlreadyAdded"));
                     break;
                 case 2:
                     ErrorModal.ShowError(Strings.Get("PathNotUnderCollection"));

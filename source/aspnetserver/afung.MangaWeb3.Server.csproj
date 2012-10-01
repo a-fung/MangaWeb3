@@ -118,6 +118,7 @@
     <Compile Include="Handler\AdminCollectionUserAddRequestHandler.cs" />
     <Compile Include="Handler\AdminFinderRequestHandler.cs" />
     <Compile Include="Handler\AdminMangaAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminMangaEditPathRequestHandler.cs" />
     <Compile Include="Handler\AdminMangasDeleteRequestHandler.cs" />
     <Compile Include="Handler\AdminMangasGetRequestHandler.cs" />
     <Compile Include="Handler\AdminMangasRefreshRequestHandler.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Handler\HandlerBase.cs" />
     <Compile Include="Handler\LoginRequestHandler.cs" />
     <Compile Include="Manga.cs" />
+    <Compile Include="MangaMeta.cs" />
     <Compile Include="ProcessLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\Constants.cs" />

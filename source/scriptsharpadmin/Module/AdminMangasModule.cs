@@ -27,6 +27,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             jQuery.Select("#admin-mangas-add-btn").Click(AddButtonClicked);
             jQuery.Select("#admin-mangas-delete-btn").Click(DeleteButtonClicked);
+            jQuery.Select("#admin-mangas-edit-btn").Click(EditButtonClicked);
             jQuery.Select("#admin-mangas-refresh-btn").Click(RefreshButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
@@ -79,7 +80,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
                 jQuery.Select(".admin-mangas-path", row).Text(mangas[i].path);
                 jQuery.Select(".admin-mangas-type", row).Text(mangas[i].type == 0 ? Strings.Get("Zip") : mangas[i].type == 1 ? Strings.Get("RAR") : Strings.Get("PDF"));
                 jQuery.Select(".admin-mangas-views", row).Text(mangas[i].view.ToString());
-                jQuery.Select(".admin-mangas-status", row).Text(mangas[i].status == 0 ? Strings.Get("OK") : mangas[i].type == 1 ? Strings.Get("FileMissing") : mangas[i].type == 2 ? Strings.Get("WrongFormat") : Strings.Get("ContentMismatch"));
+                jQuery.Select(".admin-mangas-status", row).Text(mangas[i].status == 0 ? Strings.Get("OK") : mangas[i].status == 1 ? Strings.Get("FileMissing") : mangas[i].status == 2 ? Strings.Get("WrongFormat") : Strings.Get("ContentMismatch"));
             }
         }
 
@@ -128,6 +129,22 @@ namespace afung.MangaWeb3.Client.Admin.Module
                 AdminMangasRefreshRequest request = new AdminMangasRefreshRequest();
                 request.ids = ids;
                 Request.Send(request, Refresh);
+            }
+        }
+
+        private void EditButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            int[] ids = GetSelectedIds();
+
+            if (ids.Length > 1)
+            {
+                ErrorModal.ShowError(Strings.Get("SelectSingleItem"));
+            }
+            else if (ids.Length == 1)
+            {
+                AdminMangaEditPathModal.ShowDialog(this, ids[0]);
             }
         }
     }

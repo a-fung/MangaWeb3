@@ -48,6 +48,8 @@
     <Compile Include="AdminFinderResponse.cs" />
     <Compile Include="AdminMangaAddRequest.cs" />
     <Compile Include="AdminMangaAddResponse.cs" />
+    <Compile Include="AdminMangaEditPathRequest.cs" />
+    <Compile Include="AdminMangaEditPathResponse.cs" />
     <Compile Include="AdminMangasDeleteRequest.cs" />
     <Compile Include="AdminMangasGetRequest.cs" />
     <Compile Include="AdminMangasGetResponse.cs" />
