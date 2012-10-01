@@ -80,7 +80,7 @@ class RarProvider implements IMangaProvider
                 
                 if (Utility.ArrayContains(Constants.FileExtensionsInArchive, extension))
                 {
-                    content.push(Utility.Remove4PlusBytesUtf8Chars(fileName));
+                    content.push(fileName);
                 }
             }
             

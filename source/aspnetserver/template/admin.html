@@ -128,6 +128,7 @@
                 <th class="msg msg-Collection"></th>
                 <th class="msg msg-Path"></th>
                 <th class="msg msg-Type text-center td-small"></th>
+                <th class="msg msg-Status text-center td-small"></th>
                 <th class="msg msg-Views text-center td-small"></th>
                 <th class="msg msg-Meta text-center td-small"></th>
             </tr>
@@ -140,7 +141,12 @@
                 <td class="break-word admin-mangas-title"></td>
                 <td class="break-word admin-mangas-collection"></td>
                 <td class="break-word admin-mangas-path"></td>
-                <td class="text-center td-small admin-mangas-type"></td>
+                <td class="text-center td-small">
+                    <span class="label admin-mangas-type"></span>
+                </td>
+                <td class="text-center td-small">
+                    <span class="label admin-mangas-status"></span>
+                </td>
                 <td class="text-center td-small admin-mangas-views"></td>
                 <td class="text-center td-small"><a href="#" class="msg msg-Details btn admin-mangas-meta"></a></td>
             </tr>
@@ -518,7 +524,7 @@
             <label class="msg msg-Path control-label" for="admin-manga-add-path"></label>
             <div class="controls">
                 <div class="input-append">
-                <input type="text" id="admin-manga-add-path" />
+                    <input type="text" id="admin-manga-add-path" />
                     <a href="#" class="btn" id="admin-manga-add-browse-btn">
                         <i class="icon-folder-open"></i>
                     </a>

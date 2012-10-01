@@ -1,5 +1,6 @@
 package afung.mangaWeb3.server;
 
+import afung.mangaWeb3.common.MangaJson;
 import afung.mangaWeb3.server.provider.IMangaProvider;
 import afung.mangaWeb3.server.provider.PdfProvider;
 import afung.mangaWeb3.server.provider.RarProvider;
@@ -72,16 +73,65 @@ class Manga
         newManga.ParentCollection = collection;
         newManga.MangaPath = path;
         newManga.MangaType = CheckMangaType(path);
-        newManga.RefreshContent();
+        newManga.InnerRefreshContent();
         newManga.View = newManga.Status = 0;
         return newManga;
+    }
+    
+    private static function FromData(data:Hash<Dynamic>):Manga
+    {
+        var newManga:Manga = new Manga();
+        newManga.Id = Std.parseInt(data.get("id"));
+        newManga.ParentCollection = Collection.GetById(Std.parseInt(data.get("cid")));
+        newManga.MangaPath = Std.string(data.get("path"));
+        newManga.MangaType = Std.parseInt(data.get("type"));
+        newManga.ModifiedTime = Std.parseInt(data.get("time"));
+        newManga.Size = Std.parseInt(data.get("size"));
+        newManga.Content = cast Lib.toHaxeArray(untyped __call__("json_decode", Std.string(data.get("content"))));
+        newManga.NumberOfPages = Std.parseInt(data.get("numpages"));
+        newManga.View = Std.parseInt(data.get("view"));
+        newManga.Status = Std.parseInt(data.get("status"));
+        return newManga;
+    }
+    
+    public static function GetByPath(path:String):Manga
+    {
+        if (path != null && path != "")
+        {
+            var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`path` COLLATE utf8_bin =" + Database.Quote(path));
+            
+            if (resultSet.length > 0)
+            {
+                return FromData(resultSet[0]);
+            }
+        }
+        
+        return null;
+    }
+    
+    private static function GetMangas(where:String):Array<Manga>
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", where);
+        var mangas:Array<Manga> = new Array<Manga>();
+        
+        for (result in resultSet)
+        {
+            mangas.push(FromData(result));
+        }
+        
+        return mangas;
+    }
+    
+    public static function GetAllMangas():Array<Manga>
+    {
+        return GetMangas(null);
     }
     
     public static function CheckMangaPath(path:String):String
     {
         path = FileSystem.fullPath(path);
         
-        if (path == null || !FileSystem.exists(path) || FileSystem.isDirectory(path))
+        if (path == null || !FileSystem.exists(path) || FileSystem.isDirectory(path) || GetByPath(path) != null)
         {
             return null;
         }
@@ -113,6 +163,29 @@ class Manga
     
     public function RefreshContent():Void
     {
+        if (!FileSystem.exists(MangaPath) || FileSystem.isDirectory(MangaPath))
+        {
+            Status = 1;
+        }
+        else
+        {
+            InnerRefreshContent();
+            
+            if (Content.length == 0)
+            {
+                Status = 2;
+            }
+            else
+            {
+                Status = 0;
+            }
+        }
+        
+        Save();
+    }
+    
+    private function InnerRefreshContent():Void
+    {
         var info:FileStat = FileSystem.stat(MangaPath);
         ModifiedTime = Math.round(info.mtime.getTime());
         Size = info.size;
@@ -135,13 +208,69 @@ class Manga
 
         if (Id == -1)
         {
-            Database.Insert("user", data);
+            Database.Insert("manga", data);
             Id = Database.LastInsertId();
         }
         else
         {
             data.set("id", Id);
-            Database.Replace("user", data);
+            Database.Replace("manga", data);
+        }
+    }
+    
+    public function ToJson():MangaJson
+    {
+        var obj:MangaJson = new MangaJson();
+        obj.id = Id;
+        obj.collection = ParentCollection.Name;
+        obj.path = MangaPath;
+        obj.type = MangaType;
+        obj.view = View;
+        obj.status = Status;
+        return obj;
+    }
+    
+    public static function ToJsonArray(mangas:Array<Manga>):Array<MangaJson>
+    {
+        var objs:Array<MangaJson> = new Array<MangaJson>();
+        for (manga in mangas)
+        {
+            objs.push(manga.ToJson());
+        }
+        
+        return objs;
+    }
+    
+    public function Delete():Void
+    {
+        Database.Delete("manga", "`id`=" + Database.Quote(Std.string(Id)));
+
+        // TODO: delete meta
+    }
+    
+    public static function DeleteMangas(mangas:Array<Manga>):Void
+    {
+        for (manga in mangas)
+        {
+            manga.Delete();
+        }
+    }
+    
+    public static function DeleteMangasFromCollectionIds(cids:Array<Int>):Void
+    {
+        DeleteMangas(GetMangas(Database.BuildWhereClauseOr("cid", cids)));
+    }
+    
+    public static function DeleteMangasFromIds(ids:Array<Int>):Void
+    {
+        DeleteMangas(GetMangas(Database.BuildWhereClauseOr("id", ids)));
+    }
+    
+    public static function RefreshMangasContent(ids:Array<Int>):Void
+    {
+        for (manga in GetMangas(Database.BuildWhereClauseOr("id", ids)))
+        {
+            manga.RefreshContent();
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using Newtonsoft.Json;
 
@@ -159,7 +161,7 @@ namespace afung.MangaWeb3.Server
             }
             else
             {
-                return path.Substring(index - 1);
+                return path.Substring(index);
             }
         }
 
@@ -172,5 +174,71 @@ namespace afung.MangaWeb3.Server
 
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         public static extern int StrCmpLogicalW(string x, string y);
+
+        public static string Encode4BytesCharacters(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if (c >= 55296 && c <= 57343)
+                {
+                    // This character needs to be encoded
+                    string encodedValue = "\\u" + ((int)c).ToString("x4");
+                    sb.Append(encodedValue);
+                }
+                else if (c == '\\')
+                {
+                    sb.Append("\\\\");
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string DecodeEscapedUnicodeCharacters(string value)
+        {
+            return Regex.Replace(
+                value,
+                @"\\(?<Value>\\|(u[a-fA-F0-9]{4}))",
+                m =>
+                {
+                    if (m.Groups["Value"].Value == "\\")
+                    {
+                        return "\\";
+                    }
+                    else
+                    {
+                        return ((char)int.Parse(m.Groups["Value"].Value.Substring(1), NumberStyles.HexNumber)).ToString();
+                    }
+                });
+        }
+
+        public static string JsonEncodeArchiveContent(string[] content)
+        {
+            string[] c = new string[content.Length];
+            Array.Copy(content, c, c.Length);
+
+            for (int i = 0; i < c.Length; i++)
+            {
+                c[i] = Encode4BytesCharacters(c[i]);
+            }
+
+            return JsonConvert.SerializeObject(c);
+        }
+
+        public static string[] JsonDecodeArchiveContentString(string jsonString)
+        {
+            string[] c = JsonConvert.DeserializeObject<string[]>(jsonString);
+
+            for (int i = 0; i < c.Length; i++)
+            {
+                c[i] = DecodeEscapedUnicodeCharacters(c[i]);
+            }
+
+            return c;
+        }
     }
 }

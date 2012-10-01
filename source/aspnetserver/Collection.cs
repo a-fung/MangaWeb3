@@ -185,8 +185,7 @@ namespace afung.MangaWeb3.Server
         {
             Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
             Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
-
-            // todo: delete mangas
+            Manga.DeleteMangasFromCollectionIds(ids);
         }
 
         public static void SetCollectionsPublic(int[] ids, bool public_)

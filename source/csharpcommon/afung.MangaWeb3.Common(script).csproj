@@ -61,6 +61,10 @@
     <Compile Include="AdminFinderResponse.cs" />
     <Compile Include="AdminMangaAddRequest.cs" />
     <Compile Include="AdminMangaAddResponse.cs" />
+    <Compile Include="AdminMangasDeleteRequest.cs" />
+    <Compile Include="AdminMangasGetRequest.cs" />
+    <Compile Include="AdminMangasGetResponse.cs" />
+    <Compile Include="AdminMangasRefreshRequest.cs" />
     <Compile Include="AdminSettingsGetRequest.cs" />
     <Compile Include="AdminSettingsGetResponse.cs" />
     <Compile Include="AdminSettingsSetRequest.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="CollectionUserJson.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="MangaJson.cs" />
     <Compile Include="UserJson.cs" />
     <Content Include="Properties\afung.MangaWeb3.Common.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Common.script" />

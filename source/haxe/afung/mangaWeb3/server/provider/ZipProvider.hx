@@ -2,6 +2,7 @@ package afung.mangaWeb3.server.provider;
 
 import afung.mangaWeb3.server.Settings;
 import afung.mangaWeb3.server.Utility;
+import haxe.Utf8;
 import php.Exception;
 import php.io.Path;
 import php.Lib;
@@ -66,7 +67,7 @@ class ZipProvider implements IMangaProvider
                 
                 if (Utility.ArrayContains(Constants.FileExtensionsInArchive, extension))
                 {
-                    content.push(Utility.Remove4PlusBytesUtf8Chars(fileName));
+                    content.push(Utf8.encode(fileName));
                 }
             }
             

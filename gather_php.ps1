@@ -76,12 +76,12 @@ copy source\aspnetserver\install.sql $path
 
 
 # php files
-robocopy source\php $path /E
+Copy-Item source\php\* $path -recurse -force;
 
 
 # compiled php files
 del source\haxephp\index.php
-robocopy source\haxephp $path /E
+Copy-Item source\haxephp\* $path -recurse -force;
 
 
 # ckfinder

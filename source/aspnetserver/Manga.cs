@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using afung.MangaWeb3.Server.Provider;
 using Newtonsoft.Json;
+using afung.MangaWeb3.Common;
 
 namespace afung.MangaWeb3.Server
 {
@@ -108,16 +109,65 @@ namespace afung.MangaWeb3.Server
             newManga.ParentCollection = collection;
             newManga.MangaPath = path;
             newManga.MangaType = CheckMangaType(path);
-            newManga.RefreshContent();
+            newManga.InnerRefreshContent();
             newManga.View = newManga.Status = 0;
             return newManga;
+        }
+
+        public static Manga FromData(Dictionary<string, object> data)
+        {
+            Manga newManga = new Manga();
+            newManga.Id = Convert.ToInt32(data["id"]);
+            newManga.ParentCollection = Collection.GetById(Convert.ToInt32(data["cid"]));
+            newManga.MangaPath = Convert.ToString(data["path"]);
+            newManga.MangaType = Convert.ToInt32(data["type"]);
+            newManga.ModifiedTime = Convert.ToInt32(data["time"]);
+            newManga.Size = Convert.ToInt64(data["size"]);
+            newManga.Content = Utility.JsonDecodeArchiveContentString(Convert.ToString(data["content"]));
+            newManga.NumberOfPages = Convert.ToInt32(data["numpages"]);
+            newManga.View = Convert.ToInt32(data["view"]);
+            newManga.Status = Convert.ToInt32(data["status"]);
+            return newManga;
+        }
+
+        public static Manga GetByPath(string path)
+        {
+            if (path != null && path != "")
+            {
+                Dictionary<string, object>[] resultSet = Database.Select("manga", "`path`=" + Database.Quote(path));
+
+                if (resultSet.Length > 0)
+                {
+                    return FromData(resultSet[0]);
+                }
+            }
+
+            return null;
+        }
+
+        private static Manga[] GetMangas(string where)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("manga", where);
+            List<Manga> mangas = new List<Manga>();
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                mangas.Add(FromData(result));
+            }
+
+            return mangas.ToArray();
+        }
+
+        public static Manga[] GetAllMangas()
+        {
+            return GetMangas(null);
         }
 
         public static string CheckMangaPath(string path)
         {
             path = Utility.GetFullPath(path);
 
-            if (path == null || !File.Exists(path))
+            if (path == null || !File.Exists(path) || GetByPath(path) != null)
             {
                 return null;
             }
@@ -149,6 +199,29 @@ namespace afung.MangaWeb3.Server
 
         public void RefreshContent()
         {
+            if (!File.Exists(MangaPath))
+            {
+                Status = 1;
+            }
+            else
+            {
+                InnerRefreshContent();
+
+                if (Content.Length == 0)
+                {
+                    Status = 2;
+                }
+                else
+                {
+                    Status = 0;
+                }
+            }
+
+            Save();
+        }
+
+        private void InnerRefreshContent()
+        {
             FileInfo info = new FileInfo(MangaPath);
             ModifiedTime = Utility.ToUnixTimeStamp(info.LastWriteTimeUtc);
             Size = info.Length;
@@ -162,7 +235,7 @@ namespace afung.MangaWeb3.Server
             data.Add("cid", ParentCollection.Id);
             data.Add("path", MangaPath);
             data.Add("type", MangaType);
-            data.Add("content", JsonConvert.SerializeObject(Content));
+            data.Add("content", Utility.JsonEncodeArchiveContent(Content));
             data.Add("time", ModifiedTime);
             data.Add("size", Size);
             data.Add("numpages", NumberOfPages);
@@ -171,13 +244,69 @@ namespace afung.MangaWeb3.Server
 
             if (Id == -1)
             {
-                Database.Insert("user", data);
+                Database.Insert("manga", data);
                 Id = Database.LastInsertId();
             }
             else
             {
                 data.Add("id", Id);
-                Database.Replace("user", data);
+                Database.Replace("manga", data);
+            }
+        }
+
+        public MangaJson ToJson()
+        {
+            MangaJson obj = new MangaJson();
+            obj.id = Id;
+            obj.collection = ParentCollection.Name;
+            obj.path = MangaPath;
+            obj.type = MangaType;
+            obj.view = View;
+            obj.status = Status;
+            return obj;
+        }
+
+        public static MangaJson[] ToJsonArray(Manga[] mangas)
+        {
+            List<MangaJson> objs = new List<MangaJson>();
+            foreach (Manga manga in mangas)
+            {
+                objs.Add(manga.ToJson());
+            }
+
+            return objs.ToArray();
+        }
+
+        public void Delete()
+        {
+            Database.Delete("manga", "`id`=" + Database.Quote(Id.ToString()));
+
+            // TODO: delete meta
+        }
+
+        public static void DeleteMangas(Manga[] mangas)
+        {
+            foreach (Manga manga in mangas)
+            {
+                manga.Delete();
+            }
+        }
+
+        public static void DeleteMangasFromCollectionIds(int[] cids)
+        {
+            DeleteMangas(GetMangas(Database.BuildWhereClauseOr("cid", cids)));
+        }
+
+        public static void DeleteMangasFromIds(int[] ids)
+        {
+            DeleteMangas(GetMangas(Database.BuildWhereClauseOr("id", ids)));
+        }
+
+        public static void RefreshMangasContent(int[] ids)
+        {
+            foreach (Manga manga in GetMangas(Database.BuildWhereClauseOr("id", ids)))
+            {
+                manga.RefreshContent();
             }
         }
     }

@@ -164,8 +164,7 @@ class Collection
     {
         Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
         Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
-        
-        // todo: delete mangas
+        Manga.DeleteMangasFromCollectionIds(ids);
     }
     
     public static function SetCollectionsPublic(ids:Array<Int>, public_:Bool):Void

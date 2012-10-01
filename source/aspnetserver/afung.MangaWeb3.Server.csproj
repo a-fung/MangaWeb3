@@ -118,6 +118,9 @@
     <Compile Include="Handler\AdminCollectionUserAddRequestHandler.cs" />
     <Compile Include="Handler\AdminFinderRequestHandler.cs" />
     <Compile Include="Handler\AdminMangaAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminMangasDeleteRequestHandler.cs" />
+    <Compile Include="Handler\AdminMangasGetRequestHandler.cs" />
+    <Compile Include="Handler\AdminMangasRefreshRequestHandler.cs" />
     <Compile Include="Handler\AdminSettingsGetRequestHandler.cs" />
     <Compile Include="Handler\AdminSettingsSetRequestHandler.cs" />
     <Compile Include="Handler\AdminUserAddRequestHandler.cs" />

@@ -59,7 +59,7 @@ namespace afung.MangaWeb3.Server.Provider
 
                         if (Constants.FileExtensionsInArchive.Contains(extension))
                         {
-                            content.Add(Utility.Remove4PlusBytesUtf8Chars(fileName));
+                            content.Add(fileName);
                         }
                     }
                 }

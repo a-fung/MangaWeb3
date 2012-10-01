@@ -97,10 +97,10 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             {
                 case 0:
                     Hide();
-                    // mangasModule.Refresh();
+                    mangasModule.Refresh();
                     break;
                 case 1:
-                    ErrorModal.ShowError(Strings.Get("FileNotExist"));
+                    ErrorModal.ShowError(Strings.Get("FileNotFound"));
                     break;
                 case 2:
                     ErrorModal.ShowError(Strings.Get("PathNotUnderCollection"));

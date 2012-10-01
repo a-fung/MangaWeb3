@@ -24,7 +24,7 @@ CREATE TABLE `manga` (
   `cid` int(11) NOT NULL,
   `path` varchar(300) NOT NULL,
   `type` tinyint(4) NOT NULL,
-  `content` text NOT NULL,
+  `content` longtext NOT NULL,
   `time` int(11) NOT NULL,
   `size` bigint(20) NOT NULL,
   `numpages` int(11) NOT NULL,
