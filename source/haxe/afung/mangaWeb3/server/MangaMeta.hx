@@ -43,6 +43,33 @@ class MangaMeta
         return newMeta;
     }
     
+    private static function FromData(data:Hash<Dynamic>):MangaMeta
+    {
+        var newMeta:MangaMeta = new MangaMeta();
+        newMeta.Id = Std.parseInt(data.get("id"));
+        newMeta.Title = Std.string(data.get("title"));
+        newMeta.Author = Std.string(data.get("author"));
+        newMeta.Series = Std.string(data.get("series"));
+        newMeta.Publisher = Std.string(data.get("publisher"));
+        newMeta.Volume = Std.parseInt(data.get("volume"));
+        newMeta.Year = Std.parseInt(data.get("year"));
+        return newMeta;
+    }
+    
+    public static function Get(manga:Manga):MangaMeta
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("meta", "`mid`=" + Database.Quote(Std.string(manga.Id)));
+        
+        if (resultSet.length > 0)
+        {
+            var newMeta:MangaMeta = FromData(resultSet[0]);
+            newMeta.ParentManga = manga;
+            return newMeta;
+        }
+        
+        return null;
+    }
+    
     public function Save():Void
     {
         var data:Hash<Dynamic> = new Hash<Dynamic>();

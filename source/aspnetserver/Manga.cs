@@ -99,10 +99,19 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        private MangaMeta _meta = null;
+
         public MangaMeta Meta
         {
-            get;
-            private set;
+            get
+            {
+                if (_meta == null && Id != -1)
+                {
+                    _meta = MangaMeta.Get(this);
+                }
+
+                return _meta;
+            }
         }
 
         private Manga()
@@ -118,11 +127,11 @@ namespace afung.MangaWeb3.Server
             newManga.MangaType = CheckMangaType(path);
             newManga.InnerRefreshContent();
             newManga.View = newManga.Status = 0;
-            newManga.Meta = MangaMeta.CreateNewMeta(newManga);
+            newManga._meta = MangaMeta.CreateNewMeta(newManga);
             return newManga;
         }
 
-        public static Manga FromData(Dictionary<string, object> data)
+        private static Manga FromData(Dictionary<string, object> data)
         {
             Manga newManga = new Manga();
             newManga.Id = Convert.ToInt32(data["id"]);

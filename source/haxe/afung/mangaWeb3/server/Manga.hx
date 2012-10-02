@@ -62,7 +62,19 @@ class Manga
         return provider;
     }
     
-    public var Meta(default, null):MangaMeta;
+    private var _meta:MangaMeta = null;
+    
+    public var Meta(get_Meta, never):MangaMeta;
+    
+    private function get_Meta():MangaMeta
+    {
+        if (_meta == null && Id != -1)
+        {
+            _meta = MangaMeta.Get(this);
+        }
+        
+        return _meta;
+    }
     
     private function new()
     {
@@ -77,7 +89,7 @@ class Manga
         newManga.MangaType = CheckMangaType(path);
         newManga.InnerRefreshContent();
         newManga.View = newManga.Status = 0;
-        newManga.Meta = MangaMeta.CreateNewMeta(newManga);
+        newManga._meta = MangaMeta.CreateNewMeta(newManga);
         return newManga;
     }
     

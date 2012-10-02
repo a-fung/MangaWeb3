@@ -75,6 +75,33 @@ namespace afung.MangaWeb3.Server
             return newMeta;
         }
 
+        private static MangaMeta FromData(Dictionary<string, object> data)
+        {
+            MangaMeta newMeta = new MangaMeta();
+            newMeta.Id = Convert.ToInt32(data["id"]);
+            newMeta.Title = Convert.ToString(data["title"]);
+            newMeta.Author = Convert.ToString(data["author"]);
+            newMeta.Series = Convert.ToString(data["series"]);
+            newMeta.Publisher = Convert.ToString(data["publisher"]);
+            newMeta.Volume = Convert.ToInt32(data["volume"]);
+            newMeta.Year = Convert.ToInt32(data["year"]);
+            return newMeta;
+        }
+
+        public static MangaMeta Get(Manga manga)
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("meta", "`mid`=" + Database.Quote(manga.Id.ToString()));
+
+            if (resultSet.Length > 0)
+            {
+                MangaMeta newMeta = FromData(resultSet[0]);
+                newMeta.ParentManga = manga;
+                return newMeta;
+            }
+
+            return null;
+        }
+
         public void Save()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
