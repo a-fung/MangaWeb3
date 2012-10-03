@@ -57,8 +57,6 @@ namespace afung.MangaWeb3.Client.Admin.Modal
                 AdminFinderRequest request = new AdminFinderRequest();
                 request.cid = cid;
                 Request.Send(request, FinderRequestSuccess);
-
-                Show();
             };
 
             if (finder != null)

@@ -42,14 +42,13 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         public void InternalShow()
         {
             Request.Send(new AdminSettingsGetRequest(), GetRequestSuccess);
-            Show();
         }
 
         [AlternateSignature]
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminSettingsGetResponse response)
         {
-            jQuery.Select("#admin-settings-guest").Focus();
+            Show();
 
             if (response.guest)
             {

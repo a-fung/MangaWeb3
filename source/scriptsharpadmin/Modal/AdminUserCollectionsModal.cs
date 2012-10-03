@@ -69,7 +69,6 @@ namespace afung.MangaWeb3.Client.Admin.Modal
 
         public void InternalShow(int uid)
         {
-            Show();
             this.uid = uid;
             Refresh();
         }
@@ -89,6 +88,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminCollectionsUsersGetResponse response)
         {
+            Show();
             jQuery.Select("#admin-user-collections-name").Text(username = response.name);
             ((BootstrapTypeahead)((jQueryBootstrap)jQuery.Select("#admin-user-collections-add-collection").Value("")).Typeahead().GetDataValue("typeahead")).Source = collectionNames = response.names;
 

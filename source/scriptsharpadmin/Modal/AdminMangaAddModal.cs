@@ -49,8 +49,6 @@ namespace afung.MangaWeb3.Client.Admin.Modal
 
         public void InternalShow()
         {
-            Show();
-
             jQuery.Select("#admin-manga-add-path").Value("").Focus();
             jQuery.Select("#admin-manga-add-collection").Children().Remove();
             Request.Send(new AdminCollectionsGetRequest(), GetRequestSuccess);
@@ -60,6 +58,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
         private extern void GetRequestSuccess(JsonResponse response);
         private void GetRequestSuccess(AdminCollectionsGetResponse response)
         {
+            Show();
+
             foreach (CollectionJson collection in response.collections)
             {
                 jQuery.FromHtml("<option></option>").AppendTo(jQuery.Select("#admin-manga-add-collection")).Value(collection.id.ToString()).Text(collection.name);
