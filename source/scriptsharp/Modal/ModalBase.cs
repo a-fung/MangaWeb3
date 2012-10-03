@@ -31,7 +31,10 @@ namespace afung.MangaWeb3.Client.Modal
 
         protected void Show()
         {
-            ((jQueryBootstrap)attachedObject).Modal();
+            ((jQueryBootstrap)attachedObject).Modal(
+                new Dictionary<string, object>(
+                    "keyboard",
+                    false));
             FixVerticalCenter();
         }
 
@@ -40,7 +43,9 @@ namespace afung.MangaWeb3.Client.Modal
             ((jQueryBootstrap)attachedObject).Modal(
                 new Dictionary<string, object>(
                     "backdrop",
-                    "static"));
+                    "static",
+                    "keyboard",
+                    false));
             FixVerticalCenter();
         }
 

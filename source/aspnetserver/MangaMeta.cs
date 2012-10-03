@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using afung.MangaWeb3.Common;
 
 namespace afung.MangaWeb3.Server
 {
@@ -66,7 +67,7 @@ namespace afung.MangaWeb3.Server
             newMeta.ParentManga = manga;
 
             string title = manga.MangaPath.Substring(0, manga.MangaPath.LastIndexOf("."));
-            title = title.Substring(title.LastIndexOf("\\"));
+            title = title.Substring(title.LastIndexOf("\\") + 1);
             newMeta.Title = title;
 
             newMeta.Author = newMeta.Series = newMeta.Publisher = string.Empty;
@@ -123,6 +124,32 @@ namespace afung.MangaWeb3.Server
                 data.Add("id", Id);
                 Database.Replace("meta", data);
             }
+        }
+
+        public void Update(AdminMangaMetaJson obj)
+        {
+            Author = obj.author;
+            Title = obj.title;
+            Volume = obj.volume;
+            Series = obj.series;
+            Year = obj.year;
+            Publisher = obj.publisher;
+            Save();
+        }
+
+        public static string[] GetAuthors()
+        {
+            return Database.GetDistinctStringValue("meta", "author");
+        }
+
+        public static string[] GetSeries()
+        {
+            return Database.GetDistinctStringValue("meta", "series");
+        }
+
+        public static string[] GetPublishers()
+        {
+            return Database.GetDistinctStringValue("meta", "publisher");
         }
     }
 }

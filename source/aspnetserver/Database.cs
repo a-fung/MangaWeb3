@@ -202,5 +202,17 @@ namespace afung.MangaWeb3.Server
 
             return clauseBuilder.Length == 0 ? "FALSE" : ("(" + clauseBuilder.ToString().Substring(4) + ")");
         }
+
+        public static string[] GetDistinctStringValue(string table, string field)
+        {
+            Dictionary<string, object>[] resultSet = Select(table, "`" + field + "`<>''", null, null, "DISTINCT `" + field + "`");
+            List<string> rtn = new List<string>();
+            foreach (Dictionary<string, object> data in resultSet)
+            {
+                rtn.Add(Convert.ToString(data[field]));
+            }
+
+            return rtn.ToArray();
+        }
     }
 }

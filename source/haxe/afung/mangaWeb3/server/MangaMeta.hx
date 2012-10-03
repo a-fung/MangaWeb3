@@ -1,5 +1,7 @@
 package afung.mangaWeb3.server;
 
+import afung.mangaWeb3.common.AdminMangaMetaJson;
+
 /**
  * ...
  * @author a-fung
@@ -34,7 +36,7 @@ class MangaMeta
         newMeta.ParentManga = manga;
 
         var title:String = manga.MangaPath.substr(0, manga.MangaPath.lastIndexOf("."));
-        title = title.substr(title.lastIndexOf("/"));
+        title = title.substr(title.lastIndexOf("/") + 1);
         newMeta.Title = title;
 
         newMeta.Author = newMeta.Series = newMeta.Publisher = "";
@@ -91,5 +93,31 @@ class MangaMeta
             data.set("id", Id);
             Database.Replace("meta", data);
         }
+    }
+    
+    public function Update(obj:AdminMangaMetaJson):Void
+    {
+        Author = obj.author;
+        Title = obj.title;
+        Volume = obj.volume;
+        Series = obj.series;
+        Year = obj.year;
+        Publisher = obj.publisher;
+        Save();
+    }
+    
+    public static function GetAuthors():Array<String>
+    {
+        return Database.GetDistinctStringValue("meta", "author");
+    }
+    
+    public static function GetSeries():Array<String>
+    {
+        return Database.GetDistinctStringValue("meta", "series");
+    }
+    
+    public static function GetPublishers():Array<String>
+    {
+        return Database.GetDistinctStringValue("meta", "publisher");
     }
 }

@@ -183,4 +183,16 @@ class Database
 
         return "(" + clauseBuilder.toString().substr(4) + ")";
     }
+    
+    public static function GetDistinctStringValue(table:String, field:String):Array<String>
+    {
+        var resultSet:Array<Hash<Dynamic>> = Select(table, "`" + field + "`<>''", null, null, "DISTINCT `" + field + "`");
+        var rtn:Array<String> = new Array<String>();
+        for (data in resultSet)
+        {
+            rtn.push(Std.string(data.get(field)));
+        }
+        
+        return rtn;
+    }
 }

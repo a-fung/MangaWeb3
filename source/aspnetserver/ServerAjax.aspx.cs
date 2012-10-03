@@ -45,6 +45,8 @@ namespace afung.MangaWeb3.Server
                     new AdminMangasDeleteRequestHandler(),
                     new AdminMangasRefreshRequestHandler(),
                     new AdminMangaEditPathRequestHandler(),
+                    new AdminMangaMetaGetRequestHandler(),
+                    new AdminMangaMetaEditRequestHandler(),
                 };
             }
 

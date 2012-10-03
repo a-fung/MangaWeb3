@@ -297,12 +297,33 @@ namespace afung.MangaWeb3.Server
         {
             MangaJson obj = new MangaJson();
             obj.id = Id;
+            obj.title = Meta.Title;
             obj.collection = ParentCollection.Name;
             obj.path = MangaPath;
             obj.type = MangaType;
             obj.view = View;
             obj.status = Status;
             return obj;
+        }
+
+        public AdminMangaMetaJson GetMetaJson()
+        {
+            AdminMangaMetaJson obj = new AdminMangaMetaJson();
+            obj.author = Meta.Author;
+            obj.title = Meta.Title;
+            obj.volume = Meta.Volume;
+            obj.series = Meta.Series;
+            obj.year = Meta.Year;
+            obj.publisher = Meta.Publisher;
+            obj.tags = new string[0];
+            return obj;
+        }
+
+        public void UpdateMeta(AdminMangaMetaJson obj)
+        {
+            Meta.Update(obj);
+
+            // todo: tags
         }
 
         public static MangaJson[] ToJsonArray(Manga[] mangas)

@@ -87,6 +87,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void MetaButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
+            string id = jQuery.FromElement(e.Target).GetAttribute("data-id");
+            if (!String.IsNullOrEmpty(id))
+            {
+                AdminMangaMetaModal.ShowDialog(this, int.Parse(id, 10));
+            }
         }
 
         private void DeleteButtonClicked(jQueryEvent e)

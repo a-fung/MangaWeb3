@@ -1,5 +1,6 @@
 package afung.mangaWeb3.server;
 
+import afung.mangaWeb3.common.AdminMangaMetaJson;
 import afung.mangaWeb3.common.MangaJson;
 import afung.mangaWeb3.server.provider.IMangaProvider;
 import afung.mangaWeb3.server.provider.PdfProvider;
@@ -259,12 +260,33 @@ class Manga
     {
         var obj:MangaJson = new MangaJson();
         obj.id = Id;
+        obj.title = Meta.Title;
         obj.collection = ParentCollection.Name;
         obj.path = MangaPath;
         obj.type = MangaType;
         obj.view = View;
         obj.status = Status;
         return obj;
+    }
+    
+    public function GetMetaJson():AdminMangaMetaJson
+    {
+        var obj:AdminMangaMetaJson = new AdminMangaMetaJson();
+        obj.author = Meta.Author;
+        obj.title = Meta.Title;
+        obj.volume = Meta.Volume;
+        obj.series = Meta.Series;
+        obj.year = Meta.Year;
+        obj.publisher = Meta.Publisher;
+        obj.tags = [];
+        return obj;
+    }
+    
+    public function UpdateMeta(obj:AdminMangaMetaJson):Void
+    {
+        Meta.Update(obj);
+
+        // todo: tags
     }
     
     public static function ToJsonArray(mangas:Array<Manga>):Array<MangaJson>
