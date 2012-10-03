@@ -36,21 +36,22 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             jQuery.Select("#admin-manga-meta-title").Focus();
         }
 
-        public static void ShowDialog(AdminMangasModule mangasModule, int id)
+        public static void ShowDialog(AdminMangasModule mangasModule, int id, int copiedId)
         {
             if (instance == null)
             {
                 instance = new AdminMangaMetaModal();
             }
 
-            instance.InternalShow(id);
+            instance.InternalShow(id, copiedId);
             AdminMangaMetaModal.mangasModule = mangasModule;
         }
 
-        public void InternalShow(int id)
+        public void InternalShow(int id, int copiedId)
         {
             AdminMangaMetaGetRequest request = new AdminMangaMetaGetRequest();
-            mangaId = request.id = id;
+            mangaId = id;
+            request.id = copiedId;
 
             Request.Send(request, GetMetaSuccess);
         }

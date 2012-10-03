@@ -7,4 +7,5 @@ package afung.mangaWeb3.common;
 
 class AdminMangasGetRequest extends JsonRequest
 {
+    public var filter:AdminMangaFilterJson;
 }

@@ -106,6 +106,11 @@ namespace afung.MangaWeb3.Server
             return collections.ToArray();
         }
 
+        public static string[] GetAllCollectionNames()
+        {
+            return Database.GetDistinctStringValues("collection", "name");
+        }
+
         public static bool CheckNewCollectionName(string name)
         {
             return GetByName(name) == null;

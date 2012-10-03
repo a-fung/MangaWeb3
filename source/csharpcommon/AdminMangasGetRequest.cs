@@ -8,5 +8,6 @@ namespace afung.MangaWeb3.Common
 {
     public class AdminMangasGetRequest : JsonRequest
     {
+        public AdminMangaFilterJson filter;
     }
 }

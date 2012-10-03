@@ -187,6 +187,33 @@ namespace afung.MangaWeb3.Server
             return mangas.ToArray();
         }
 
+        public static Manga[] GetMangasWithFilter(Collection collection, string tag, string author, int type)
+        {
+            string where = "TRUE";
+
+            if (collection != null)
+            {
+                where += " AND `cid`=" + Database.Quote(collection.Id.ToString());
+            }
+
+            if (!String.IsNullOrEmpty(tag))
+            {
+                where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(tag) + "))";
+            }
+
+            if (!String.IsNullOrEmpty(author))
+            {
+                where += " AND `id` IN (SELECT `mid` FROM `meta` WHERE `author`=" + Database.Quote(author) + ")";
+            }
+
+            if (type != -1)
+            {
+                where += " AND `type`=" + Database.Quote(type.ToString());
+            }
+
+            return GetMangas(where);
+        }
+
         public static Manga[] GetAllMangas()
         {
             return GetMangas(null);
@@ -343,19 +370,26 @@ namespace afung.MangaWeb3.Server
             Database.Delete("meta", "`mid`=" + Database.Quote(Id.ToString()));
         }
 
+        public static string[] GetAllTags()
+        {
+            return Database.GetDistinctStringValues("tag", "name");
+        }
+
         private string[] GetTags()
         {
-            return Database.GetDistinctStringValue("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Id.ToString()) + ")");
+            return Database.GetDistinctStringValues("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Id.ToString()) + ")");
         }
 
         private void UpdateTags(string[] tags)
         {
             int id;
             string[] oldTags = GetTags();
-            string[] allTags = Database.GetDistinctStringValue("tag", "name");
+            string[] allTags = GetAllTags();
 
-            foreach (string tag in tags)
+            foreach (string rawTag in tags)
             {
+                string tag = Utility.Remove4PlusBytesUtf8Chars(rawTag);
+
                 if (!oldTags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
                 {
                     if (allTags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))

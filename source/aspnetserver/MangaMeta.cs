@@ -128,28 +128,28 @@ namespace afung.MangaWeb3.Server
 
         public void Update(AdminMangaMetaJson obj)
         {
-            Author = obj.author;
-            Title = obj.title;
+            Author = Utility.Remove4PlusBytesUtf8Chars(obj.author);
+            Title = Utility.Remove4PlusBytesUtf8Chars(obj.title);
             Volume = obj.volume;
-            Series = obj.series;
+            Series = Utility.Remove4PlusBytesUtf8Chars(obj.series);
             Year = obj.year;
-            Publisher = obj.publisher;
+            Publisher = Utility.Remove4PlusBytesUtf8Chars(obj.publisher);
             Save();
         }
 
         public static string[] GetAuthors()
         {
-            return Database.GetDistinctStringValue("meta", "author");
+            return Database.GetDistinctStringValues("meta", "author");
         }
 
         public static string[] GetSeries()
         {
-            return Database.GetDistinctStringValue("meta", "series");
+            return Database.GetDistinctStringValues("meta", "series");
         }
 
         public static string[] GetPublishers()
         {
-            return Database.GetDistinctStringValue("meta", "publisher");
+            return Database.GetDistinctStringValues("meta", "publisher");
         }
     }
 }

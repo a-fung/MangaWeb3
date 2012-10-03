@@ -86,6 +86,11 @@ class Collection
         return collections;
     }
     
+    public static function GetAllCollectionNames():Array<String>
+    {
+        return Database.GetDistinctStringValues("collection", "name");
+    }
+    
     public static function CheckNewCollectionName(name:String):Bool
     {
         return GetByName(name) == null;

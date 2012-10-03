@@ -50,6 +50,9 @@
     <Compile Include="AdminMangaAddResponse.cs" />
     <Compile Include="AdminMangaEditPathRequest.cs" />
     <Compile Include="AdminMangaEditPathResponse.cs" />
+    <Compile Include="AdminMangaFilterJson.cs" />
+    <Compile Include="AdminMangaFilterRequest.cs" />
+    <Compile Include="AdminMangaFilterResponse.cs" />
     <Compile Include="AdminMangaMetaEditRequest.cs" />
     <Compile Include="AdminMangaMetaGetRequest.cs" />
     <Compile Include="AdminMangaMetaGetResponse.cs" />

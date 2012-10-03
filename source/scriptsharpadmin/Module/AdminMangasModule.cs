@@ -17,6 +17,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private MangaJson[] mangas;
         private int currentPage;
         private Pagination pagination;
+        private int copiedMangaMetaId = -1;
 
         public AdminMangasModule()
             : base("admin-mangas-module")
@@ -29,6 +30,9 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-mangas-delete-btn").Click(DeleteButtonClicked);
             jQuery.Select("#admin-mangas-edit-btn").Click(EditButtonClicked);
             jQuery.Select("#admin-mangas-refresh-btn").Click(RefreshButtonClicked);
+            jQuery.Select("#admin-mangas-copy-meta-btn").Click(CopyMetaButtonClicked);
+            jQuery.Select("#admin-mangas-paste-meta-btn").Click(PasteMetaButtonClicked);
+            jQuery.Select("#admin-mangas-filter-btn").Click(FilterButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
             Refresh();
@@ -42,9 +46,17 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
         [AlternateSignature]
         public extern void Refresh(JsonResponse response);
-        public void Refresh()
+        [AlternateSignature]
+        public extern void Refresh();
+        public void Refresh(bool useFilter, AdminMangaFilterJson filter)
         {
-            Request.Send(new AdminMangasGetRequest(), GetRequestSuccess);
+            AdminMangasGetRequest request = new AdminMangasGetRequest();
+            if (!Script.IsNullOrUndefined(filter))
+            {
+                request.filter = filter;
+            }
+
+            Request.Send(request, GetRequestSuccess);
         }
 
         [AlternateSignature]
@@ -52,6 +64,10 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void GetRequestSuccess(AdminMangasGetResponse response)
         {
             mangas = response.mangas;
+            mangas.Sort(delegate(object x, object y)
+            {
+                return ((MangaJson)y).status - ((MangaJson)x).status;
+            });
             ChangePage(1);
             pagination.Refresh(true);
         }
@@ -87,10 +103,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void MetaButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
-            string id = jQuery.FromElement(e.Target).GetAttribute("data-id");
-            if (!String.IsNullOrEmpty(id))
+            string idString = jQuery.FromElement(e.Target).GetAttribute("data-id");
+            if (!String.IsNullOrEmpty(idString))
             {
-                AdminMangaMetaModal.ShowDialog(this, int.Parse(id, 10));
+                int id = int.Parse(idString, 10);
+                AdminMangaMetaModal.ShowDialog(this, id, id);
             }
         }
 
@@ -151,6 +168,47 @@ namespace afung.MangaWeb3.Client.Admin.Module
             {
                 AdminMangaEditPathModal.ShowDialog(this, ids[0]);
             }
+        }
+
+        private void CopyMetaButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            int[] ids = GetSelectedIds();
+
+            if (ids.Length > 1)
+            {
+                ErrorModal.ShowError(Strings.Get("SelectSingleItem"));
+            }
+            else if (ids.Length == 1)
+            {
+                copiedMangaMetaId = ids[0];
+            }
+        }
+
+        private void PasteMetaButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            if (copiedMangaMetaId != -1)
+            {
+                int[] ids = GetSelectedIds();
+
+                if (ids.Length > 1)
+                {
+                    ErrorModal.ShowError(Strings.Get("SelectSingleItem"));
+                }
+                else if (ids.Length == 1)
+                {
+                    AdminMangaMetaModal.ShowDialog(this, ids[0], copiedMangaMetaId);
+                }
+            }
+        }
+
+        private void FilterButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            AdminMangaFilterModal.ShowDialog(this);
         }
     }
 }

@@ -21,8 +21,27 @@ namespace afung.MangaWeb3.Server.Handler
                 return;
             }
 
+            AdminMangasGetRequest request = Utility.ParseJson<AdminMangasGetRequest>(jsonString);
             AdminMangasGetResponse response = new AdminMangasGetResponse();
-            response.mangas = Manga.ToJsonArray(Manga.GetAllMangas());
+            if (request.filter == null)
+            {
+                response.mangas = Manga.ToJsonArray(Manga.GetAllMangas());
+            }
+            else
+            {
+                Collection collection = null;
+                if (!String.IsNullOrEmpty(request.filter.collection))
+                {
+                    if ((collection = Collection.GetByName(request.filter.collection)) == null)
+                    {
+                        ajax.BadRequest();
+                        return;
+                    }
+                }
+
+                response.mangas = Manga.ToJsonArray(Manga.GetMangasWithFilter(collection, request.filter.tag, request.filter.author, request.filter.type));
+            }
+
             ajax.ReturnJson(response);
         }
     }

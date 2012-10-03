@@ -13,6 +13,7 @@ namespace afung.MangaWeb3.Client.Admin
         {
             Template.Templates[Template.Templates.Length] = "admin";
             Template.TemplateIds["admin"] = new string[] {
+                "admin-manga-filter-modal",
                 "admin-manga-meta-modal",
                 "admin-manga-edit-path-modal",
                 "admin-finder-modal",

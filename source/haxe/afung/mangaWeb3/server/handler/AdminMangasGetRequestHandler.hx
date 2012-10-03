@@ -2,6 +2,7 @@ package afung.mangaWeb3.server.handler;
 
 import afung.mangaWeb3.common.AdminMangasGetRequest;
 import afung.mangaWeb3.common.AdminMangasGetResponse;
+import afung.mangaWeb3.server.Collection;
 
 /**
  * ...
@@ -23,8 +24,27 @@ class AdminMangasGetRequestHandler extends HandlerBase
             return;
         }
         
+        var request:AdminMangasGetRequest = Utility.ParseJson(jsonString);
         var response:AdminMangasGetResponse = new AdminMangasGetResponse();
-        response.mangas = Manga.ToJsonArray(Manga.GetAllMangas());
+        if (request.filter == null)
+        {
+            response.mangas = Manga.ToJsonArray(Manga.GetAllMangas());
+        }
+        else
+        {
+            var collection:Collection = null;
+            if (request.filter.collection != null && request.filter.collection != "")
+            {
+                if ((collection = Collection.GetByName(request.filter.collection)) == null)
+                {
+                    ajax.BadRequest();
+                    return;
+                }
+            }
+
+            response.mangas = Manga.ToJsonArray(Manga.GetMangasWithFilter(collection, request.filter.tag, request.filter.author, request.filter.type));
+        }
+            
         ajax.ReturnJson(response);
     }
 }

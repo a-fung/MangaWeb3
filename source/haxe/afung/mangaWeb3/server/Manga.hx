@@ -150,6 +150,33 @@ class Manga
         return mangas;
     }
     
+    public static function GetMangasWithFilter(collection:Collection, tag:String, author:String, type:Int):Array<Manga>
+    {
+        var where:String = "TRUE";
+
+        if (collection != null)
+        {
+            where += " AND `cid`=" + Database.Quote(Std.string(collection.Id));
+        }
+
+        if (tag != null && tag != "")
+        {
+            where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(tag) + "))";
+        }
+
+        if (author != null && author != "")
+        {
+            where += " AND `id` IN (SELECT `mid` FROM `meta` WHERE `author`=" + Database.Quote(author) + ")";
+        }
+
+        if (type != -1)
+        {
+            where += " AND `type`=" + Database.Quote(Std.string(type));
+        }
+        
+        return GetMangas(where);
+    }
+    
     public static function GetAllMangas():Array<Manga>
     {
         return GetMangas(null);
@@ -306,19 +333,26 @@ class Manga
         Database.Delete("meta", "`mid`=" + Database.Quote(Std.string(Id)));
     }
     
+    public static function GetAllTags():Array<String>
+    {
+        return Database.GetDistinctStringValues("tag", "name");
+    }
+    
     private function GetTags():Array<String>
     {
-        return Database.GetDistinctStringValue("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Std.string(Id)) + ")");
+        return Database.GetDistinctStringValues("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Std.string(Id)) + ")");
     }
     
     private function UpdateTags(tags:Array<String>):Void
     {
         var id:Int;
         var oldTags:Array<String> = GetTags();
-        var allTags:Array<String> = Database.GetDistinctStringValue("tag", "name");
+        var allTags:Array<String> = GetAllTags();
 
-        for (tag in tags)
+        for (rawTag in tags)
         {
+            var tag:String = Utility.Remove4PlusBytesUtf8Chars(rawTag);
+
             if (Utility.ArrayStringContains(oldTags, tag))
             {
                 if (Utility.ArrayStringContains(allTags, tag))

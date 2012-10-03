@@ -173,6 +173,14 @@
                             <i class="icon-refresh"></i>
                             <span class="msg msg-RefreshContent"></span>
                         </a></li>
+                        <li><a href="#" id="admin-mangas-copy-meta-btn">
+                            <i class="icon-pencil"></i>
+                            <span class="msg msg-CopyMeta"></span>
+                        </a></li>
+                        <li><a href="#" id="admin-mangas-paste-meta-btn">
+                            <i class="icon-pencil"></i>
+                            <span class="msg msg-PasteMeta"></span>
+                        </a></li>
                     </ul>
                 </div>
                 <a href="#" class="btn" id="admin-mangas-add-btn">
@@ -634,6 +642,52 @@
     </div>
     <div class="modal-footer">
         <input class="val val-Submit btn btn-primary" id="admin-manga-meta-submit" type="submit" value="Submit" />
+    </div>
+    </form>
+</div>
+<div id="admin-manga-filter-modal" class="modal hide fade">
+    <form id="admin-manga-filter-form">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-Filter"></h3>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        <span class="msg msg-Collection"></span>
+                        <br />
+                        <select size="4" id="admin-manga-filter-collection"></select>
+                    </td>
+                    <td class="text-center">
+                        <span class="msg msg-Tags"></span>
+                        <br />
+                        <select size="4" id="admin-manga-filter-tag"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        <span class="msg msg-Author"></span>
+                        <br />
+                        <select size="4" id="admin-manga-filter-author"></select>
+                    </td>
+                    <td class="text-center">
+                        <span class="msg msg-Type"></span>
+                        <br />
+                        <select size="4" id="admin-manga-filter-type">
+                            <option value="-1" class="msg msg-All"></option>
+                            <option value="0" class="msg msg-Zip"></option>
+                            <option value="1" class="msg msg-RAR"></option>
+                            <option value="2" class="msg msg-PDF"></option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Apply btn btn-primary" id="admin-manga-filter-submit" type="submit" />
     </div>
     </form>
 </div>

@@ -184,7 +184,7 @@ class Database
         return "(" + clauseBuilder.toString().substr(4) + ")";
     }
     
-    public static function GetDistinctStringValue(table:String, field:String, where:String = "TRUE"):Array<String>
+    public static function GetDistinctStringValues(table:String, field:String, where:String = "TRUE"):Array<String>
     {
         var resultSet:Array<Hash<Dynamic>> = Select(table, "`" + field + "`<>'' AND " + where, null, null, "DISTINCT `" + field + "`");
         var rtn:Array<String> = new Array<String>();
