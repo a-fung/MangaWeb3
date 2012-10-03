@@ -278,15 +278,14 @@ class Manga
         obj.series = Meta.Series;
         obj.year = Meta.Year;
         obj.publisher = Meta.Publisher;
-        obj.tags = [];
+        obj.tags = GetTags();
         return obj;
     }
     
     public function UpdateMeta(obj:AdminMangaMetaJson):Void
     {
         Meta.Update(obj);
-
-        // todo: tags
+        UpdateTags(obj.tags);
     }
     
     public static function ToJsonArray(mangas:Array<Manga>):Array<MangaJson>
@@ -302,10 +301,57 @@ class Manga
     
     public function Delete():Void
     {
+        UpdateTags([]);
         Database.Delete("manga", "`id`=" + Database.Quote(Std.string(Id)));
         Database.Delete("meta", "`mid`=" + Database.Quote(Std.string(Id)));
+    }
+    
+    private function GetTags():Array<String>
+    {
+        return Database.GetDistinctStringValue("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Std.string(Id)) + ")");
+    }
+    
+    private function UpdateTags(tags:Array<String>):Void
+    {
+        var id:Int;
+        var oldTags:Array<String> = GetTags();
+        var allTags:Array<String> = Database.GetDistinctStringValue("tag", "name");
 
-        // TODO: delete tags
+        for (tag in tags)
+        {
+            if (Utility.ArrayStringContains(oldTags, tag))
+            {
+                if (Utility.ArrayStringContains(allTags, tag))
+                {
+                    id = Std.parseInt(Database.Select("tag", "`name`=" + Database.Quote(tag))[0].get("id"));
+                }
+                else
+                {
+                    var tagData:Hash<Dynamic> = new Hash<Dynamic>();
+                    tagData.set("name", tag);
+                    Database.Insert("tag", tagData);
+                    id = Database.LastInsertId();
+                }
+
+                var mangaTagData:Hash<Dynamic> = new Hash<Dynamic>();
+                mangaTagData.set("tid", id); // tag ID
+                mangaTagData.set("mid", Id); // manga ID
+                Database.Insert("mangatag", mangaTagData);
+            }
+        }
+
+        for (tag in oldTags)
+        {
+            if (Utility.ArrayStringContains(tags, tag))
+            {
+                id = Std.parseInt(Database.Select("tag", "`name`=" + Database.Quote(tag))[0].get("id"));
+                Database.Delete("mangatag", "`tid`=" + Database.Quote(Std.string(id)) + " AND `mid`=" + Database.Quote(Std.string(Id)));
+                if (Database.Select("mangatag", "`tid`=" + Database.Quote(Std.string(id))).length == 0)
+                {
+                    Database.Delete("tag", "`id`=" + Database.Quote(Std.string(id)));
+                }
+            }
+        }
     }
     
     public static function DeleteMangas(mangas:Array<Manga>):Void

@@ -170,6 +170,19 @@ class Utility
         return false;
     }
     
+    public static function ArrayStringContains(array:Array<String>, value:String):Bool
+    {
+        for (e in array)
+        {
+            if (e.toLowerCase() == value.toLowerCase())
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public static function JoinNativeArray(original:NativeArray):String
     {
         var buf:StringBuf = new StringBuf();

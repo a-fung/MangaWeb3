@@ -15,7 +15,8 @@ CREATE TABLE `collectionuser` (
   `cid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `access` tinyint(1) NOT NULL,
-  KEY `cid` (`cid`,`uid`)
+  KEY `cid` (`cid`),
+  KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `manga`;
@@ -59,7 +60,8 @@ DROP TABLE IF EXISTS `mangatag`;
 CREATE TABLE `mangatag` (
   `mid` int(11) NOT NULL,
   `tid` int(11) NOT NULL,
-  KEY `mid` (`mid`,`tid`)
+  KEY `mid` (`mid`),
+  KEY `tid` (`tid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `setting`;

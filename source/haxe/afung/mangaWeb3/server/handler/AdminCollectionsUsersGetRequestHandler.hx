@@ -80,11 +80,11 @@ class AdminCollectionsUsersGetRequestHandler extends HandlerBase
                 exNames.push(cu.collectionName);
             }
             
-            for (user in User.GetAllUsers())
+            for (collection in Collection.GetAllCollections())
             {
-                if (!Utility.ArrayContains(exNames, user.Username))
+                if (!Utility.ArrayContains(exNames, collection.Name))
                 {
-                    newNames.push(user.Username);
+                    newNames.push(collection.Name);
                 }
             }
             

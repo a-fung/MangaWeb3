@@ -205,7 +205,12 @@ namespace afung.MangaWeb3.Server
 
         public static string[] GetDistinctStringValue(string table, string field)
         {
-            Dictionary<string, object>[] resultSet = Select(table, "`" + field + "`<>''", null, null, "DISTINCT `" + field + "`");
+            return GetDistinctStringValue(table, field, "TRUE");
+        }
+
+        public static string[] GetDistinctStringValue(string table, string field, string where)
+        {
+            Dictionary<string, object>[] resultSet = Select(table, "`" + field + "`<>'' AND " + where, null, null, "DISTINCT `" + field + "`");
             List<string> rtn = new List<string>();
             foreach (Dictionary<string, object> data in resultSet)
             {

@@ -315,15 +315,14 @@ namespace afung.MangaWeb3.Server
             obj.series = Meta.Series;
             obj.year = Meta.Year;
             obj.publisher = Meta.Publisher;
-            obj.tags = new string[0];
+            obj.tags = GetTags();
             return obj;
         }
 
         public void UpdateMeta(AdminMangaMetaJson obj)
         {
             Meta.Update(obj);
-
-            // todo: tags
+            UpdateTags(obj.tags);
         }
 
         public static MangaJson[] ToJsonArray(Manga[] mangas)
@@ -339,10 +338,57 @@ namespace afung.MangaWeb3.Server
 
         public void Delete()
         {
+            UpdateTags(new string[0]);
             Database.Delete("manga", "`id`=" + Database.Quote(Id.ToString()));
             Database.Delete("meta", "`mid`=" + Database.Quote(Id.ToString()));
+        }
 
-            // TODO: delete tags
+        private string[] GetTags()
+        {
+            return Database.GetDistinctStringValue("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Id.ToString()) + ")");
+        }
+
+        private void UpdateTags(string[] tags)
+        {
+            int id;
+            string[] oldTags = GetTags();
+            string[] allTags = Database.GetDistinctStringValue("tag", "name");
+
+            foreach (string tag in tags)
+            {
+                if (!oldTags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    if (allTags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        id = Convert.ToInt32(Database.Select("tag", "`name`=" + Database.Quote(tag))[0]["id"]);
+                    }
+                    else
+                    {
+                        Dictionary<string, object> tagData = new Dictionary<string, object>();
+                        tagData["name"] = tag;
+                        Database.Insert("tag", tagData);
+                        id = Database.LastInsertId();
+                    }
+
+                    Dictionary<string, object> mangaTagData = new Dictionary<string, object>();
+                    mangaTagData["tid"] = id; // tag ID
+                    mangaTagData["mid"] = Id; // manga ID
+                    Database.Insert("mangatag", mangaTagData);
+                }
+            }
+
+            foreach (string tag in oldTags)
+            {
+                if (!tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    id = Convert.ToInt32(Database.Select("tag", "`name`=" + Database.Quote(tag))[0]["id"]);
+                    Database.Delete("mangatag", "`tid`=" + Database.Quote(id.ToString()) + " AND `mid`=" + Database.Quote(Id.ToString()));
+                    if (Database.Select("mangatag", "`tid`=" + Database.Quote(id.ToString())).Length == 0)
+                    {
+                        Database.Delete("tag", "`id`=" + Database.Quote(id.ToString()));
+                    }
+                }
+            }
         }
 
         public static void DeleteMangas(Manga[] mangas)
