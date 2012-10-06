@@ -85,15 +85,28 @@ namespace afung.MangaWeb3.Client.Install.Module
 
         private bool AllRequiredComponentLoaded;
 
-        public InstallModule()
-            : base("install", "install-module")
+        private static InstallModule _instance = null;
+        public static InstallModule Instance
         {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new InstallModule();
+                }
+
+                return _instance;
+            }
         }
 
-        protected override void Initialize()
+        private InstallModule()
+            : base("install", "install-module")
         {
-            // hide install form and send out a request to check if MangaWeb is installed
             jQuery.Select("#install-form").Hide();
+        }
+
+        protected override void OnShow()
+        {
             Request.Send(new PreInstallCheckRequest(), OnPreInstallCheckRequestFinished);
         }
 

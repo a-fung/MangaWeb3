@@ -19,12 +19,22 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private int currentPage;
         private Pagination pagination;
 
-        public AdminCollectionsModule()
-            : base("admin-collections-module")
+        private static AdminCollectionsModule _instance = null;
+        public static AdminCollectionsModule Instance
         {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AdminCollectionsModule();
+                }
+
+                return _instance;
+            }
         }
 
-        protected override void InnerInitialize()
+        private AdminCollectionsModule()
+            : base("admin-collections-module")
         {
             jQuery.Select("#admin-collections-add-btn").Click(AddButtonClicked);
             jQuery.Select("#admin-collections-delete-btn").Click(DeleteButtonClicked);
@@ -33,6 +43,10 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-collections-edit-btn").Click(EditButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-collections-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
+        }
+
+        protected override void OnShow()
+        {
             Refresh();
         }
 

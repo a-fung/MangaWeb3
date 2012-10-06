@@ -34,7 +34,7 @@ namespace afung.MangaWeb3.Client.Install.Modal
             if (response.installsuccessful)
             {
                 this.Hide();
-                new InstallFinishModule();
+                InstallFinishModule.Instance.Show();
             }
             else
             {

@@ -9,12 +9,26 @@ namespace afung.MangaWeb3.Client.Install.Module
 {
     public class InstallFinishModule : ModuleBase
     {
-        public InstallFinishModule()
+        private static InstallFinishModule _instance = null;
+        public static InstallFinishModule Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new InstallFinishModule();
+                }
+
+                return _instance;
+            }
+        }
+
+        private InstallFinishModule()
             : base("install", "install-finish-module")
         {
         }
 
-        protected override void Initialize()
+        protected override void OnShow()
         {
         }
     }

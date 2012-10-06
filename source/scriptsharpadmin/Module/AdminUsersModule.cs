@@ -21,12 +21,22 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private Pagination pagination;
         private string currentUserName;
 
-        public AdminUsersModule()
-            : base("admin-users-module")
+        private static AdminUsersModule _instance = null;
+        public static AdminUsersModule Instance
         {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AdminUsersModule();
+                }
+
+                return _instance;
+            }
         }
 
-        protected override void InnerInitialize()
+        private AdminUsersModule()
+            : base("admin-users-module")
         {
             LoginModal.GetUserName(delegate(LoginResponse response)
             {
@@ -38,6 +48,10 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-users-setasuser-btn").Click(SetAsUserButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-users-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-users-pagination"), ChangePage, GetTotalPage, "right");
+        }
+
+        protected override void OnShow()
+        {
             Refresh();
         }
 

@@ -19,12 +19,22 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private Pagination pagination;
         private int copiedMangaMetaId = -1;
 
-        public AdminMangasModule()
-            : base("admin-mangas-module")
+        private static AdminMangasModule _instance = null;
+        public static AdminMangasModule Instance
         {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AdminMangasModule();
+                }
+
+                return _instance;
+            }
         }
 
-        protected override void InnerInitialize()
+        private AdminMangasModule()
+            : base("admin-mangas-module")
         {
             jQuery.Select("#admin-mangas-add-btn").Click(AddButtonClicked);
             jQuery.Select("#admin-mangas-delete-btn").Click(DeleteButtonClicked);
@@ -35,6 +45,10 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-mangas-filter-btn").Click(FilterButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
+        }
+
+        protected override void OnShow()
+        {
             Refresh();
         }
 

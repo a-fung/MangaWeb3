@@ -14,23 +14,15 @@ namespace afung.MangaWeb3.Client.Admin.Module
 {
     public abstract class AdminModuleBase : ModuleBase
     {
-        public AdminModuleBase(string templateId)
+        protected AdminModuleBase(string templateId)
             : base("admin", templateId)
-        {
-        }
-
-        protected sealed override void Initialize()
         {
             jQuery.Select(".nav-admin-collections").Click(NavCollectionsClicked);
             jQuery.Select(".nav-admin-mangas").Click(NavMangasClicked);
             jQuery.Select(".nav-admin-users").Click(NavUsersClicked);
             jQuery.Select(".nav-admin-settings").Click(NavSettingsClicked);
             jQuery.Select(".nav-admin-logout").Click(NavLogoutClicked);
-
-            InnerInitialize();
         }
-
-        protected abstract void InnerInitialize();
 
         private void NavCollectionsClicked(jQueryEvent e)
         {
@@ -38,7 +30,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminCollectionsModule))
             {
-                new AdminCollectionsModule();
+                AdminCollectionsModule.Instance.Show();
             }
         }
 
@@ -48,7 +40,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminMangasModule))
             {
-                new AdminMangasModule();
+                AdminMangasModule.Instance.Show();
             }
         }
 
@@ -58,7 +50,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminUsersModule))
             {
-                new AdminUsersModule();
+                AdminUsersModule.Instance.Show();
             }
         }
 

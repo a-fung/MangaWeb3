@@ -11,12 +11,26 @@ namespace afung.MangaWeb3.Client.Admin.Module
 {
     public class AdminModule : ModuleBase
     {
-        public AdminModule()
+        private static AdminModule _instance = null;
+        public static AdminModule Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AdminModule();
+                }
+
+                return _instance;
+            }
+        }
+
+        private AdminModule()
             : base("admin", "admin-module")
         {
         }
 
-        protected override void Initialize()
+        protected override void OnShow()
         {
             LoginModal.GetUserName(LoginSuccess, LoginFailure, true);
         }
@@ -25,7 +39,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             if (userInfo.admin)
             {
-                new AdminCollectionsModule();
+                AdminCollectionsModule.Instance.Show();
             }
             else
             {
