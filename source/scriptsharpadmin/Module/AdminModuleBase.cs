@@ -17,11 +17,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         protected AdminModuleBase(string templateId)
             : base("admin", templateId)
         {
-            jQuery.Select(".nav-admin-collections").Click(NavCollectionsClicked);
-            jQuery.Select(".nav-admin-mangas").Click(NavMangasClicked);
-            jQuery.Select(".nav-admin-users").Click(NavUsersClicked);
-            jQuery.Select(".nav-admin-settings").Click(NavSettingsClicked);
-            jQuery.Select(".nav-admin-logout").Click(NavLogoutClicked);
+            jQuery.Select(".nav-admin-collections", attachedObject).Click(NavCollectionsClicked);
+            jQuery.Select(".nav-admin-mangas", attachedObject).Click(NavMangasClicked);
+            jQuery.Select(".nav-admin-users", attachedObject).Click(NavUsersClicked);
+            jQuery.Select(".nav-admin-settings", attachedObject).Click(NavSettingsClicked);
+            jQuery.Select(".nav-admin-logout", attachedObject).Click(NavLogoutClicked);
         }
 
         private void NavCollectionsClicked(jQueryEvent e)

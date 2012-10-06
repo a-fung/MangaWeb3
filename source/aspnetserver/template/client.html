@@ -45,3 +45,356 @@
         <a href="#" class="msg msg-Yes btn btn-primary" id="confirm-modal-yes-btn"></a><a href="#" class="msg msg-No btn" id="confirm-modal-no-btn"></a>
     </div>
 </div>
+<li id="nav-login-widget"><a href="#" class="nav-login">
+    <i class="icon-user"></i>
+    <span class="msg msg-Login"></span>
+</a></li>
+<li class="dropdown" id="nav-logout-widget"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="icon-user"></i>
+    <span class="nav-user-username"></span>
+    <i class="caret"></i>
+</a>
+    <ul class="dropdown-menu">
+        <li><a href="#">
+            <i class="icon-off"></i>
+            <span class="msg msg-Logout"></span>
+        </a></li>
+        <li><a href="#">
+            <i class="icon-lock"></i>
+            <span class="msg msg-ChangePassword"></span>
+        </a></li>
+    </ul>
+</li>
+<div class="container" id="mangas-module">
+    <ul class="nav nav-pills nav-main hidden-phone">
+        <li class="active"><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <ul class="nav nav-pills nav-main nav-stacked visible-phone">
+        <li class="active"><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <ul class="breadcrumb" id="mangas-breadcrumb">
+        <li id="mangas-breadcrumb-link"><a href="#" class="mangas-breadcrumb-btn"></a>
+            <span class="divider">/</span></li>
+        <li class="active" id="mangas-breadcrumb-active-folder"></li>
+        <li class="active" id="mangas-breadcrumb-tag">
+            <span class="msg msg-TagColon"></span>
+            <span class="mangas-breadcrumb-tag-name"></span>
+        </li>
+    </ul>
+    <div class="mangas-pagination">
+    </div>
+    <div id="mangas-list" class="row-fluid">
+        <ul class="thumbnails" id="mangas-list-row">
+            <li class="span3" id="mangas-list-item">
+                <div class="thumbnail mangas-list-item-frame">
+                    <div class="mangas-list-item-inner">
+                        <div class="mangas-list-item-thumbnail-wrap">
+                            <a href="#" class="mangas-list-item-thumbnail-link">
+                                <img src="img/cover.png" class="mangas-list-item-thumbnail">
+                            </a>
+                        </div>
+                        <div class="caption">
+                            <h4 class="mangas-list-item-title"></h4>
+                            <p>
+                                <span class="mangas-list-item-pages"></span>
+                                <span class="mangas-list-item-pages-unit"></span>
+                                -
+                                <span class="mangas-list-item-size"></span>
+                                <span class="mangas-list-item-size-unit"></span>
+                            </p>
+                            <p class="mangas-list-item-details-p"><a href="#" class="btn btn-small btn-info mangas-list-item-details-btn">
+                                <i class="icon-list icon-white"></i>
+                                <span class="msg msg-Details"></span>
+                            </a></p>
+                            <div id="mangas-list-item-details" class="mangas-list-item-details">
+                                <p class="mangas-list-item-details-author-p">
+                                    <span class="msg msg-AuthorColon"></span>
+                                    <span class="mangas-list-item-details-author"></span>
+                                </p>
+                                <p class="mangas-list-item-details-series-p">
+                                    <span class="msg msg-SeriesColon"></span>
+                                    <span class="mangas-list-item-details-series"></span>
+                                </p>
+                                <p class="mangas-list-item-details-volume-p">
+                                    <span class="msg msg-VolumeColon"></span>
+                                    <span class="mangas-list-item-details-volume"></span>
+                                </p>
+                                <p class="mangas-list-item-details-year-p">
+                                    <span class="msg msg-YearColon"></span>
+                                    <span class="mangas-list-item-details-year"></span>
+                                </p>
+                                <p class="mangas-list-item-details-publisher-p">
+                                    <span class="msg msg-PublisherColon"></span>
+                                    <span class="mangas-list-item-details-publisher"></span>
+                                </p>
+                                <p class="mangas-list-item-details-tags-p">
+                                    <span class="msg msg-TagsColon"></span>
+                                    <span class="mangas-list-item-details-tags"><a href="#" id="mangas-list-item-details-tag-link"></a></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="mangas-pagination">
+    </div>
+</div>
+<div class="container" id="folders-module">
+    <ul class="nav nav-pills nav-main hidden-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <ul class="nav nav-pills nav-main nav-stacked visible-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <div id="folders-area">
+        <table id="folders-table">
+            <tbody class="folders-tbody">
+                <tr id="folders-trow">
+                    <td><a href="#" class="folders-expand-btn">
+                        <i class="icon-none folders-expand-icon"></i>
+                    </a></td>
+                    <td class="btn folders-tcell"><a href="#" class="btn folders-btn"></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="container" id="search-module">
+    <ul class="nav nav-pills nav-main hidden-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <ul class="nav nav-pills nav-main nav-stacked visible-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <form class="form-horizontal" id="search-form">
+    <div class="control-group">
+        <label class="msg msg-Title control-label" for="search-title"></label>
+        <div class="controls">
+            <input type="text" id="search-title" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Folder control-label" for="search-folder"></label>
+        <div class="controls">
+            <select id="search-folder">
+                <option value="0" class="msg msg-AllFolders"></option>
+                <option value="1" class="msg msg-CurrentFolderAndSubfolders">Current folder and subfolders</option>
+                <option value="2" class="msg msg-CurrentFolderOnly">Current folder only</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Author control-label" for="search-author"></label>
+        <div class="controls">
+            <select id="search-author"></select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Series control-label" for="search-series"></label>
+        <div class="controls">
+            <select id="search-series"></select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Year control-label" for="search-year"></label>
+        <div class="controls">
+            <input type="number" id="search-year" class="input-small" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Publisher control-label" for="search-publisher"></label>
+        <div class="controls">
+            <select id="search-publisher"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset5 span2">
+            <input type="submit" class="val val-Search btn btn-primary btn-block" id="search-submit" />
+        </div>
+    </div>
+    </form>
+</div>
+<div class="container" id="settings-module">
+    <ul class="nav nav-pills nav-main hidden-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <ul class="nav nav-pills nav-main nav-stacked visible-phone">
+        <li><a href="#" class="nav-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-folders">
+            <i class="icon-folder-open"></i>
+            <span class="msg msg-Folders"></span>
+        </a></li>
+        <li><a href="#" class="nav-search">
+            <i class="icon-search"></i>
+            <span class="msg msg-Search"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+    </ul>
+    <form class="form-horizontal" id="settings-form">
+    <div class="control-group">
+        <label class="msg msg-Language control-label" for="settings-language"></label>
+        <div class="controls">
+            <select id="settings-language">
+                <option value="en-us">English (United States)</option>
+                <option value="zh-hk">中文 (香港)</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-Author control-label" for="settings-sort"></label>
+        <div class="controls">
+            <select id="settings-sort">
+                <option value="0" class="msg msg-ByTitle"></option>
+                <option value="1" class="msg msg-ByNumberOfPages"></option>
+                <option value="2" class="msg msg-BySize"></option>
+                <option value="3" class="msg msg-ByDate"></option>
+                <option value="-1" class="msg msg-Random"></option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-DisplayType control-label" for="settings-display-type"></label>
+        <div class="controls">
+            <select id="settings-display-type">
+                <option value="0" class="msg msg-FitHeight"></option>
+                <option value="1" class="msg msg-FitScreen"></option>
+                <option value="2" class="msg msg-FitWidth"></option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-ContinuousMode control-label" for="settings-continuous-mode"></label>
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" id="settings-continuous-mode" />
+            </label>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="msg msg-FixAutoResize control-label" for="settings-fix-auto-resize"></label>
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" id="settings-fix-auto-resize" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset5 span2">
+            <input type="submit" class="val val-Apply btn btn-primary btn-block" id="settings-apply-btn" />
+        </div>
+    </div>
+    </form>
+</div>

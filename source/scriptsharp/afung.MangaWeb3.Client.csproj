@@ -54,6 +54,11 @@
     <Compile Include="Modal\ErrorModal.cs" />
     <Compile Include="Modal\LoginModal.cs" />
     <Compile Include="Modal\ModalBase.cs" />
+    <Compile Include="Module\ClientModuleBase.cs" />
+    <Compile Include="Module\FoldersModule.cs" />
+    <Compile Include="Module\MangasModule.cs" />
+    <Compile Include="Module\SearchModule.cs" />
+    <Compile Include="Module\SettingsModule.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Module\ModuleBase.cs" />

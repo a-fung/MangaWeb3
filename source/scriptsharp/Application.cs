@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using jQueryApi;
 using System.Html;
+using afung.MangaWeb3.Client.Module;
+using jQueryApi;
 
 namespace afung.MangaWeb3.Client
 {
@@ -86,7 +87,7 @@ namespace afung.MangaWeb3.Client
 
         protected virtual void LoadFirstModule()
         {
-
+            MangasModule.Instance.Show();
         }
 
         /// <summary>

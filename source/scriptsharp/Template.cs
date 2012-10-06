@@ -32,13 +32,27 @@ namespace afung.MangaWeb3.Client
             new Dictionary<string, string[]>(
                 "client",
                 new string[] {
+                    "settings-module",
+                    "search-module",
+                    "folders-trow",
+                    "folders-table",
+                    "folders-module",
+                    "mangas-list-item-details-tag-link",
+                    "mangas-list-item-details",
+                    "mangas-list-item",
+                    "mangas-list-row",
+                    "mangas-breadcrumb-tag",
+                    "mangas-breadcrumb-active-folder",
+                    "mangas-breadcrumb-link",
+                    "mangas-module",
+                    "nav-logout-widget",
+                    "nav-login-widget",
                     "confirm-modal",
                     "widget-pagination-page",
                     "widget-pagination",
                     "login-modal",
                     "error-modal"
                 });
-
 
         private static jQueryObject _tempDivObject = null;
 
