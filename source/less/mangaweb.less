@@ -120,3 +120,56 @@ textarea {
 .typeahead {
 	z-index:2000;
 }
+
+.dropdown.open > a {
+	>[class^="icon-"], >[class*=" icon-"] {
+		background-image: url("../img/glyphicons-halflings-white.png");
+	}
+}
+
+#mangas-list {
+	.thumbnails {
+		.vtransition {
+			transition: height 0.5s, opacity 0.5s;
+			-moz-transition: height 0.5s, opacity 0.5s;
+			-webkit-transition: height 0.5s, opacity 0.5s;
+			-o-transition: height 0.5s, opacity 0.5s;
+		}
+		
+		.thumbnail {
+			overflow: hidden;
+			
+			.caption {
+				h4:first-child {
+					margin-top: 0;
+				}
+				
+				.manga-list-item-details p {
+					font-size: 12px;
+					line-height: 16px;
+					margin-bottom: 8px;
+				}
+				
+				p:last-child {
+					margin-bottom: 0;
+				}
+			}
+			
+			img {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				background-image: url("../img/loading.gif");
+				background-repeat: no-repeat;
+				background-position: center center;
+				max-height: 200px;
+			}
+		}
+	}
+}
+#folders-module {
+	td {
+		vertical-align:baseline;
+		white-space:nowrap;
+	}
+}
