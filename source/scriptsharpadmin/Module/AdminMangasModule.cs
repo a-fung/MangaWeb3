@@ -45,11 +45,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-mangas-filter-btn").Click(FilterButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
+            Refresh();
         }
 
         protected override void OnShow()
         {
-            Refresh();
         }
 
         private void AddButtonClicked(jQueryEvent e)

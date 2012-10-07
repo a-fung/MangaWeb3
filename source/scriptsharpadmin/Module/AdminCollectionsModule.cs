@@ -43,11 +43,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-collections-edit-btn").Click(EditButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-collections-action-dropdown"));
             pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
+            Refresh();
         }
 
         protected override void OnShow()
         {
-            Refresh();
         }
 
         private void AddButtonClicked(jQueryEvent e)
