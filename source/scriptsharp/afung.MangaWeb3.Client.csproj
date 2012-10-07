@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Import\Bootstrap.cs" />
     <Compile Include="Import\CKFinder.cs" />
+    <Compile Include="Modal\ChangePasswordModal.cs" />
     <Compile Include="Modal\ConfirmModal.cs" />
     <Compile Include="Modal\ErrorModal.cs" />
     <Compile Include="Modal\LoginModal.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Strings.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="Widget\LoginWidget.cs" />
     <Compile Include="Widget\Pagination.cs" />
     <Content Include="Properties\afung.MangaWeb3.Client.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.script" />

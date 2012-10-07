@@ -32,6 +32,7 @@ namespace afung.MangaWeb3.Client
             new Dictionary<string, string[]>(
                 "client",
                 new string[] {
+                    "change-password-modal",
                     "settings-module",
                     "search-module",
                     "folders-trow",
@@ -45,8 +46,8 @@ namespace afung.MangaWeb3.Client
                     "mangas-breadcrumb-active-folder",
                     "mangas-breadcrumb-link",
                     "mangas-module",
-                    "nav-logout-widget",
-                    "nav-login-widget",
+                    "nav-logout-dropdown",
+                    "nav-login-button",
                     "confirm-modal",
                     "widget-pagination-page",
                     "widget-pagination",

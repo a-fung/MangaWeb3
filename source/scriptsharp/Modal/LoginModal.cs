@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
 using jQueryApi;
 
@@ -143,6 +144,7 @@ namespace afung.MangaWeb3.Client.Modal
         {
             loggingIn = false;
             userInfo = response;
+            LoginWidget.RefreshAll();
 
             if (String.IsNullOrEmpty(response.username))
             {

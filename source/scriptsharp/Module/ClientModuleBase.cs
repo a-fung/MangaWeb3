@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using afung.MangaWeb3.Client.Widget;
 using jQueryApi;
 
 namespace afung.MangaWeb3.Client.Module
@@ -16,6 +17,7 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select(".nav-folders", attachedObject).Click(NavFoldersClicked);
             jQuery.Select(".nav-search", attachedObject).Click(NavSearchClicked);
             jQuery.Select(".nav-settings", attachedObject).Click(NavSettingsClicked);
+            new LoginWidget(jQuery.Select(".nav-main", attachedObject));
         }
 
         private void NavMangasClicked(jQueryEvent e)

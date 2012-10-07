@@ -24,6 +24,7 @@ namespace afung.MangaWeb3.Server
             {
                 handlers = new HandlerBase[]{
                     new LoginRequestHandler(),
+                    new ChangePasswordRequestHandler(),
                     new AdminSettingsGetRequestHandler(),
                     new AdminSettingsSetRequestHandler(),
                     new AdminCollectionAddRequestHandler(),

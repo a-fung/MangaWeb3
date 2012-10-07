@@ -45,21 +45,21 @@
         <a href="#" class="msg msg-Yes btn btn-primary" id="confirm-modal-yes-btn"></a><a href="#" class="msg msg-No btn" id="confirm-modal-no-btn"></a>
     </div>
 </div>
-<li id="nav-login-widget"><a href="#" class="nav-login">
+<li class="login-widget pull-right" id="nav-login-button"><a href="#" class="nav-login">
     <i class="icon-user"></i>
     <span class="msg msg-Login"></span>
 </a></li>
-<li class="dropdown" id="nav-logout-widget"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+<li class="dropdown login-widget pull-right" id="nav-logout-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="icon-user"></i>
     <span class="nav-user-username"></span>
     <i class="caret"></i>
 </a>
     <ul class="dropdown-menu">
-        <li><a href="#">
+        <li><a href="#" class="nav-logout">
             <i class="icon-off"></i>
             <span class="msg msg-Logout"></span>
         </a></li>
-        <li><a href="#">
+        <li><a href="#" class="nav-change-password">
             <i class="icon-lock"></i>
             <span class="msg msg-ChangePassword"></span>
         </a></li>
@@ -354,7 +354,7 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="msg msg-Author control-label" for="settings-sort"></label>
+        <label class="msg msg-Sort control-label" for="settings-sort"></label>
         <div class="controls">
             <select id="settings-sort">
                 <option value="0" class="msg msg-ByTitle"></option>
@@ -395,6 +395,37 @@
         <div class="offset5 span2">
             <input type="submit" class="val val-Apply btn btn-primary btn-block" id="settings-apply-btn" />
         </div>
+    </div>
+    </form>
+</div>
+<div id="change-password-modal" class="modal hide fade">
+    <form id="change-password-form" class="form-horizontal">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-ChangePassword"></h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="msg msg-CurrentPassword control-label" for="change-password-current-password"></label>
+            <div class="controls">
+                <input type="password" id="change-password-current-password" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-NewPassword control-label" for="change-password-new-password"></label>
+            <div class="controls">
+                <input type="password" id="change-password-new-password" class="plhdr plhdr-AtLeastEightCharacters" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-ConfirmPassword control-label" for="change-password-new-password2"></label>
+            <div class="controls">
+                <input type="password" id="change-password-new-password2" class="plhdr plhdr-EnterPasswordAgain" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input class="val val-Submit btn btn-primary" id="change-password-submit" type="submit" />
     </div>
     </form>
 </div>

@@ -24,6 +24,7 @@ import afung.mangaWeb3.server.handler.AdminUserAddRequestHandler;
 import afung.mangaWeb3.server.handler.AdminUsersDeleteRequestHandler;
 import afung.mangaWeb3.server.handler.AdminUsersGetRequestHandler;
 import afung.mangaWeb3.server.handler.AdminUsersSetAdminRequestHandler;
+import afung.mangaWeb3.server.handler.ChangePasswordRequestHandler;
 import afung.mangaWeb3.server.handler.HandlerBase;
 import afung.mangaWeb3.server.handler.LoginRequestHandler;
 import afung.mangaWeb3.server.install.InstallAjax;
@@ -59,6 +60,7 @@ class ServerAjax extends AjaxBase
         {
             handlers = [
                 new LoginRequestHandler(),
+                new ChangePasswordRequestHandler(),
                 new AdminSettingsGetRequestHandler(),
                 new AdminSettingsSetRequestHandler(),
                 new AdminCollectionAddRequestHandler(),

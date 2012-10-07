@@ -83,6 +83,8 @@
     <Compile Include="AdminUsersGetRequest.cs" />
     <Compile Include="AdminUsersGetResponse.cs" />
     <Compile Include="AdminUsersSetAdminRequest.cs" />
+    <Compile Include="ChangePasswordRequest.cs" />
+    <Compile Include="ChangePasswordResponse.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="CollectionUserJson.cs" />
     <Compile Include="LoginRequest.cs" />
