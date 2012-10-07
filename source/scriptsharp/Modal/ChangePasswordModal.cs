@@ -38,6 +38,9 @@ namespace afung.MangaWeb3.Client.Modal
 
         public void InternalShow()
         {
+            jQuery.Select("#change-password-current-password").Value("");
+            jQuery.Select("#change-password-new-password").Value("");
+            jQuery.Select("#change-password-new-password2").Value("");
             Show();
         }
 
