@@ -82,6 +82,11 @@ class Utility
         return str == Remove4PlusBytesUtf8Chars(str);
     }
     
+    public static function GetTempFileName():String
+    {
+        return "temp/" + Std.string(Math.random()).substr(2);
+    }
+    
     public static function Remove4PlusBytesUtf8Chars(str:String):String
     {
         var i:Int = 0;

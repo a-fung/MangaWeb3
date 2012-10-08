@@ -42,7 +42,6 @@ namespace afung.MangaWeb3.Server.Provider
             return GetNumberOfPages(path) > 0;
         }
 
-
         public string[] GetContent(string path)
         {
             int pages = GetNumberOfPages(path);
@@ -53,6 +52,32 @@ namespace afung.MangaWeb3.Server.Provider
             }
 
             return content;
+        }
+
+        public string OutputFile(string path, string page, string outputPath)
+        {
+            int pageInt, numberOfPages = -1;
+            if (!int.TryParse(page, out pageInt) || pageInt < 1 || pageInt > (numberOfPages = GetNumberOfPages(path)))
+            {
+                InvalidOperationException exception = new InvalidOperationException("Read PDF file error");
+                exception.Data["manga_status"] = System.IO.File.Exists(path) ? (numberOfPages == 0 ? 2 : 3) : 1;
+                throw exception;
+            }
+
+            string output;
+            int exitCode;
+            outputPath = outputPath + ".png";
+
+            ProcessLauncher.Run(Config.MudrawPath, "-o \"" + outputPath + "\" -r 300 \"" + path + "\" " + page, out output, out exitCode);
+
+            if (exitCode != 0)
+            {
+                InvalidOperationException exception = new InvalidOperationException("Render PDF file error");
+                exception.Data["manga_status"] = 2;
+                throw exception;
+            }
+
+            return outputPath;
         }
     }
 }

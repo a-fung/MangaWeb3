@@ -27,6 +27,9 @@ import afung.mangaWeb3.server.handler.AdminUsersSetAdminRequestHandler;
 import afung.mangaWeb3.server.handler.ChangePasswordRequestHandler;
 import afung.mangaWeb3.server.handler.HandlerBase;
 import afung.mangaWeb3.server.handler.LoginRequestHandler;
+import afung.mangaWeb3.server.handler.MangaListItemCoverRequestHandler;
+import afung.mangaWeb3.server.handler.MangaListRequestHandler;
+import afung.mangaWeb3.server.handler.ThreadHelperRequestHandler;
 import afung.mangaWeb3.server.install.InstallAjax;
 
 /**
@@ -59,6 +62,8 @@ class ServerAjax extends AjaxBase
         if (handlers == null)
         {
             handlers = [
+                new MangaListItemCoverRequestHandler(),
+                new MangaListRequestHandler(),
                 new LoginRequestHandler(),
                 new ChangePasswordRequestHandler(),
                 new AdminSettingsGetRequestHandler(),
@@ -85,6 +90,7 @@ class ServerAjax extends AjaxBase
                 new AdminMangaMetaGetRequestHandler(),
                 new AdminMangaMetaEditRequestHandler(),
                 new AdminMangaFilterRequestHandler(),
+                new ThreadHelperRequestHandler(),
             ];
         }
 

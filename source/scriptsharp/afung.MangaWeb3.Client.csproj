@@ -67,6 +67,7 @@
     <Compile Include="Template.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Widget\LoginWidget.cs" />
+    <Compile Include="Widget\MangaListItem.cs" />
     <Compile Include="Widget\Pagination.cs" />
     <Content Include="Properties\afung.MangaWeb3.Client.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Client.script" />

@@ -165,6 +165,11 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public static string GetTempFileName()
+        {
+            return Path.GetTempFileName();
+        }
+
         public static int ToUnixTimeStamp(DateTime date)
         {
             DateTime timeStampZero = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

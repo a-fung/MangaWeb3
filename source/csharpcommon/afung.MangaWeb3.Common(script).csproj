@@ -89,7 +89,14 @@
     <Compile Include="CollectionUserJson.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="MangaFilter.cs" />
+    <Compile Include="MangaImageResponse.cs" />
     <Compile Include="MangaJson.cs" />
+    <Compile Include="MangaListItemCoverRequest.cs" />
+    <Compile Include="MangaListItemJson.cs" />
+    <Compile Include="MangaListRequest.cs" />
+    <Compile Include="MangaListResponse.cs" />
+    <Compile Include="MangaSearchFilter.cs" />
     <Compile Include="UserJson.cs" />
     <Content Include="Properties\afung.MangaWeb3.Common.ruleset" />
     <Content Include="Properties\afung.MangaWeb3.Common.script" />

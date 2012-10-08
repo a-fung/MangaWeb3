@@ -1,15 +1,21 @@
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.AdminMangaMetaJson;
+import afung.mangaWeb3.common.MangaFilter;
 import afung.mangaWeb3.common.MangaJson;
+import afung.mangaWeb3.common.MangaListItemJson;
+import afung.mangaWeb3.server.provider.ImageProvider;
 import afung.mangaWeb3.server.provider.IMangaProvider;
 import afung.mangaWeb3.server.provider.PdfProvider;
 import afung.mangaWeb3.server.provider.RarProvider;
 import afung.mangaWeb3.server.provider.ZipProvider;
 import php.Exception;
 import php.FileSystem;
+import php.io.File;
+import php.io.FileOutput;
 import php.io.Path;
 import php.Lib;
+import php.Sys;
 import sys.FileStat;
 
 /**
@@ -177,6 +183,32 @@ class Manga
         return GetMangas(where);
     }
     
+    public static function GetMangaList(ajax:AjaxBase, filter:MangaFilter):Array<Manga>
+    {
+        var where:String = "TRUE";
+        var user:User = User.GetCurrentUser(ajax);
+        var collectionSelect:String = "FALSE";
+        if (Settings.AllowGuest || user != null)
+        {
+            collectionSelect += " OR `cid` IN (SELECT `id` FROM `collection` WHERE `public`='1')";
+        }
+
+        if (user != null)
+        {
+            collectionSelect += " OR `cid` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='1')";
+            where += " AND `cid` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='0')";
+        }
+
+        where += " AND (" + collectionSelect + ")";
+
+        if (filter != null)
+        {
+
+        }
+        
+        return GetMangas(where);
+    }
+    
     public static function GetAllMangas():Array<Manga>
     {
         return GetMangas(null);
@@ -241,6 +273,7 @@ class Manga
     
     private function InnerRefreshContent():Void
     {
+        
         var info:FileStat = FileSystem.stat(MangaPath);
         ModifiedTime = Math.round(info.mtime.getTime());
         Size = info.size;
@@ -282,6 +315,16 @@ class Manga
             Database.Replace("manga", data);
         }
     }
+
+    public function ToMangaListItemJson():MangaListItemJson
+    {
+        var obj:MangaListItemJson = new MangaListItemJson();
+        obj.id = Id;
+        obj.title = Meta.Title;
+        obj.pages = NumberOfPages;
+        obj.size = Size;
+        return obj;
+    }
     
     public function ToJson():MangaJson
     {
@@ -313,6 +356,17 @@ class Manga
     {
         Meta.Update(obj);
         UpdateTags(obj.tags);
+    }
+    
+    public static function ToListItemJsonArray(mangas:Array<Manga>):Array<MangaListItemJson>
+    {
+        var objs:Array<MangaListItemJson> = new Array<MangaListItemJson>();
+        for (manga in mangas)
+        {
+            objs.push(manga.ToMangaListItemJson());
+        }
+        
+        return objs;
     }
     
     public static function ToJsonArray(mangas:Array<Manga>):Array<MangaJson>
@@ -411,6 +465,72 @@ class Manga
         for (manga in GetMangas(Database.BuildWhereClauseOr("id", ids)))
         {
             manga.RefreshContent();
+        }
+    }
+    
+    public function GetCover():String
+    {
+        var hash:String = Utility.Md5(MangaPath);
+        var coverDir:String = FileSystem.fullPath("cover");
+        var lockPath:String = "cover/" + hash + ".lock"; // coverDir + "/" + hash + ".lock";
+        var coverRelativePath:String = "cover/" + hash + ".jpg";
+        var coverPath:String = coverRelativePath; //coverDir + "/" + hash + ".jpg";
+
+        if (FileSystem.exists(lockPath))
+        {
+            return null;
+        }
+        else if (!FileSystem.exists(coverPath))
+        {
+            ThreadHelper.Run("MangaProcessFile", [Id, Content[0], 260, 200, coverPath, lockPath]);
+            return null;
+        }
+        else
+        {
+            return coverRelativePath;
+        }
+    }
+    
+    public function ProcessFile(content:String, width:Int, height:Int, outputPath:String, lockPath:String):Void
+    {
+        if (!FileSystem.exists(outputPath))
+        {
+            var lockFile:Dynamic;
+            lockFile = untyped __call__("@fopen", lockPath, "x");
+            
+            if (lockFile != false)
+            {
+                if (!FileSystem.exists(outputPath))
+                {
+                    var tempFilePath:String = null;
+                    try
+                    {
+                        tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
+                    }
+                    catch (exception:Exception)
+                    {
+                        var code:Int = exception.getCode();
+                        if (code % 1000 == 1)
+                        {
+                            this.Status = code - 1000;
+                            this.Save();
+                        }
+                        else
+                        {
+                            throw exception;
+                        }
+                    }
+                    
+                    if (tempFilePath != null)
+                    {
+                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height);
+                        FileSystem.deleteFile(tempFilePath);
+                    }
+                }
+                
+                untyped __call__("@fclose", lockFile);
+                FileSystem.deleteFile(lockPath);
+            }
         }
     }
 }

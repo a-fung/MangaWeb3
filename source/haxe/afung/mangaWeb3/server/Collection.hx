@@ -178,4 +178,25 @@ class Collection
         data.set("public", public_ ? 1 : 0);
         Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
     }
+    
+    public function Accessible(ajax:AjaxBase):Bool
+    {
+        var where:String = "`id`=" + Database.Quote(Std.string(Id));
+        var user:User = User.GetCurrentUser(ajax);
+        var collectionSelect:String = "FALSE";
+        if (Settings.AllowGuest || user != null)
+        {
+            collectionSelect += " OR `public`='1'";
+        }
+
+        if (user != null)
+        {
+            collectionSelect += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='1')";
+            where += " AND `id` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='0')";
+        }
+
+        where += " AND (" + collectionSelect + ")";
+
+        return Database.Select("collection", where, null, null, "`id`").length > 0;
+    }
 }

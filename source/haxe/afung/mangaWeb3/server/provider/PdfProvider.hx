@@ -2,6 +2,7 @@ package afung.mangaWeb3.server.provider;
 
 import afung.mangaWeb3.server.Settings;
 import php.Exception;
+import php.FileSystem;
 
 /**
  * ...
@@ -54,5 +55,26 @@ class PdfProvider implements IMangaProvider
         }
         
         return content;
+    }
+    
+    public function OutputFile(path:String, page:String, outputPath:String):String
+    {
+        var pageInt:Int = Std.parseInt(page);
+        var numberOfPages:Int;
+        if (pageInt < 1 || pageInt > (numberOfPages = GetNumberOfPages(path)))
+        {
+            throw new Exception("Read PDF file error", FileSystem.exists(path) ? (numberOfPages == 0 ? 1002 : 1003) : 1001);
+        }
+        
+        outputPath = outputPath + ".png";
+        Native.Exec("pdfdraw -o \"" + outputPath + "\" -r 300 \"" + path + "\" " + page);
+        var exitCode:Int = Native.ExecReturnVar;
+        
+        if (exitCode != 0)
+        {
+            throw new Exception("Read PDF file error", 1002);
+        }
+        
+        return outputPath;
     }
 }

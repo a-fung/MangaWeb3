@@ -214,6 +214,32 @@ namespace afung.MangaWeb3.Server
             return GetMangas(where);
         }
 
+        public static Manga[] GetMangaList(AjaxBase ajax, MangaFilter filter)
+        {
+            string where = "TRUE";
+            User user = User.GetCurrentUser(ajax);
+            string collectionSelect = "FALSE";
+            if (Settings.AllowGuest || user != null)
+            {
+                collectionSelect += " OR `cid` IN (SELECT `id` FROM `collection` WHERE `public`='1')";
+            }
+
+            if (user != null)
+            {
+                collectionSelect += " OR `cid` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='1')";
+                where += " AND `cid` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='0')";
+            }
+
+            where += " AND (" + collectionSelect + ")";
+
+            if (filter != null)
+            {
+
+            }
+
+            return GetMangas(where);
+        }
+
         public static Manga[] GetAllMangas()
         {
             return GetMangas(null);
@@ -320,6 +346,16 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public MangaListItemJson ToMangaListItemJson()
+        {
+            MangaListItemJson obj = new MangaListItemJson();
+            obj.id = Id;
+            obj.title = Meta.Title;
+            obj.pages = NumberOfPages;
+            obj.size = Size;
+            return obj;
+        }
+
         public MangaJson ToJson()
         {
             MangaJson obj = new MangaJson();
@@ -350,6 +386,17 @@ namespace afung.MangaWeb3.Server
         {
             Meta.Update(obj);
             UpdateTags(obj.tags);
+        }
+
+        public static MangaListItemJson[] ToListItemJsonArray(Manga[] mangas)
+        {
+            List<MangaListItemJson> objs = new List<MangaListItemJson>();
+            foreach (Manga manga in mangas)
+            {
+                objs.Add(manga.ToMangaListItemJson());
+            }
+
+            return objs.ToArray();
         }
 
         public static MangaJson[] ToJsonArray(Manga[] mangas)
@@ -448,6 +495,69 @@ namespace afung.MangaWeb3.Server
             foreach (Manga manga in GetMangas(Database.BuildWhereClauseOr("id", ids)))
             {
                 manga.RefreshContent();
+            }
+        }
+
+        public string GetCover()
+        {
+            string hash = Utility.Md5(MangaPath);
+            string lockPath = Path.Combine(AjaxBase.DirectoryPath, "cover", hash + ".lock");
+            string coverRelativePath = Path.Combine("cover", hash + ".jpg");
+            string coverPath = Path.Combine(AjaxBase.DirectoryPath, coverRelativePath);
+
+            if (File.Exists(lockPath))
+            {
+                return null;
+            }
+            else if (!File.Exists(coverPath))
+            {
+                ThreadHelper.Run("MangaProcessFile", Id, Content[0], 260, 200, coverPath, lockPath);
+                return null;
+            }
+            else
+            {
+                return coverRelativePath;
+            }
+        }
+
+        public void ProcessFile(string content, int width, int height, string outputPath, string lockPath)
+        {
+            if (!File.Exists(outputPath))
+            {
+                FileStream lockFile;
+
+                try
+                {
+                    lockFile = File.Open(lockPath, FileMode.CreateNew);
+                }
+                catch (IOException)
+                {
+                    return;
+                }
+
+                if (!File.Exists(outputPath))
+                {
+                    string tempFilePath = null;
+
+                    try
+                    {
+                        tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
+                    }
+                    catch (InvalidOperationException exception)
+                    {
+                        this.Status = (int)exception.Data["manga_status"];
+                        this.Save();
+                    }
+
+                    if (tempFilePath != null)
+                    {
+                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height);
+                        File.Delete(tempFilePath);
+                    }
+                }
+
+                lockFile.Close();
+                File.Delete(lockPath);
             }
         }
     }

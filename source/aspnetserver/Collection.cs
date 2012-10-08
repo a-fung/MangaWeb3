@@ -199,5 +199,26 @@ namespace afung.MangaWeb3.Server
             data.Add("public", public_ ? 1 : 0);
             Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
         }
+
+        public bool Accessible(AjaxBase ajax)
+        {
+            string where = "`id`=" + Database.Quote(Id.ToString());
+            User user = User.GetCurrentUser(ajax);
+            string collectionSelect = "FALSE";
+            if (Settings.AllowGuest || user != null)
+            {
+                collectionSelect += " OR `public`='1'";
+            }
+
+            if (user != null)
+            {
+                collectionSelect += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='1')";
+                where += " AND `id` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='0')";
+            }
+
+            where += " AND (" + collectionSelect + ")";
+
+            return Database.Select("collection", where, null, null, "`id`").Length > 0;
+        }
     }
 }

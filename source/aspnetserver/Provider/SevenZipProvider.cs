@@ -72,5 +72,37 @@ namespace afung.MangaWeb3.Server.Provider
 
             return content.ToArray();
         }
+
+        public string OutputFile(string path, string content, string outputPath)
+        {
+            try
+            {
+                using (SevenZipExtractor extractor = new SevenZipExtractor(path))
+                {
+                    outputPath = outputPath + Utility.GetExtension(content).ToLowerInvariant();
+                    using (FileStream outputFile = File.Open(outputPath, FileMode.Create))
+                    {
+                        try
+                        {
+                            extractor.ExtractFile(content, outputFile);
+                        }
+                        catch (SevenZipException sevenZipException)
+                        {
+                            InvalidOperationException exception = new InvalidOperationException("Read Archive file error", sevenZipException);
+                            exception.Data["manga_status"] = 3;
+                            throw exception;
+                        }
+                    }
+                }
+            }
+            catch (SevenZipException sevenZipException)
+            {
+                InvalidOperationException exception = new InvalidOperationException("Read Archive file error", sevenZipException);
+                exception.Data["manga_status"] = System.IO.File.Exists(path) ? 2 : 1;
+                throw exception;
+            }
+
+            return outputPath;
+        }
     }
 }

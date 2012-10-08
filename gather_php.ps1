@@ -21,6 +21,12 @@ copy LICENSE $path
 copy NOTICE $path
 
 
+# create folders
+mkdir $path\cover
+mkdir $path\mangacache
+mkdir $path\temp
+
+
 # HTML files
 copy source\aspnetserver\*.html $path
 

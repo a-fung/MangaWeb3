@@ -85,7 +85,14 @@
     <Compile Include="JsonResponse.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="MangaFilter.cs" />
+    <Compile Include="MangaImageResponse.cs" />
     <Compile Include="MangaJson.cs" />
+    <Compile Include="MangaListItemCoverRequest.cs" />
+    <Compile Include="MangaListItemJson.cs" />
+    <Compile Include="MangaListRequest.cs" />
+    <Compile Include="MangaListResponse.cs" />
+    <Compile Include="MangaSearchFilter.cs" />
     <Compile Include="PreInstallCheckRequest.cs" />
     <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

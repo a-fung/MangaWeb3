@@ -2,6 +2,7 @@ package afung.mangaWeb3.server.provider;
 
 import afung.mangaWeb3.server.Settings;
 import php.Exception;
+import php.FileSystem;
 import php.io.Path;
 import php.Lib;
 import php.NativeArray;
@@ -91,5 +92,35 @@ class RarProvider implements IMangaProvider
         }
         
         return content;
+    }
+    
+    public function OutputFile(path:String, content:String, outputPath:String):String
+    {
+        var rar:RarArchive = RarArchive.open(path);
+        var result:Dynamic = rar;
+        
+        if (result != false && !rar.isBroken())
+        {
+            var entry:RarEntry = rar.getEntry(content);
+            result = entry;
+            outputPath = outputPath + "." + Path.extension(content).toLowerCase();
+            
+            if (result != false && !entry.isDirectory() && !entry.isEncrypted() && entry.extract("", outputPath))
+            {
+            }
+            else
+            {
+                rar.close();
+                throw new Exception("Read RAR file error", 1003);
+            }
+            
+            rar.close();
+        }
+        else
+        {
+            throw new Exception("Read RAR file error", FileSystem.exists(path) ? 1002 : 1001);
+        }
+        
+        return outputPath;
     }
 }
