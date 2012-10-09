@@ -74,5 +74,13 @@ namespace afung.MangaWeb3.Server.Provider
                 }
             }
         }
+
+        public static int[] GetDimensions(string inputFile)
+        {
+            using (Image image = Image.FromFile(inputFile))
+            {
+                return new int[] { image.Width, image.Height };
+            }
+        }
     }
 }

@@ -26,6 +26,7 @@ CREATE TABLE `manga` (
   `path` varchar(300) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `content` longtext NOT NULL,
+  `dimensions` longtext NOT NULL,
   `time` int(11) NOT NULL,
   `size` bigint(20) NOT NULL,
   `numpages` int(11) NOT NULL,

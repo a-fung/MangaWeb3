@@ -78,7 +78,35 @@ namespace afung.MangaWeb3.Client.Widget
         {
             if (response.status == 0)
             {
-                jQuery.Select(".mangas-list-item-thumbnail", attachedObject).Attribute("src", response.url);
+                jQueryObject wrap = jQuery.Select(".mangas-list-item-thumbnail-wrap", attachedObject);
+                wrap.Height(wrap.GetHeight());
+                jQueryObject placeholderThumbnail = jQuery.Select(".mangas-list-item-thumbnail", attachedObject);
+                jQueryObject thumbnail = placeholderThumbnail.Clone().Attribute("src", response.url);
+                thumbnail.One(
+                    "load",
+                    delegate(jQueryEvent e)
+                    {
+                        thumbnail.AddClass("fade");
+                        Utility.OnTransitionEnd(
+                            placeholderThumbnail.AddClass("fade"),
+                            delegate
+                            {
+                                placeholderThumbnail.After(thumbnail);
+                                placeholderThumbnail.Remove();
+                                Utility.OnTransitionEnd(
+                                    wrap.AddClass("height-transition").Height(thumbnail.GetHeight()),
+                                    delegate
+                                    {
+                                        Utility.OnTransitionEnd(
+                                            thumbnail.AddClass("in"),
+                                            delegate
+                                            {
+                                                thumbnail.RemoveClass("fade in");
+                                                wrap.RemoveClass("height-transition").CSS("height", "");
+                                            });
+                                    });
+                            });
+                    });
             }
             else if (response.status == 1)
             {

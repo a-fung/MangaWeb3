@@ -37,4 +37,17 @@ class ImageProvider
             untyped __call__("imagedestroy", image);
         }
     }
+    
+    public static function GetDimensions(inputFile:String):Array<Int>
+    {
+        var image:Dynamic = untyped __call__("getimagesize", inputFile);
+        
+        if (image != false)
+        {
+            var imageSize:Array<Dynamic> = Lib.toHaxeArray(image);
+            return [imageSize[0], imageSize[1]];
+        }
+        
+        return null;
+    }
 }

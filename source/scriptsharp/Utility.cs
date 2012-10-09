@@ -29,5 +29,22 @@ namespace afung.MangaWeb3.Client
         {
             dropdown.Bind("touchstart", delegate(jQueryEvent e) { e.StopPropagation(); });
         }
+
+        public static void OnTransitionEnd(jQueryObject obj, Action trigger)
+        {
+            if (BootstrapTransition.Support)
+            {
+                obj.One(
+                    BootstrapTransition.TransitionEventEndName,
+                    delegate(jQueryEvent e)
+                    {
+                        trigger();
+                    });
+            }
+            else
+            {
+                trigger();
+            }
+        }
     }
 }

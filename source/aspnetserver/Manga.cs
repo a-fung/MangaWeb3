@@ -41,6 +41,12 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        private int[][] Dimensions
+        {
+            get;
+            set;
+        }
+
         public int ModifiedTime
         {
             get;
@@ -141,6 +147,7 @@ namespace afung.MangaWeb3.Server
             newManga.ModifiedTime = Convert.ToInt32(data["time"]);
             newManga.Size = Convert.ToInt64(data["size"]);
             newManga.Content = Utility.JsonDecodeArchiveContentString(Convert.ToString(data["content"]));
+            newManga.Dimensions = Utility.ParseJson<int[][]>(Convert.ToString(data["dimensions"]));
             newManga.NumberOfPages = Convert.ToInt32(data["numpages"]);
             newManga.View = Convert.ToInt32(data["view"]);
             newManga.Status = Convert.ToInt32(data["status"]);
@@ -308,6 +315,7 @@ namespace afung.MangaWeb3.Server
             ModifiedTime = Utility.ToUnixTimeStamp(info.LastWriteTimeUtc);
             Size = info.Length;
             Content = Provider.GetContent(MangaPath);
+            Dimensions = new int[Content.Length][];
             NumberOfPages = Content.Length;
         }
 
@@ -327,6 +335,7 @@ namespace afung.MangaWeb3.Server
             data.Add("path", MangaPath);
             data.Add("type", MangaType);
             data.Add("content", Utility.JsonEncodeArchiveContent(Content));
+            data.Add("dimensions", JsonConvert.SerializeObject(Dimensions));
             data.Add("time", ModifiedTime);
             data.Add("size", Size);
             data.Add("numpages", NumberOfPages);
@@ -502,8 +511,8 @@ namespace afung.MangaWeb3.Server
         {
             string hash = Utility.Md5(MangaPath);
             string lockPath = Path.Combine(AjaxBase.DirectoryPath, "cover", hash + ".lock");
-            string coverRelativePath = Path.Combine("cover", hash + ".jpg");
-            string coverPath = Path.Combine(AjaxBase.DirectoryPath, coverRelativePath);
+            string coverRelativePath = "cover/" + hash + ".jpg";
+            string coverPath = Path.Combine(AjaxBase.DirectoryPath, "cover", hash + ".jpg");
 
             if (File.Exists(lockPath))
             {
@@ -511,13 +520,35 @@ namespace afung.MangaWeb3.Server
             }
             else if (!File.Exists(coverPath))
             {
-                ThreadHelper.Run("MangaProcessFile", Id, Content[0], 260, 200, coverPath, lockPath);
+                int[] resizedDimensions = GetResizedDimensions(0, 260, 200);
+                if (resizedDimensions != null)
+                {
+                    ThreadHelper.Run("MangaProcessFile", Id, Content[0], resizedDimensions[0], resizedDimensions[1], coverPath, lockPath);
+                }
+
                 return null;
             }
             else
             {
                 return coverRelativePath;
             }
+        }
+
+        private string TryOutputFile(string content)
+        {
+            string tempFilePath = null;
+
+            try
+            {
+                tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
+            }
+            catch (InvalidOperationException exception)
+            {
+                this.Status = (int)exception.Data["manga_status"];
+                this.Save();
+            }
+
+            return tempFilePath;
         }
 
         public void ProcessFile(string content, int width, int height, string outputPath, string lockPath)
@@ -537,17 +568,7 @@ namespace afung.MangaWeb3.Server
 
                 if (!File.Exists(outputPath))
                 {
-                    string tempFilePath = null;
-
-                    try
-                    {
-                        tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
-                    }
-                    catch (InvalidOperationException exception)
-                    {
-                        this.Status = (int)exception.Data["manga_status"];
-                        this.Save();
-                    }
+                    string tempFilePath = TryOutputFile(content);
 
                     if (tempFilePath != null)
                     {
@@ -559,6 +580,39 @@ namespace afung.MangaWeb3.Server
                 lockFile.Close();
                 File.Delete(lockPath);
             }
+        }
+
+        private int[] GetDimensions(int page)
+        {
+            if (Dimensions[page] == null)
+            {
+                string tempFilePath = TryOutputFile(Content[page]);
+
+                if (tempFilePath != null)
+                {
+                    Dimensions[page] = ImageProvider.GetDimensions(tempFilePath);
+                    File.Delete(tempFilePath);
+                    Save();
+                }
+            }
+
+            return Dimensions[page];
+        }
+
+        private int[] GetResizedDimensions(int page, int width, int height)
+        {
+            int[] dimensions = GetDimensions(page);
+            if (dimensions != null)
+            {
+                double widthFactor = width > 0 ? ((double)width) / dimensions[0] : 1;
+                double heightFactor = height > 0 ? ((double)height) / dimensions[1] : 1;
+                widthFactor = widthFactor > 1 ? 1 : widthFactor;
+                heightFactor = heightFactor > 1 ? 1 : heightFactor;
+                double factor = widthFactor > heightFactor ? heightFactor : widthFactor;
+                return new int[] { (int)Math.Round(dimensions[0] * factor), (int)Math.Round(dimensions[1] * factor) };
+            }
+
+            return null;
         }
     }
 }

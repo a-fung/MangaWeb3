@@ -9,6 +9,7 @@ import afung.mangaWeb3.server.provider.IMangaProvider;
 import afung.mangaWeb3.server.provider.PdfProvider;
 import afung.mangaWeb3.server.provider.RarProvider;
 import afung.mangaWeb3.server.provider.ZipProvider;
+import haxe.Json;
 import php.Exception;
 import php.FileSystem;
 import php.io.File;
@@ -34,6 +35,8 @@ class Manga
     public var MangaType(default, null):Int;
     
     public var Content(default, null):Array<String>;
+    
+    private var Dimensions(null, null):Array<Array<Int>>;
     
     public var ModifiedTime(default, null):Int;
     
@@ -110,6 +113,7 @@ class Manga
         newManga.ModifiedTime = Std.parseInt(data.get("time"));
         newManga.Size = Std.parseInt(data.get("size"));
         newManga.Content = cast Lib.toHaxeArray(untyped __call__("json_decode", Std.string(data.get("content"))));
+        newManga.Dimensions = Json.parse(Std.string(data.get("dimensions")));
         newManga.NumberOfPages = Std.parseInt(data.get("numpages"));
         newManga.View = Std.parseInt(data.get("view"));
         newManga.Status = Std.parseInt(data.get("status"));
@@ -278,6 +282,12 @@ class Manga
         ModifiedTime = Math.round(info.mtime.getTime());
         Size = info.size;
         Content = Provider.GetContent(MangaPath);
+        Dimensions = new Array<Array<Int>>();
+        for (i in 0...Content.length)
+        {
+            Dimensions.push(null);    
+        }
+        
         NumberOfPages = Content.length;
     }
     
@@ -297,6 +307,7 @@ class Manga
         data.set("path", MangaPath);
         data.set("type", MangaType);
         data.set("content", untyped __call__("json_encode", Lib.toPhpArray(Content)));
+        data.set("dimensions", Json.stringify(Dimensions));
         data.set("time", ModifiedTime);
         data.set("size", Size);
         data.set("numpages", NumberOfPages);
@@ -472,9 +483,9 @@ class Manga
     {
         var hash:String = Utility.Md5(MangaPath);
         var coverDir:String = FileSystem.fullPath("cover");
-        var lockPath:String = "cover/" + hash + ".lock"; // coverDir + "/" + hash + ".lock";
+        var lockPath:String = "cover/" + hash + ".lock";
         var coverRelativePath:String = "cover/" + hash + ".jpg";
-        var coverPath:String = coverRelativePath; //coverDir + "/" + hash + ".jpg";
+        var coverPath:String = coverRelativePath;
 
         if (FileSystem.exists(lockPath))
         {
@@ -482,13 +493,42 @@ class Manga
         }
         else if (!FileSystem.exists(coverPath))
         {
-            ThreadHelper.Run("MangaProcessFile", [Id, Content[0], 260, 200, coverPath, lockPath]);
+            var resizedDimensions:Array<Int> = GetResizedDimensions(0, 260, 200);
+            if (resizedDimensions != null)
+            {
+                ThreadHelper.Run("MangaProcessFile", [Id, Content[0], resizedDimensions[0], resizedDimensions[1], coverPath, lockPath]);
+            }
+
             return null;
         }
         else
         {
             return coverRelativePath;
         }
+    }
+    
+    private function TryOutputFile(content:String):String
+    {
+        var tempFilePath:String = null;
+        try
+        {
+            tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
+        }
+        catch (exception:Exception)
+        {
+            var code:Int = exception.getCode();
+            if (code % 1000 == 1)
+            {
+                this.Status = code - 1000;
+                this.Save();
+            }
+            else
+            {
+                throw exception;
+            }
+        }
+        
+        return tempFilePath;
     }
     
     public function ProcessFile(content:String, width:Int, height:Int, outputPath:String, lockPath:String):Void
@@ -502,24 +542,7 @@ class Manga
             {
                 if (!FileSystem.exists(outputPath))
                 {
-                    var tempFilePath:String = null;
-                    try
-                    {
-                        tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
-                    }
-                    catch (exception:Exception)
-                    {
-                        var code:Int = exception.getCode();
-                        if (code % 1000 == 1)
-                        {
-                            this.Status = code - 1000;
-                            this.Save();
-                        }
-                        else
-                        {
-                            throw exception;
-                        }
-                    }
+                    var tempFilePath:String = TryOutputFile(content);
                     
                     if (tempFilePath != null)
                     {
@@ -532,5 +555,38 @@ class Manga
                 FileSystem.deleteFile(lockPath);
             }
         }
+    }
+    
+    private function GetDimensions(page:Int):Array<Int>
+    {
+        if (Dimensions[page] == null)
+        {
+            var tempFilePath:String = TryOutputFile(Content[page]);
+
+            if (tempFilePath != null)
+            {
+                Dimensions[page] = ImageProvider.GetDimensions(tempFilePath);
+                FileSystem.deleteFile(tempFilePath);
+                Save();
+            }
+        }
+
+        return Dimensions[page];
+    }
+    
+    private function GetResizedDimensions(page:Int, width:Int, height:Int):Array<Int>
+    {
+        var dimensions:Array<Int> = GetDimensions(page);
+        if (dimensions != null)
+        {
+            var widthFactor:Float = width > 0 ? width / dimensions[0] : 1;
+            var heightFactor:Float = height > 0 ? height / dimensions[1] : 1;
+            widthFactor = widthFactor > 1 ? 1 : widthFactor;
+            heightFactor = heightFactor > 1 ? 1 : heightFactor;
+            var factor:Float = widthFactor > heightFactor ? heightFactor : widthFactor;
+            return [Math.round(dimensions[0] * factor), Math.round(dimensions[1] * factor)];
+        }
+            
+        return null;
     }
 }
