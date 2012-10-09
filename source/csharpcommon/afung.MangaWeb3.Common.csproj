@@ -89,6 +89,8 @@
     <Compile Include="MangaImageResponse.cs" />
     <Compile Include="MangaJson.cs" />
     <Compile Include="MangaListItemCoverRequest.cs" />
+    <Compile Include="MangaListItemDetailsRequest.cs" />
+    <Compile Include="MangaListItemDetailsResponse.cs" />
     <Compile Include="MangaListItemJson.cs" />
     <Compile Include="MangaListRequest.cs" />
     <Compile Include="MangaListResponse.cs" />

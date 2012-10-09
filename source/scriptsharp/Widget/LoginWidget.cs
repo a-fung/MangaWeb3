@@ -70,6 +70,7 @@ namespace afung.MangaWeb3.Client.Widget
 
         private void ChangePasswordButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             ChangePasswordModal.ShowDialog();
         }
 

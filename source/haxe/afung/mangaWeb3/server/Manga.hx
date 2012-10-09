@@ -189,7 +189,7 @@ class Manga
     
     public static function GetMangaList(ajax:AjaxBase, filter:MangaFilter):Array<Manga>
     {
-        var where:String = "TRUE";
+        var where:String = "`status`='0'";
         var user:User = User.GetCurrentUser(ajax);
         var collectionSelect:String = "FALSE";
         if (Settings.AllowGuest || user != null)
@@ -403,7 +403,7 @@ class Manga
         return Database.GetDistinctStringValues("tag", "name");
     }
     
-    private function GetTags():Array<String>
+    public function GetTags():Array<String>
     {
         return Database.GetDistinctStringValues("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Std.string(Id)) + ")");
     }

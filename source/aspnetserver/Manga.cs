@@ -223,7 +223,7 @@ namespace afung.MangaWeb3.Server
 
         public static Manga[] GetMangaList(AjaxBase ajax, MangaFilter filter)
         {
-            string where = "TRUE";
+            string where = "`status`='0'";
             User user = User.GetCurrentUser(ajax);
             string collectionSelect = "FALSE";
             if (Settings.AllowGuest || user != null)
@@ -431,7 +431,7 @@ namespace afung.MangaWeb3.Server
             return Database.GetDistinctStringValues("tag", "name");
         }
 
-        private string[] GetTags()
+        public string[] GetTags()
         {
             return Database.GetDistinctStringValues("tag", "name", "`id` IN (SELECT `tid` FROM `mangatag` WHERE `mid`=" + Database.Quote(Id.ToString()) + ")");
         }

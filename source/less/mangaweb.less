@@ -129,11 +129,11 @@ textarea {
 
 #mangas-list {
 	.thumbnails {
-		.vtransition {
-			transition: height 0.5s, opacity 0.5s;
-			-moz-transition: height 0.5s, opacity 0.5s;
-			-webkit-transition: height 0.5s, opacity 0.5s;
-			-o-transition: height 0.5s, opacity 0.5s;
+		.thumbnail:hover {
+			border-color: #08C;
+			-webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+			-moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+			box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 		}
 		
 		.thumbnail {
@@ -179,4 +179,11 @@ textarea {
 	-moz-transition: height .15s ease-out;
 	-o-transition: height .15s ease-out;
 	transition: height .15s ease-out;
+}
+
+.height-transition-suppress {
+	-webkit-transition: height 0;
+	-moz-transition: height 0;
+	-o-transition: height 0;
+	transition: height 0;
 }
