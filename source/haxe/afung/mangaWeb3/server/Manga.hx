@@ -207,7 +207,10 @@ class Manga
 
         if (filter != null)
         {
-
+            if (filter.tag != null && filter.tag != "")
+            {
+                where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(filter.tag) + "))";
+            }
         }
         
         return GetMangas(where);
