@@ -134,6 +134,7 @@
     <Compile Include="Handler\AdminUsersGetRequestHandler.cs" />
     <Compile Include="Handler\AdminUsersSetAdminRequestHandler.cs" />
     <Compile Include="Handler\ChangePasswordRequestHandler.cs" />
+    <Compile Include="Handler\FolderRequestHandler.cs" />
     <Compile Include="Handler\HandlerBase.cs" />
     <Compile Include="Handler\LoginRequestHandler.cs" />
     <Compile Include="Handler\MangaListItemCoverRequestHandler.cs" />

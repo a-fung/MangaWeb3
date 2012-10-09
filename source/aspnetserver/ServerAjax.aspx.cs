@@ -26,6 +26,7 @@ namespace afung.MangaWeb3.Server
                     new MangaListItemCoverRequestHandler(),
                     new MangaListRequestHandler(),
                     new MangaListItemDetailsRequestHandler(),
+                    new FolderRequestHandler(),
                     new LoginRequestHandler(),
                     new ChangePasswordRequestHandler(),
                     new AdminSettingsGetRequestHandler(),

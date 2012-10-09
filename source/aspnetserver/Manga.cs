@@ -245,6 +245,26 @@ namespace afung.MangaWeb3.Server
                 {
                     where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(filter.tag) + "))";
                 }
+
+                if (filter.folder != null && filter.folder != "")
+                {
+                    int index;
+                    string collectionName = (index = filter.folder.IndexOf("\\")) == -1 ? filter.folder : filter.folder.Substring(0, index);
+                    string relativePath = filter.folder.Substring(index + 1);
+                    Collection collection = Collection.GetByName(collectionName);
+
+                    if (collection == null)
+                    {
+                        where += " AND FALSE";
+                    }
+                    else
+                    {
+                        string actualPath = Database.Quote(index == -1 ? collection.Path.Substring(0, collection.Path.Length - 1) : collection.Path + relativePath);
+                        actualPath = actualPath.Substring(1, actualPath.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+                        where += " AND `cid`=" + Database.Quote(collection.Id.ToString());
+                        where += " AND `path` LIKE '" + actualPath + "\\\\\\\\%' AND `path` NOT LIKE '" + actualPath + "\\\\\\\\%\\\\\\\\%'";
+                    }
+                }
             }
 
             return GetMangas(where);

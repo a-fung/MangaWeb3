@@ -73,6 +73,31 @@ class Collection
         return null;
     }
     
+    public static function GetAccessible(ajax:AjaxBase):Array<Collection>
+    {
+        var user:User = User.GetCurrentUser(ajax);
+        var where:String = "FALSE";
+        if (Settings.AllowGuest || user != null)
+        {
+            where += " OR `public`='1'";
+        }
+
+        if (user != null)
+        {
+            where += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='1')";
+        }
+        
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", where);
+        var collections:Array<Collection> = new Array<Collection>();
+        
+        for (result in resultSet)
+        {
+            collections.push(FromData(result));
+        }
+        
+        return collections;
+    }
+    
     public static function GetAllCollections():Array<Collection>
     {
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection");

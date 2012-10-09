@@ -93,6 +93,31 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        public static Collection[] GetAccessible(AjaxBase ajax)
+        {
+            User user = User.GetCurrentUser(ajax);
+            string where = "FALSE";
+            if (Settings.AllowGuest || user != null)
+            {
+                where += " OR `public`='1'";
+            }
+
+            if (user != null)
+            {
+                where += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='1')";
+            }
+
+            Dictionary<string, object>[] resultSet = Database.Select("collection", where);
+            List<Collection> collections = new List<Collection>();
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                collections.Add(FromData(result));
+            }
+
+            return collections.ToArray();
+        }
+
         public static Collection[] GetAllCollections()
         {
             Dictionary<string, object>[] resultSet = Database.Select("collection");

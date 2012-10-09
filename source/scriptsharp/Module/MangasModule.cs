@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
 using jQueryApi;
-using afung.MangaWeb3.Client.Widget;
 
 namespace afung.MangaWeb3.Client.Module
 {
@@ -44,6 +44,8 @@ namespace afung.MangaWeb3.Client.Module
         public extern void Refresh();
         public void Refresh(MangaFilter filter)
         {
+            Show();
+
             if (Script.IsNullOrUndefined(filter))
             {
                 filter = new MangaFilter();

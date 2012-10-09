@@ -66,6 +66,7 @@
     <Compile Include="Strings.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="Widget\FoldersWidget.cs" />
     <Compile Include="Widget\LoginWidget.cs" />
     <Compile Include="Widget\MangaListItem.cs" />
     <Compile Include="Widget\Pagination.cs" />

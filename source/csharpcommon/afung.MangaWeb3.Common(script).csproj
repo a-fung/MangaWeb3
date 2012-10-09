@@ -87,6 +87,9 @@
     <Compile Include="ChangePasswordResponse.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="CollectionUserJson.cs" />
+    <Compile Include="FolderJson.cs" />
+    <Compile Include="FolderRequest.cs" />
+    <Compile Include="FolderResponse.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
     <Compile Include="MangaFilter.cs" />

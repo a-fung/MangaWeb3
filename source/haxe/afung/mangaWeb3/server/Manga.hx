@@ -211,6 +211,27 @@ class Manga
             {
                 where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(filter.tag) + "))";
             }
+            
+
+            if (filter.folder != null && filter.folder != "")
+            {
+                var index:Int;
+                var collectionName:String = (index = filter.folder.indexOf("/")) == -1 ? filter.folder : filter.folder.substr(0, index);
+                var relativePath = filter.folder.substr(index + 1);
+                var collection:Collection = Collection.GetByName(collectionName);
+
+                if (collection == null)
+                {
+                    where += " AND FALSE";
+                }
+                else
+                {
+                    var actualPath:String = Database.Quote(index == -1 ? collection.Path.substr(0, collection.Path.length - 1) : collection.Path + relativePath);
+                    actualPath = StringTools.replace(StringTools.replace(actualPath.substr(1, actualPath.length - 2), "\\", "\\\\"), "%", "\\%");
+                    where += " AND `cid`=" + Database.Quote(Std.string(collection.Id));
+                    where += " AND `path` COLLATE utf8_bin LIKE '" + actualPath + "/%' AND `path` COLLATE utf8_bin NOT LIKE '" + actualPath + "/%/%'";
+                }
+            }
         }
         
         return GetMangas(where);
