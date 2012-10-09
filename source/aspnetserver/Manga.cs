@@ -317,10 +317,12 @@ namespace afung.MangaWeb3.Server
             Content = Provider.GetContent(MangaPath);
             Dimensions = new int[Content.Length][];
             NumberOfPages = Content.Length;
+            DeleteCache();
         }
 
         public void ChangePath(string newPath, int newType)
         {
+            DeleteCache();
             MangaPath = newPath;
             MangaType = newType;
             InnerRefreshContent();
@@ -613,6 +615,22 @@ namespace afung.MangaWeb3.Server
             }
 
             return null;
+        }
+
+        private void DeleteCache()
+        {
+            string hash = Utility.Md5(MangaPath);
+            DirectoryInfo coverDirectory = new DirectoryInfo(Path.Combine(AjaxBase.DirectoryPath, "cover"));
+            foreach (FileInfo file in coverDirectory.GetFiles(hash + "*"))
+            {
+                try
+                {
+                    file.Delete();
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
     }
 }

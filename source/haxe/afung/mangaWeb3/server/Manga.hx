@@ -289,10 +289,12 @@ class Manga
         }
         
         NumberOfPages = Content.length;
+        DeleteCache();
     }
     
     public function ChangePath(newPath:String, newType:Int):Void
     {
+        DeleteCache();
         MangaPath = newPath;
         MangaType = newType;
         InnerRefreshContent();
@@ -588,5 +590,17 @@ class Manga
         }
             
         return null;
+    }
+    
+    private function DeleteCache():Void
+    {
+        var hash:String = Utility.Md5(MangaPath);
+        for (file in FileSystem.readDirectory("cover/"))
+        {
+            if (file.indexOf(hash) == 0)
+            {
+                FileSystem.deleteFile("cover/" + file);
+            }
+        }
     }
 }
