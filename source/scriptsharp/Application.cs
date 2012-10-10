@@ -37,7 +37,7 @@ namespace afung.MangaWeb3.Client
                 // Then load user language
                 Action<Exception> userLanguageLoadFailed = delegate(Exception error)
                 {
-                    // TODO: Set default language as current/user language
+                    Settings.UserLanguage = Strings.DefaultLanguage;
                     StartStage2();
                 };
 

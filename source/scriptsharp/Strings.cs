@@ -31,7 +31,7 @@ namespace afung.MangaWeb3.Client
         /// <summary>
         /// Current Language
         /// </summary>
-        private static string CurrentLanguage = DefaultLanguage;
+        private static string CurrentLanguage;
 
         /// <summary>
         /// Dictionary to store loaded language data
@@ -55,8 +55,24 @@ namespace afung.MangaWeb3.Client
         /// <param name="failureCallback">Failure Callback</param>
         public static void LoadUserLanguage(Action successCallback, Action<Exception> failureCallback)
         {
-            // TODO: add option to change user language
-            LoadLanguageFile(CurrentLanguage, successCallback, failureCallback);
+            string userLanguage = Settings.UserLanguage;
+
+            if (userLanguage == null || userLanguage == "")
+            {
+                Settings.UserLanguage = CurrentLanguage = DefaultLanguage;
+                successCallback();
+            }
+            else
+            {
+                LoadLanguageFile(
+                    userLanguage,
+                    delegate
+                    {
+                        CurrentLanguage = userLanguage;
+                        successCallback();
+                    },
+                    failureCallback);
+            }
         }
 
         /// <summary>
@@ -129,6 +145,23 @@ namespace afung.MangaWeb3.Client
         public static string Get(string stringId)
         {
             return jQuery.FromHtml("<span>" + GetHtml(stringId) + "</span>").GetText();
+        }
+
+        public static List<string> FindUnlocalizedStringIds()
+        {
+            List<string> unlocalized = new List<string>();
+            if (CurrentLanguage != DefaultLanguage)
+            {
+                foreach (string stringId in loadedLanguageData[DefaultLanguage].Keys)
+                {
+                    if (Script.IsNullOrUndefined(loadedLanguageData[CurrentLanguage][stringId]))
+                    {
+                        unlocalized.Add(stringId);
+                    }
+                }
+            }
+
+            return unlocalized;
         }
     }
 }
