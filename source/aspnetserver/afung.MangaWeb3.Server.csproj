@@ -140,6 +140,7 @@
     <Compile Include="Handler\MangaListItemCoverRequestHandler.cs" />
     <Compile Include="Handler\MangaListItemDetailsRequestHandler.cs" />
     <Compile Include="Handler\MangaListRequestHandler.cs" />
+    <Compile Include="Handler\SearchModuleRequestHandler.cs" />
     <Compile Include="Manga.cs" />
     <Compile Include="MangaMeta.cs" />
     <Compile Include="ProcessLauncher.cs" />

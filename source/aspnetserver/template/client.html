@@ -279,25 +279,31 @@
     <div class="control-group">
         <label class="msg msg-Author control-label" for="search-author"></label>
         <div class="controls">
-            <select id="search-author"></select>
+            <select id="search-author">
+                <option value="" class="msg msg-All"></option>
+            </select>
         </div>
     </div>
     <div class="control-group">
         <label class="msg msg-Series control-label" for="search-series"></label>
         <div class="controls">
-            <select id="search-series"></select>
+            <select id="search-series">
+                <option value="" class="msg msg-All"></option>
+            </select>
         </div>
     </div>
     <div class="control-group">
         <label class="msg msg-Year control-label" for="search-year"></label>
         <div class="controls">
-            <input type="number" id="search-year" class="input-small" />
+            <input type="number" id="search-year" class="input-small" maxlength="4" min="0" max="9999" />
         </div>
     </div>
     <div class="control-group">
         <label class="msg msg-Publisher control-label" for="search-publisher"></label>
         <div class="controls">
-            <select id="search-publisher"></select>
+            <select id="search-publisher">
+                <option value="" class="msg msg-All"></option>
+            </select>
         </div>
     </div>
     <div class="row">

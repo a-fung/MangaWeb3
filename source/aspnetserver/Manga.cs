@@ -246,11 +246,62 @@ namespace afung.MangaWeb3.Server
                     where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(filter.tag) + "))";
                 }
 
-                if (filter.folder != null && filter.folder != "")
+                string folder = null;
+                int folderSetting = 2;
+
+                if (filter.search != null)
+                {
+                    string metaSelect = "TRUE";
+
+                    if (filter.search.title != null && filter.search.title != "")
+                    {
+                        string title = Database.Quote(filter.search.title);
+                        title = title.Substring(1, title.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+                        metaSelect += " AND `title` LIKE '%" + title + "%'";
+                    }
+
+                    if (filter.search.author != null && filter.search.author != "")
+                    {
+                        metaSelect += " AND `author`=" + Database.Quote(filter.search.author);
+                    }
+
+                    if (filter.search.series != null && filter.search.series != "")
+                    {
+                        metaSelect += " AND `series`=" + Database.Quote(filter.search.series);
+                    }
+
+                    if (filter.search.year >= 0)
+                    {
+                        metaSelect += " AND `year`=" + Database.Quote(filter.search.year.ToString());
+                    }
+
+                    if (filter.search.publisher != null && filter.search.publisher != "")
+                    {
+                        metaSelect += " AND `publisher`=" + Database.Quote(filter.search.publisher);
+                    }
+
+                    if (metaSelect != "TRUE")
+                    {
+                        where += " AND `id` IN (SELECT `mid` FROM `meta` WHERE " + metaSelect + ")";
+                    }
+
+                    if (filter.search.folderSetting > 0 && filter.search.folder != null && filter.search.folder != "")
+                    {
+                        folder = filter.search.folder;
+                        folderSetting = filter.search.folderSetting;
+                    }
+                }
+
+                if (folder == null && filter.folder != null && filter.folder != "")
+                {
+                    folder = filter.folder;
+                }
+
+                if (folderSetting > 0 && folder != null && folder != "")
                 {
                     int index;
-                    string collectionName = (index = filter.folder.IndexOf("\\")) == -1 ? filter.folder : filter.folder.Substring(0, index);
-                    string relativePath = filter.folder.Substring(index + 1);
+                    string collectionName = (index = folder.IndexOf("\\")) == -1 ? folder : folder.Substring(0, index);
+                    string relativePath = folder.Substring(index + 1);
                     Collection collection = Collection.GetByName(collectionName);
 
                     if (collection == null)
@@ -262,7 +313,7 @@ namespace afung.MangaWeb3.Server
                         string actualPath = Database.Quote(index == -1 ? collection.Path.Substring(0, collection.Path.Length - 1) : collection.Path + relativePath);
                         actualPath = actualPath.Substring(1, actualPath.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
                         where += " AND `cid`=" + Database.Quote(collection.Id.ToString());
-                        where += " AND `path` LIKE '" + actualPath + "\\\\\\\\%' AND `path` NOT LIKE '" + actualPath + "\\\\\\\\%\\\\\\\\%'";
+                        where += " AND `path` LIKE '" + actualPath + "\\\\\\\\%'" + (folderSetting == 2 ? " AND `path` NOT LIKE '" + actualPath + "\\\\\\\\%\\\\\\\\%'" : "");
                     }
                 }
             }

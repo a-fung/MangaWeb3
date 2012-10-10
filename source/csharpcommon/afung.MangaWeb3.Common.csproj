@@ -101,6 +101,8 @@
     <Compile Include="PreInstallCheckRequest.cs" />
     <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchModuleRequest.cs" />
+    <Compile Include="SearchModuleResponse.cs" />
     <Compile Include="UserJson.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

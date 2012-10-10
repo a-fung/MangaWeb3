@@ -212,12 +212,62 @@ class Manga
                 where += " AND `id` IN (SELECT `mid` FROM `mangatag` WHERE `tid` IN (SELECT `id` FROM `tag` WHERE `name`=" + Database.Quote(filter.tag) + "))";
             }
             
+            var folder:String = null;
+            var folderSetting:Int = 2;
 
-            if (filter.folder != null && filter.folder != "")
+            if (filter.search != null)
+            {
+                var metaSelect:String = "TRUE";
+
+                if (filter.search.title != null && filter.search.title != "")
+                {
+                    var title:String = Database.Quote(filter.search.title);
+                    title = StringTools.replace(StringTools.replace(title.substr(1, title.length - 2), "\\", "\\\\"), "%", "\\%");
+                    metaSelect += " AND `title` LIKE '%" + title + "%'";
+                }
+
+                if (filter.search.author != null && filter.search.author != "")
+                {
+                    metaSelect += " AND `author`=" + Database.Quote(filter.search.author);
+                }
+
+                if (filter.search.series != null && filter.search.series != "")
+                {
+                    metaSelect += " AND `series`=" + Database.Quote(filter.search.series);
+                }
+
+                if (filter.search.year >= 0)
+                {
+                    metaSelect += " AND `year`=" + Database.Quote(Std.string(filter.search.year));
+                }
+
+                if (filter.search.publisher != null && filter.search.publisher != "")
+                {
+                    metaSelect += " AND `publisher`=" + Database.Quote(filter.search.publisher);
+                }
+
+                if (metaSelect != "TRUE")
+                {
+                    where += " AND `id` IN (SELECT `mid` FROM `meta` WHERE " + metaSelect + ")";
+                }
+
+                if (filter.search.folderSetting > 0 && filter.search.folder != null && filter.search.folder != "")
+                {
+                    folder = filter.search.folder;
+                    folderSetting = filter.search.folderSetting;
+                }
+            }
+
+            if (folder == null && filter.folder != null && filter.folder != "")
+            {
+                folder = filter.folder;
+            }
+            
+            if (folderSetting > 0 && folder != null && folder != "")
             {
                 var index:Int;
-                var collectionName:String = (index = filter.folder.indexOf("/")) == -1 ? filter.folder : filter.folder.substr(0, index);
-                var relativePath = filter.folder.substr(index + 1);
+                var collectionName:String = (index = folder.indexOf("/")) == -1 ? folder : folder.substr(0, index);
+                var relativePath = folder.substr(index + 1);
                 var collection:Collection = Collection.GetByName(collectionName);
 
                 if (collection == null)
@@ -229,7 +279,7 @@ class Manga
                     var actualPath:String = Database.Quote(index == -1 ? collection.Path.substr(0, collection.Path.length - 1) : collection.Path + relativePath);
                     actualPath = StringTools.replace(StringTools.replace(actualPath.substr(1, actualPath.length - 2), "\\", "\\\\"), "%", "\\%");
                     where += " AND `cid`=" + Database.Quote(Std.string(collection.Id));
-                    where += " AND `path` COLLATE utf8_bin LIKE '" + actualPath + "/%' AND `path` COLLATE utf8_bin NOT LIKE '" + actualPath + "/%/%'";
+                    where += " AND `path` COLLATE utf8_bin LIKE '" + actualPath + "/%'" + (folderSetting == 2 ? " AND `path` COLLATE utf8_bin NOT LIKE '" + actualPath + "/%/%'" : "");
                 }
             }
         }
