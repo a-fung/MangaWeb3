@@ -733,6 +733,19 @@ namespace afung.MangaWeb3.Server
                 {
                 }
             }
+
+
+            DirectoryInfo mangaCacheDirectory = new DirectoryInfo(Path.Combine(AjaxBase.DirectoryPath, "mangacache"));
+            foreach (FileInfo file in mangaCacheDirectory.GetFiles(hash + "*"))
+            {
+                try
+                {
+                    file.Delete();
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         public void IncreaseViewCount()

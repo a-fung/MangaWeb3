@@ -703,6 +703,14 @@ class Manga
                 FileSystem.deleteFile("cover/" + file);
             }
         }
+        
+        for (file in FileSystem.readDirectory("mangacache/"))
+        {
+            if (file.indexOf(hash) == 0)
+            {
+                FileSystem.deleteFile("mangacache/" + file);
+            }
+        }
     }
     
     public function IncreaseViewCount():Void

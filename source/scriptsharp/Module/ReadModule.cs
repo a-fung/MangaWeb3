@@ -33,6 +33,7 @@ namespace afung.MangaWeb3.Client.Module
         private jQueryObject mangaArea;
         private jQueryObject infoArea;
         private jQueryObject buttonArea;
+        private jQueryObject sliderHandle;
 
         private int _currentPage;
         private int CurrentPage
@@ -52,6 +53,9 @@ namespace afung.MangaWeb3.Client.Module
                     {
                         infoPage.Tooltip("show");
                     }
+
+                    int maxOffset = sliderHandle.Parent().GetInnerWidth() - sliderHandle.GetOuterWidth();
+                    SliderOffset = (int)(maxOffset - (maxOffset + 1) / manga.pages * (value + 0.5));
                 }
                 else
                 {
@@ -95,8 +99,34 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        private int _sliderOffset;
+        private int SliderOffset
+        {
+            get
+            {
+                return _sliderOffset;
+            }
+            set
+            {
+                _sliderOffset = Math.Round(value);
+                if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
+                {
+                    string cssValue = "translate(" + _sliderOffset + "px,0)";
+                    sliderHandle.CSS("transform", cssValue).CSS("-ms-transform", cssValue);
+                }
+                else
+                {
+                    string cssValue = "translate3d(" + _sliderOffset + "px,0,0)";
+                    sliderHandle.CSS("transform", cssValue).CSS("-ms-transform", cssValue).CSS("-moz-transform", cssValue).CSS("-webkit-transform", cssValue).CSS("-o-transform", cssValue);
+                }
+            }
+        }
+
         private int touchInitialOffset;
         private int touchInitialXPosition;
+
+        private int sliderTouchInitialOffset;
+        private int sliderTouchInitialXPosition;
 
         private ReadModule()
             : base("client", "read-module")
@@ -108,9 +138,11 @@ namespace afung.MangaWeb3.Client.Module
 
             ((jQueryObjectTouch)jQuery.Select("#read-manga-area"))
                 .TouchInitialize(new Dictionary<string, object>("maxtouch", 1))
-                .Bind("touch_start", TouchHandler)
-                .Bind("touch_move", TouchHandler)
-                .Bind("touch_end", TouchHandler);
+                .Bind("touch_start touch_move touch_end", TouchHandler);
+
+            sliderHandle = ((jQueryObjectTouch)jQuery.Select("#read-slider-handle"))
+                .TouchInitialize(new Dictionary<string, object>("maxtouch", 1))
+                .Bind("touch_start touch_move touch_end", SliderTouchHandler);
 
             // prevent default scrolling in iOS
             attachedObject.Bind(
@@ -122,7 +154,8 @@ namespace afung.MangaWeb3.Client.Module
 
             jQuery.Select("#read-info-btn").Click(ToggleInfoButtonClicked);
             jQuery.Select("#read-exit-btn").Click(ExitButtonClicked);
-
+            jQuery.Select("#read-next-btn").Click(NextButtonClicked);
+            jQuery.Select(".arrow-btn").Click(ArrowButtonClicked);
         }
 
         protected override void OnShow()
@@ -142,6 +175,7 @@ namespace afung.MangaWeb3.Client.Module
             infoArea.Show();
             ((jQueryBootstrap)jQuery.Select("#read-info-page")).Tooltip("show");
             buttonArea.AddClass("show");
+            CurrentPage = CurrentPage; // force update of slider position
         }
 
         private void ToggleInfo()
@@ -177,6 +211,15 @@ namespace afung.MangaWeb3.Client.Module
         public void Read(MangaReadResponse manga)
         {
             this.manga = manga;
+            if (manga.nextId == -1)
+            {
+                jQuery.Select("#read-next-btn").Hide();
+            }
+            else
+            {
+                jQuery.Select("#read-next-btn").Show();
+            }
+
             Show();
 
             CurrentPage = -1;
@@ -470,6 +513,29 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        [AlternateSignature]
+        private extern void SliderTouchHandler(jQueryEvent e);
+        private void SliderTouchHandler(jQueryTouchEvent e)
+        {
+            if (e.Type == "touch_start")
+            {
+                sliderTouchInitialOffset = SliderOffset;
+                sliderTouchInitialXPosition = e.ClientX;
+            }
+            else
+            {
+                int targetOffset = e.ClientX - sliderTouchInitialXPosition + sliderTouchInitialOffset;
+                int maxOffset = sliderHandle.Parent().GetInnerWidth() - sliderHandle.GetOuterWidth();
+                targetOffset = targetOffset < 0 ? 0 : targetOffset > maxOffset ? maxOffset : targetOffset;
+                CurrentPage = manga.pages - 1 - Math.Floor(targetOffset / (maxOffset + 1) * manga.pages);
+                SliderOffset = targetOffset;
+                if (e.Type == "touch_end")
+                {
+                    NavigateTo(CurrentPage);
+                }
+            }
+        }
+
         private void ExitButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
@@ -483,6 +549,60 @@ namespace afung.MangaWeb3.Client.Module
             UnloadAllPages();
             HideInfo();
             MangasModule.Instance.Show();
+        }
+
+        private void NextButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+        }
+
+        private void ArrowButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            jQueryObject target = jQuery.FromElement(e.Target);
+            while (!target.Is("a"))
+            {
+                target = target.Parent();
+            }
+
+            NavigateLeftOrRight(target.GetAttribute("data-direction") == "left");
+        }
+
+        private void NavigateLeftOrRight(bool left)
+        {
+            int? distance = null;
+
+            foreach (int page in insertedPages.Keys)
+            {
+                MangaPage mangaPage = insertedPages[page];
+                if (left)
+                {
+                    int pagePos = Offset + mangaPage.Offset;
+                    if (pagePos < 0 && (Script.IsNullOrUndefined(distance) || pagePos > distance.Value))
+                    {
+                        distance = pagePos;
+                    }
+                }
+                else
+                {
+                    int pagePos = Offset + mangaPage.Offset + mangaPage.Width - attachedObject.GetWidth();
+                    if (pagePos > 0 && (Script.IsNullOrUndefined(distance) || pagePos < distance.Value))
+                    {
+                        distance = pagePos;
+                    }
+                }
+            }
+
+            if (!Script.IsNullOrUndefined(distance))
+            {
+                if (Math.Abs(distance.Value) > attachedObject.GetWidth())
+                {
+                    distance = attachedObject.GetWidth() * (distance.Value > 0 ? 1 : -1);
+                }
+
+                Offset -= distance.Value;
+                RefreshMangaArea();
+            }
         }
     }
 }
