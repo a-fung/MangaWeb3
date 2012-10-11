@@ -121,6 +121,8 @@ namespace afung.MangaWeb3.Client.Module
                 });
 
             jQuery.Select("#read-info-btn").Click(ToggleInfoButtonClicked);
+            jQuery.Select("#read-exit-btn").Click(ExitButtonClicked);
+
         }
 
         protected override void OnShow()
@@ -466,6 +468,21 @@ namespace afung.MangaWeb3.Client.Module
                 Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
                 RefreshMangaArea(false);
             }
+        }
+
+        private void ExitButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            Exit();
+        }
+
+        private void Exit()
+        {
+            readNext = false;
+            RemoveAllPages();
+            UnloadAllPages();
+            HideInfo();
+            MangasModule.Instance.Show();
         }
     }
 }
