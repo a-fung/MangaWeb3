@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Import\Bootstrap.cs" />
     <Compile Include="Import\CKFinder.cs" />
+    <Compile Include="Import\jQueryTouch.cs" />
     <Compile Include="Modal\ChangePasswordModal.cs" />
     <Compile Include="Modal\ConfirmModal.cs" />
     <Compile Include="Modal\ErrorModal.cs" />

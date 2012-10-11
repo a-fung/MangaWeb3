@@ -66,11 +66,27 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        private int touchInitialOffset;
+        private int touchInitialXPosition;
+
         private ReadModule()
             : base("client", "read-module")
         {
             readNext = false;
             mangaArea = jQuery.Select("#read-manga-area-inner");
+            ((jQueryObjectTouch)jQuery.Select("#read-manga-area"))
+                .TouchInitialize(new Dictionary<string, object>("maxtouch", 1))
+                .Bind("touch_start", TouchHandler)
+                .Bind("touch_move", TouchHandler)
+                .Bind("touch_end", TouchHandler);
+
+            // prevent default scrolling in iOS
+            attachedObject.Bind(
+                "touchmove",
+                delegate(jQueryEvent e)
+                {
+                    e.PreventDefault();
+                });
         }
 
         protected override void OnShow()
@@ -279,6 +295,26 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             insertedPages[page.Page] = page;
+        }
+
+        [AlternateSignature]
+        private extern void TouchHandler(jQueryEvent e);
+        private void TouchHandler(jQueryTouchEvent e)
+        {
+            if (e.Type == "touch_start")
+            {
+                touchInitialOffset = Offset;
+                touchInitialXPosition = e.ClientX;
+            }
+            else
+            {
+                MangaPage firstPage;
+                int targetOffset = e.ClientX - touchInitialXPosition + touchInitialOffset;
+                int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+                Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
+                RefreshMangaArea(false);
+            }
         }
     }
 }

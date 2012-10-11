@@ -46,6 +46,7 @@ copy source\aspnetserver\js\mscorlib.js $path\js
 
 copy source\aspnetserver\js\bootstrap.min.js $path\js
 copy source\aspnetserver\js\jquery-1.8.2.min.js $path\js
+copy source\aspnetserver\js\jquery.touch.js $path\js
 copy source\aspnetserver\js\json2.js $path\js
 
 copy source\php\js\servertype.js $path\js
