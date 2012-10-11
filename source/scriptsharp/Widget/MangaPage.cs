@@ -22,6 +22,8 @@ namespace afung.MangaWeb3.Client.Widget
         private MangaPageRequest pageRequest;
         private int pageRequestDelay;
         private bool loaded;
+        private bool loading;
+        private bool unloaded;
         private int _offset;
 
         public int Offset
@@ -68,7 +70,7 @@ namespace afung.MangaWeb3.Client.Widget
             this.page = page;
             this.width = Settings.DisplayType == 0 ? 0 : width; // Fit Height?
             this.height = Settings.DisplayType == 2 ? 0 : height; // Fit Width?
-            loaded = false;
+            unloaded = loading = loaded = false;
         }
 
         public void Load(Action onload)
@@ -80,6 +82,8 @@ namespace afung.MangaWeb3.Client.Widget
             }
 
             this.onload = onload;
+
+            loading = true;
 
             pageRequest = new MangaPageRequest();
             pageRequest.id = mangaId;
@@ -94,12 +98,18 @@ namespace afung.MangaWeb3.Client.Widget
         private extern void MangaPageRequestSucess(JsonResponse response);
         private void MangaPageRequestSucess(MangaImageResponse response)
         {
+            if (unloaded)
+            {
+                return;
+            }
+
             if (response.status == 0)
             {
                 imageObject = jQuery.FromHtml("<img>").Bind(
                     "load",
                     delegate(jQueryEvent e)
                     {
+                        loading = false;
                         loaded = true;
                         onload();
                     }).Attribute("src", response.url);
@@ -125,11 +135,37 @@ namespace afung.MangaWeb3.Client.Widget
             Offset = offset + sign * otherPage.Width;
         }
 
+        public void Remove()
+        {
+            imageObject.Remove();
+        }
+
         public int Width
         {
             get
             {
                 return imageObject == null ? 0 : imageObject.GetOuterWidth();
+            }
+        }
+
+        [AlternateSignature]
+        public extern void Unload();
+        public void Unload(bool loadNext)
+        {
+            if (Script.IsNullOrUndefined(loadNext)) loadNext = true;
+            loaded = false;
+            unloaded = true;
+
+            if (imageObject != null && imageObject.Is("img"))
+            {
+                imageObject.Unbind("load").Attribute("src", "");
+                imageObject = null;
+            }
+
+            if (loading && loadNext)
+            {
+                loading = false;
+                onload();
             }
         }
     }

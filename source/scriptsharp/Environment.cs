@@ -20,6 +20,8 @@ namespace afung.MangaWeb3.Client
         public static int ModalElementsPerPage = 7;
 
         public static int MangaPagesToPreload = 1;
+
+        public static int MangaPagesUnloadDistance = 3;
     }
 
     /// <summary>

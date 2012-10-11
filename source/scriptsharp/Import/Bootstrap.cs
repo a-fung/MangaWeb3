@@ -22,6 +22,9 @@ namespace jQueryApi
 
         [ScriptName("typeahead")]
         public abstract jQueryObject Typeahead(object options);
+
+        [ScriptName("tooltip")]
+        public abstract jQueryObject Tooltip(object options);
     }
 
     [Imported]

@@ -31,8 +31,37 @@ namespace afung.MangaWeb3.Client.Module
 
         private MangaReadResponse manga;
         private jQueryObject mangaArea;
+        private jQueryObject infoArea;
+        private jQueryObject buttonArea;
 
-        private int currentPage;
+        private int _currentPage;
+        private int CurrentPage
+        {
+            get
+            {
+                return _currentPage;
+            }
+            set
+            {
+                jQueryBootstrap infoPage = (jQueryBootstrap)jQuery.Select("#read-info-page").Attribute("data-original-title", (value + 1).ToString());
+                infoPage.Tooltip("fixTitle");
+
+                if (infoArea.Is(":visible"))
+                {
+                    if (_currentPage != value)
+                    {
+                        infoPage.Tooltip("show");
+                    }
+                }
+                else
+                {
+                    infoPage.Tooltip("hide");
+                }
+
+                _currentPage = value;
+            }
+        }
+
         private int oldWidth;
         private bool readNext;
         private Dictionary<int, MangaPage> loadedPages = new Dictionary<int, MangaPage>();
@@ -74,6 +103,9 @@ namespace afung.MangaWeb3.Client.Module
         {
             readNext = false;
             mangaArea = jQuery.Select("#read-manga-area-inner");
+            infoArea = jQuery.Select("#read-info-area");
+            buttonArea = jQuery.Select("#read-button-area");
+
             ((jQueryObjectTouch)jQuery.Select("#read-manga-area"))
                 .TouchInitialize(new Dictionary<string, object>("maxtouch", 1))
                 .Bind("touch_start", TouchHandler)
@@ -87,10 +119,45 @@ namespace afung.MangaWeb3.Client.Module
                 {
                     e.PreventDefault();
                 });
+
+            jQuery.Select("#read-info-btn").Click(ToggleInfoButtonClicked);
         }
 
         protected override void OnShow()
         {
+            HideInfo();
+        }
+
+        private void HideInfo()
+        {
+            infoArea.Hide();
+            ((jQueryBootstrap)jQuery.Select("#read-info-page")).Tooltip("hide");
+            buttonArea.RemoveClass("show");
+        }
+
+        private void ShowInfo()
+        {
+            infoArea.Show();
+            ((jQueryBootstrap)jQuery.Select("#read-info-page")).Tooltip("show");
+            buttonArea.AddClass("show");
+        }
+
+        private void ToggleInfo()
+        {
+            if (infoArea.Is(":visible"))
+            {
+                HideInfo();
+            }
+            else
+            {
+                ShowInfo();
+            }
+        }
+
+        private void ToggleInfoButtonClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+            ToggleInfo();
         }
 
         public static void ReadManga(MangaReadResponse manga)
@@ -110,7 +177,7 @@ namespace afung.MangaWeb3.Client.Module
             this.manga = manga;
             Show();
 
-            currentPage = -1;
+            CurrentPage = -1;
             InitializeRead();
         }
 
@@ -121,25 +188,25 @@ namespace afung.MangaWeb3.Client.Module
             attachedObject.Height(jQuery.Window.GetHeight());
             oldWidth = attachedObject.GetWidth();
 
-            if (currentPage == -1)
+            if (CurrentPage == -1)
             {
                 if (readNext)
                 {
-                    currentPage = 0;
+                    CurrentPage = 0;
                 }
                 else
                 {
-                    currentPage = Settings.GetCurrentPage(manga.id);
-                    if (!Number.IsFinite(currentPage))
+                    CurrentPage = Settings.GetCurrentPage(manga.id);
+                    if (!Number.IsFinite(CurrentPage))
                     {
-                        currentPage = 0;
+                        CurrentPage = 0;
                     }
                 }
             }
 
             readNext = true;
 
-            NavigateTo(currentPage);
+            NavigateTo(CurrentPage);
         }
 
         private void NavigateTo(int page)
@@ -151,7 +218,7 @@ namespace afung.MangaWeb3.Client.Module
 
             RemoveAllPages();
 
-            currentPage = page;
+            CurrentPage = page;
 
             LoadPages(page);
             RefreshMangaArea();
@@ -159,6 +226,16 @@ namespace afung.MangaWeb3.Client.Module
 
         private void RemoveAllPages()
         {
+            List<int> keys = new List<int>();
+            foreach (int key in insertedPages.Keys)
+            {
+                keys.Add(key);
+            }
+
+            foreach (int key in keys)
+            {
+                Remove(insertedPages[key]);
+            }
         }
 
         [AlternateSignature]
@@ -175,7 +252,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (insertedPages.Count == 0)
             {
-                MangaPage page = GetMangaPage(currentPage);
+                MangaPage page = GetMangaPage(CurrentPage);
                 if (!page.Loaded) return;
                 Insert(page);
                 RefreshMangaArea();
@@ -183,8 +260,8 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             MangaPage lastPage = GetMangaPage(pagesTail);
-            MangaPage lastPagePlusOne = GetMangaPage(pagesTail + 1);
-            if (pagesTail != manga.pages - 1 && lastPagePlusOne.Loaded && Offset + lastPage.Offset + attachedObject.GetWidth() / 2 > 0)
+            MangaPage lastPagePlusOne;
+            if (pagesTail != manga.pages - 1 && (lastPagePlusOne = GetMangaPage(pagesTail + 1)).Loaded && Offset + lastPage.Offset + attachedObject.GetWidth() / 2 > 0)
             {
                 Insert(lastPagePlusOne);
                 RefreshMangaArea();
@@ -193,13 +270,50 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             MangaPage firstPage = GetMangaPage(pagesHead);
-            MangaPage firstPageMinusOne = GetMangaPage(pagesHead - 1);
-            if (pagesHead != 0 && firstPageMinusOne.Loaded && Offset + firstPage.Offset + firstPage.Width < attachedObject.GetWidth() * 1.5)
+            MangaPage firstPageMinusOne;
+            if (pagesHead != 0 && (firstPageMinusOne = GetMangaPage(pagesHead - 1)).Loaded && Offset + firstPage.Offset + firstPage.Width < attachedObject.GetWidth() * 1.5)
             {
                 Insert(firstPageMinusOne);
                 RefreshMangaArea();
                 LoadPages(pagesHead);
                 return;
+            }
+
+            if (insertedPages.Count > 1)
+            {
+                if (Offset + lastPage.Offset + lastPage.Width + attachedObject.GetWidth() < 0)
+                {
+                    Remove(lastPage);
+                    UnloadPage(lastPage.Page + Environment.MangaPagesUnloadDistance);
+                    RefreshMangaArea();
+                    return;
+                }
+
+                if (Offset + firstPage.Offset > attachedObject.GetWidth() * 2)
+                {
+                    Remove(firstPage);
+                    UnloadPage(firstPage.Page - Environment.MangaPagesUnloadDistance);
+                    RefreshMangaArea();
+                    return;
+                }
+            }
+
+            int newCurrentPage = -1;
+            int viewCenter = attachedObject.GetWidth() / 2;
+            foreach (int page in insertedPages.Keys)
+            {
+                int left = Offset + insertedPages[page].Offset;
+                int right = left + insertedPages[page].Width;
+                if (left < viewCenter && right > viewCenter)
+                {
+                    newCurrentPage = int.Parse(page.ToString(), 10);
+                    break;
+                }
+            }
+
+            if (newCurrentPage >= 0 && newCurrentPage < manga.pages && CurrentPage != newCurrentPage)
+            {
+                CurrentPage = newCurrentPage;
             }
         }
 
@@ -219,7 +333,12 @@ namespace afung.MangaWeb3.Client.Module
                 return;
             }
 
-            loadQueue.Enqueue(GetMangaPage(page));
+            MangaPage mangaPage;
+            if (!loadQueue.Contains(mangaPage = GetMangaPage(page)))
+            {
+                loadQueue.Enqueue(mangaPage);
+            }
+
             LoadNextPage();
         }
 
@@ -245,8 +364,32 @@ namespace afung.MangaWeb3.Client.Module
             });
         }
 
+        private void UnloadPage(int page)
+        {
+            if (loadedPages.ContainsKey(page))
+            {
+                loadedPages[page].Unload();
+                ((List<MangaPage>)(object)loadQueue).Remove(loadedPages[page]);
+                loadedPages.Remove(page);
+            }
+        }
+
         private void UnloadAllPages()
         {
+            loadQueue.Clear();
+
+            List<int> keys = new List<int>();
+            foreach (int key in loadedPages.Keys)
+            {
+                keys.Add(key);
+            }
+
+            foreach (int key in keys)
+            {
+                UnloadPage(key);
+            }
+
+            loadingPage = false;
         }
 
         private MangaPage GetMangaPage(int page)
@@ -295,6 +438,14 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             insertedPages[page.Page] = page;
+        }
+
+        private void Remove(MangaPage page)
+        {
+            insertedPages.Remove(page.Page);
+            page.Remove();
+            if (page.Page == pagesTail) pagesTail--;
+            if (page.Page == pagesHead) pagesHead++;
         }
 
         [AlternateSignature]
