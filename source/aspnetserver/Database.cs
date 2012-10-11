@@ -10,6 +10,8 @@ namespace afung.MangaWeb3.Server
 {
     public class Database
     {
+        private static object mySqlReaderLock = new object();
+
         public static MySqlConnection GetConnection(string server, int port, string username, string password, string database)
         {
             string connectionString = String.Format(
@@ -85,21 +87,26 @@ namespace afung.MangaWeb3.Server
             }
 
             string sql = "SELECT " + fields + " FROM `" + table + "`" + where + order + limit;
-            MySqlDataReader resultSet = new MySqlCommand(sql, DefaultConnection()).ExecuteReader();
-            List<Dictionary<string, object>> rtn = new List<Dictionary<string, object>>();
 
-            while (resultSet.Read())
+            lock (mySqlReaderLock)
             {
-                Dictionary<string, object> row = new Dictionary<string, object>();
-                for (int j = 0; j < resultSet.FieldCount; j++)
+                using (MySqlDataReader resultSet = new MySqlCommand(sql, DefaultConnection()).ExecuteReader())
                 {
-                    row[resultSet.GetName(j)] = resultSet.GetValue(j);
-                }
-                rtn.Add(row);
-            }
+                    List<Dictionary<string, object>> rtn = new List<Dictionary<string, object>>();
 
-            resultSet.Close();
-            return rtn.ToArray();
+                    while (resultSet.Read())
+                    {
+                        Dictionary<string, object> row = new Dictionary<string, object>();
+                        for (int j = 0; j < resultSet.FieldCount; j++)
+                        {
+                            row[resultSet.GetName(j)] = resultSet.GetValue(j);
+                        }
+                        rtn.Add(row);
+                    }
+
+                    return rtn.ToArray();
+                }
+            }
         }
 
         private static void InsertOrReplace(string method, string table, Dictionary<string, object> data)

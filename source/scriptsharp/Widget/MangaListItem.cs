@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Html;
 using System.Runtime.CompilerServices;
+using afung.MangaWeb3.Client.Modal;
 using afung.MangaWeb3.Client.Module;
 using afung.MangaWeb3.Common;
 using jQueryApi;
@@ -17,14 +18,18 @@ namespace afung.MangaWeb3.Client.Widget
         private MangaListItemCoverRequest coverRequest;
         private bool coverLoaded;
         private int coverRequestDelay;
+        private int nextMangaId;
 
-        public MangaListItem(jQueryObject parent, MangaListItemJson data)
+        private static bool sendingReadReqeust = false;
+
+        public MangaListItem(jQueryObject parent, MangaListItemJson data, int nextMangaId)
         {
             attachedObject = Template.Get("client", "mangas-list-item", true).AddClass("fade").AppendTo(parent);
             jQuery.Select(".mangas-list-item-title", attachedObject).Text(data.title);
             jQuery.Select(".mangas-list-item-pages", attachedObject).Text(data.pages.ToString());
             coverLoaded = false;
             coverRequestDelay = 0;
+            this.nextMangaId = nextMangaId;
 
             double size = data.size;
             string unit;
@@ -279,10 +284,29 @@ namespace afung.MangaWeb3.Client.Widget
         private void CoverClicked(jQueryEvent e)
         {
             e.PreventDefault();
-            if (coverLoaded)
+            if (coverLoaded && !sendingReadReqeust)
             {
+                sendingReadReqeust = true;
 
+                MangaReadRequest request = new MangaReadRequest();
+                request.id = coverRequest.id;
+                request.nextId = nextMangaId;
+                Request.Send(request, ReadRequestSuccess, ReadRequestFailure);
             }
+        }
+
+        [AlternateSignature]
+        private extern void ReadRequestSuccess(JsonResponse response);
+        private void ReadRequestSuccess(MangaReadResponse response)
+        {
+            sendingReadReqeust = false;
+            ReadModule.ReadManga(response);
+        }
+
+        private void ReadRequestFailure(Exception error)
+        {
+            sendingReadReqeust = false;
+            ErrorModal.ShowError(error.ToString());
         }
     }
 }

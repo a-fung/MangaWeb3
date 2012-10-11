@@ -558,7 +558,6 @@ class Manga
     public function GetCover():String
     {
         var hash:String = Utility.Md5(MangaPath);
-        var coverDir:String = FileSystem.fullPath("cover");
         var lockPath:String = "cover/" + hash + ".lock";
         var coverRelativePath:String = "cover/" + hash + ".jpg";
         var coverPath:String = coverRelativePath;
@@ -580,6 +579,34 @@ class Manga
         else
         {
             return coverRelativePath;
+        }
+    }
+    
+    public function GetPage(page:Int, width:Int, height:Int):String
+    {
+        var resizedDimensions:Array<Int> = GetResizedDimensions(page, width, height);
+        if (resizedDimensions == null)
+        {
+            return null;
+        }
+        
+        var hash:String = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1]);
+        var lockPath:String = "mangacache/" + hash + ".lock";
+        var outputRelativePath:String = "mangacache/" + hash + ".jpg";
+        var outputPath:String = outputRelativePath;
+
+        if (FileSystem.exists(lockPath))
+        {
+            return null;
+        }
+        else if (!FileSystem.exists(outputPath))
+        {
+            ThreadHelper.Run("MangaProcessFile", [Id, Content[page], resizedDimensions[0], resizedDimensions[1], outputPath, lockPath]);
+            return null;
+        }
+        else
+        {
+            return outputRelativePath;
         }
     }
     
@@ -676,5 +703,11 @@ class Manga
                 FileSystem.deleteFile("cover/" + file);
             }
         }
+    }
+    
+    public function IncreaseViewCount():Void
+    {
+        View++;
+        Save();
     }
 }

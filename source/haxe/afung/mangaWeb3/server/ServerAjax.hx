@@ -31,6 +31,8 @@ import afung.mangaWeb3.server.handler.LoginRequestHandler;
 import afung.mangaWeb3.server.handler.MangaListItemCoverRequestHandler;
 import afung.mangaWeb3.server.handler.MangaListItemDetailsRequestHandler;
 import afung.mangaWeb3.server.handler.MangaListRequestHandler;
+import afung.mangaWeb3.server.handler.MangaPageRequestHandler;
+import afung.mangaWeb3.server.handler.MangaReadRequestHandler;
 import afung.mangaWeb3.server.handler.SearchModuleRequestHandler;
 import afung.mangaWeb3.server.handler.ThreadHelperRequestHandler;
 import afung.mangaWeb3.server.install.InstallAjax;
@@ -65,8 +67,10 @@ class ServerAjax extends AjaxBase
         if (handlers == null)
         {
             handlers = [
+                new MangaPageRequestHandler(),
                 new MangaListItemCoverRequestHandler(),
                 new MangaListRequestHandler(),
+                new MangaReadRequestHandler(),
                 new MangaListItemDetailsRequestHandler(),
                 new FolderRequestHandler(),
                 new LoginRequestHandler(),

@@ -23,8 +23,10 @@ namespace afung.MangaWeb3.Server
             if (handlers == null)
             {
                 handlers = new HandlerBase[]{
+                    new MangaPageRequestHandler(),
                     new MangaListItemCoverRequestHandler(),
                     new MangaListRequestHandler(),
+                    new MangaReadRequestHandler(),
                     new MangaListItemDetailsRequestHandler(),
                     new FolderRequestHandler(),
                     new LoginRequestHandler(),

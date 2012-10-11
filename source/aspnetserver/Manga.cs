@@ -610,6 +610,34 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public string GetPage(int page, int width, int height)
+        {
+            int[] resizedDimensions = GetResizedDimensions(page, width, height);
+            if (resizedDimensions == null)
+            {
+                return null;
+            }
+
+            string hash = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1]);
+            string lockPath = Path.Combine(AjaxBase.DirectoryPath, "mangacache", hash + ".lock");
+            string outputRelativePath = "mangacache/" + hash + ".jpg";
+            string outputPath = Path.Combine(AjaxBase.DirectoryPath, "mangacache", hash + ".jpg");
+
+            if (File.Exists(lockPath))
+            {
+                return null;
+            }
+            else if (!File.Exists(outputPath))
+            {
+                ThreadHelper.Run("MangaProcessFile", Id, Content[page], resizedDimensions[0], resizedDimensions[1], outputPath, lockPath);
+                return null;
+            }
+            else
+            {
+                return outputRelativePath;
+            }
+        }
+
         private string TryOutputFile(string content)
         {
             string tempFilePath = null;
@@ -705,6 +733,12 @@ namespace afung.MangaWeb3.Server
                 {
                 }
             }
+        }
+
+        public void IncreaseViewCount()
+        {
+            View++;
+            Save();
         }
     }
 }

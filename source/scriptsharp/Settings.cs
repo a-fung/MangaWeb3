@@ -72,6 +72,16 @@ namespace afung.MangaWeb3.Client
             }
         }
 
+        public static int GetCurrentPage(int mangaId)
+        {
+            return int.Parse(Load("CurrentPage." + mangaId), 10);
+        }
+
+        public static void SetCurrentPage(int mangaId, int currentPage)
+        {
+            Save("CurrentPage." + mangaId, currentPage.ToString());
+        }
+
         private static void Save(string key, string value)
         {
             if (Script.IsNullOrUndefined(Window.LocalStorage))
@@ -130,5 +140,6 @@ namespace afung.MangaWeb3.Client
 
             return null;
         }
+
     }
 }

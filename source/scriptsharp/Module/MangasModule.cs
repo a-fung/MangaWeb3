@@ -151,7 +151,7 @@ namespace afung.MangaWeb3.Client.Module
                     row = Template.Get("client", "mangas-list-row", true).AppendTo(jQuery.Select("#mangas-list"));
                 }
 
-                new MangaListItem(row, items[i]);
+                new MangaListItem(row, items[i], i + 1 < items.Length ? items[i + 1].id : -1);
                 j++;
             }
         }
