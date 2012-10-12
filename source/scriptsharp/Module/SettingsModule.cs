@@ -37,15 +37,6 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select("#settings-sort").Value(Settings.Sort.ToString());
             jQuery.Select("#settings-display-type").Value(Settings.DisplayType.ToString());
 
-            if (Settings.UseContinuousMode)
-            {
-                jQuery.Select("#settings-continuous-mode").Attribute("checked", "checked");
-            }
-            else
-            {
-                jQuery.Select("#settings-continuous-mode").RemoveAttr("checked");
-            }
-
             if (Settings.FixAutoResize)
             {
                 jQuery.Select("#settings-fix-auto-resize").Attribute("checked", "checked");
@@ -62,7 +53,6 @@ namespace afung.MangaWeb3.Client.Module
 
             Settings.Sort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
-            Settings.UseContinuousMode = jQuery.Select("#settings-continuous-mode").GetAttribute("checked") == "checked";
             Settings.FixAutoResize = jQuery.Select("#settings-fix-auto-resize").GetAttribute("checked") == "checked";
 
             string newLanguage = jQuery.Select("#settings-language").GetValue();

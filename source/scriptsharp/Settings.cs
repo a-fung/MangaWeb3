@@ -48,18 +48,6 @@ namespace afung.MangaWeb3.Client
             }
         }
 
-        public static bool UseContinuousMode
-        {
-            get
-            {
-                return Load("UseContinuousMode") == "true";
-            }
-            set
-            {
-                Save("UseContinuousMode", value ? "true" : "false");
-            }
-        }
-
         public static bool FixAutoResize
         {
             get
