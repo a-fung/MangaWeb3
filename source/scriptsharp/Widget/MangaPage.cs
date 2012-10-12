@@ -27,6 +27,7 @@ namespace afung.MangaWeb3.Client.Widget
         private bool loading;
         private bool unloaded;
         private int _offset;
+        private int _offsetY;
 
         public int Offset
         {
@@ -37,16 +38,20 @@ namespace afung.MangaWeb3.Client.Widget
             private set
             {
                 _offset = Math.Round(value);
-                if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
-                {
-                    string cssValue = "translate(" + _offset + "px,0)";
-                    imageObject.CSS("transform", cssValue).CSS("-ms-transform", cssValue);
-                }
-                else
-                {
-                    string cssValue = "translate3d(" + _offset + "px,0,0)";
-                    imageObject.CSS("transform", cssValue).CSS("-ms-transform", cssValue).CSS("-moz-transform", cssValue).CSS("-webkit-transform", cssValue).CSS("-o-transform", cssValue);
-                }
+                UpdateCssTransform();
+            }
+        }
+
+        public int OffsetY
+        {
+            get
+            {
+                return _offsetY;
+            }
+            set
+            {
+                _offsetY = Math.Round(value);
+                UpdateCssTransform();
             }
         }
 
@@ -87,6 +92,14 @@ namespace afung.MangaWeb3.Client.Widget
             get
             {
                 return imagePart2Object == null ? null : (ImageElement)imagePart2Object.GetElement(0);
+            }
+        }
+
+        public jQueryObject AttachedObject
+        {
+            get
+            {
+                return imageObject;
             }
         }
 
@@ -308,6 +321,7 @@ namespace afung.MangaWeb3.Client.Widget
         {
             imageObject.AddClass("read-manga-page fade").AppendTo(mangaArea);
             Offset = offset + sign * otherPage.Width;
+            OffsetY = Height > mangaArea.GetHeight() ? 0 : ((mangaArea.GetHeight() - Height) / 2);
             Window.SetTimeout(
                 delegate
                 {
@@ -326,6 +340,14 @@ namespace afung.MangaWeb3.Client.Widget
             get
             {
                 return imageObject == null ? 0 : imageObject.GetOuterWidth();
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return imageObject == null ? 0 : imageObject.GetOuterHeight();
             }
         }
 
@@ -359,6 +381,20 @@ namespace afung.MangaWeb3.Client.Widget
             {
                 loading = false;
                 onload();
+            }
+        }
+
+        private void UpdateCssTransform()
+        {
+            if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
+            {
+                string cssValue = "translate(" + _offset + "px," + _offsetY + "px)";
+                imageObject.CSS("transform", cssValue).CSS("-ms-transform", cssValue);
+            }
+            else
+            {
+                string cssValue = "translate3d(" + _offset + "px," + _offsetY + "px,0)";
+                imageObject.CSS("transform", cssValue).CSS("-ms-transform", cssValue).CSS("-moz-transform", cssValue).CSS("-webkit-transform", cssValue).CSS("-o-transform", cssValue);
             }
         }
     }

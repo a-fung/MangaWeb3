@@ -128,10 +128,16 @@ namespace afung.MangaWeb3.Client.Module
         }
 
         private bool inTouchHandler;
+        private int touchScrollDirection;
         private int touchInitialOffset;
         private int touchInitialXPosition;
+        private int touchInitialOffsetY;
+        private int touchInitialYPosition;
         private List<int> lastTouchOffset;
         private List<Date> lastTouchTime;
+        private List<int> lastTouchOffsetY;
+        private List<Date> lastTouchTimeY;
+        private MangaPage currentVerticalScrollPage;
 
         private bool inSliderTouchHandler;
         private int sliderTouchInitialOffset;
@@ -479,6 +485,20 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        private MangaPage GetMangaPageFromClientX(int x)
+        {
+            foreach (int key in insertedPages.Keys)
+            {
+                int combinedOffset = Offset + insertedPages[key].Offset;
+                if (combinedOffset < x && combinedOffset + insertedPages[key].Width > x)
+                {
+                    return insertedPages[key];
+                }
+            }
+
+            return null;
+        }
+
         private void Insert(MangaPage page)
         {
             if (insertedPages.Count == 0)
@@ -534,76 +554,178 @@ namespace afung.MangaWeb3.Client.Module
                     inTouchHandler = true;
                     touchInitialOffset = Offset;
                     touchInitialXPosition = e.ClientX;
+
+                    if (Settings.DisplayType == 2 && (currentVerticalScrollPage = GetMangaPageFromClientX(touchInitialXPosition)) != null && currentVerticalScrollPage.Height > attachedObject.GetHeight())
+                    {
+                        touchScrollDirection = 0;
+                        touchInitialOffsetY = currentVerticalScrollPage.OffsetY;
+                        touchInitialYPosition = e.ClientY;
+                    }
+                    else
+                    {
+                        touchScrollDirection = 1;
+                    }
                 }
 
                 if (inTouchHandler)
                 {
-                    MangaPage firstPage;
-                    int targetOffset = e.ClientX - touchInitialXPosition + touchInitialOffset;
-                    int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
-                    int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
-                    Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
-                    RefreshMangaArea(false);
                     inTouchHandler = e.Type != "touch_end";
 
-                    if (BootstrapTransition.Support)
+                    if (touchScrollDirection == 0)
                     {
-                        int index = 0;
-
-                        if (e.Type == "touch_start")
+                        if (Math.Abs(e.ClientX - touchInitialXPosition) > 35)
                         {
-                            lastTouchTime = new List<Date>();
-                            lastTouchOffset = new List<int>();
-                            lastTouchTime[0] = new Date();
-                            lastTouchOffset[0] = Offset;
+                            touchScrollDirection = 1;
                         }
-                        else
+                        else if (Math.Abs(e.ClientY - touchInitialYPosition) > 35)
                         {
-                            Date currentTime = new Date();
-                            index = lastTouchOffset[lastTouchOffset.Count - 1] == Offset && currentTime - lastTouchTime[lastTouchOffset.Count - 1] < 100 ? lastTouchOffset.Count - 1 : lastTouchOffset.Count;
-                            lastTouchTime[index] = currentTime;
-                            lastTouchOffset[index] = Offset;
+                            touchScrollDirection = 2;
+
+                            // try to snap to current page
+                            mangaArea.AddClass("navigate");
+                            Offset = -currentVerticalScrollPage.Offset;
+                            Utility.OnTransitionEnd(
+                                mangaArea,
+                                delegate
+                                {
+                                    mangaArea.RemoveClass("navigate");
+                                });
                         }
+                    }
 
-                        if (e.Type == "touch_end")
+                    if (touchScrollDirection != 2)
+                    {
+                        MangaPage firstPage;
+                        int targetOffset = e.ClientX - touchInitialXPosition + touchInitialOffset;
+                        int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                        int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+                        Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
+                        RefreshMangaArea(false);
+
+                        if (BootstrapTransition.Support)
                         {
-                            int dx = lastTouchOffset[index] - lastTouchOffset[index - 1];
-                            int dt = lastTouchTime[index] - lastTouchTime[index - 1] + 1;
-                            int distance = Math.Round(dx * 200 / dt);
+                            int index = 0;
 
-                            lastTouchOffset = (List<int>)(object)(lastTouchTime = null);
-
-                            if (distance != 0)
+                            if (e.Type == "touch_start")
                             {
-                                inTransition = true;
-                                mangaArea.AddClass("inertia");
-                                Offset += distance;
-                                Utility.OnTransitionEnd(
-                                    mangaArea,
-                                    delegate
-                                    {
-                                        inTransition = false;
-                                        mangaArea.RemoveClass("inertia");
-                                        RefreshMangaArea();
+                                lastTouchTime = new List<Date>();
+                                lastTouchOffset = new List<int>();
+                                lastTouchTime[0] = new Date();
+                                lastTouchOffset[0] = Offset;
+                            }
+                            else
+                            {
+                                Date currentTime = new Date();
+                                index = lastTouchOffset[lastTouchOffset.Count - 1] == Offset && currentTime - lastTouchTime[lastTouchOffset.Count - 1] < 100 ? lastTouchOffset.Count - 1 : lastTouchOffset.Count;
+                                lastTouchTime[index] = currentTime;
+                                lastTouchOffset[index] = Offset;
+                            }
 
-                                        minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
-                                        maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+                            if (e.Type == "touch_end" && index > 0)
+                            {
+                                int dx = lastTouchOffset[index] - lastTouchOffset[index - 1];
+                                int dt = lastTouchTime[index] - lastTouchTime[index - 1] + 1;
+                                int distance = Math.Round(dx * 200 / dt);
 
-                                        if (Offset < minOffset || Offset > maxOffset)
+                                lastTouchOffset = (List<int>)(object)(lastTouchTime = null);
+
+                                if (distance != 0)
+                                {
+                                    inTransition = true;
+                                    mangaArea.AddClass("inertia");
+                                    Offset += distance;
+                                    Utility.OnTransitionEnd(
+                                        mangaArea,
+                                        delegate
                                         {
-                                            inTransition = true;
-                                            mangaArea.AddClass("navigate");
-                                            Offset = Offset < minOffset ? minOffset : maxOffset;
-                                            Utility.OnTransitionEnd(
-                                                mangaArea,
-                                                delegate
-                                                {
-                                                    inTransition = false;
-                                                    mangaArea.RemoveClass("navigate");
-                                                    RefreshMangaArea();
-                                                });
-                                        }
-                                    });
+                                            inTransition = false;
+                                            mangaArea.RemoveClass("inertia");
+                                            RefreshMangaArea();
+
+                                            minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                                            maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+
+                                            if (Offset < minOffset || Offset > maxOffset)
+                                            {
+                                                inTransition = true;
+                                                mangaArea.AddClass("navigate");
+                                                Offset = Offset < minOffset ? minOffset : maxOffset;
+                                                Utility.OnTransitionEnd(
+                                                    mangaArea,
+                                                    delegate
+                                                    {
+                                                        inTransition = false;
+                                                        mangaArea.RemoveClass("navigate");
+                                                        RefreshMangaArea();
+                                                    });
+                                            }
+                                        });
+                                }
+                            }
+                        }
+                    }
+
+                    if (touchScrollDirection != 1)
+                    {
+                        int targetOffset = e.ClientY - touchInitialYPosition + touchInitialOffsetY;
+                        int minOffset = attachedObject.GetHeight() - currentVerticalScrollPage.Height;
+                        int maxOffset = 0;
+                        currentVerticalScrollPage.OffsetY = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
+
+                        if (BootstrapTransition.Support)
+                        {
+                            int index = 0;
+
+                            if (e.Type == "touch_start")
+                            {
+                                lastTouchTimeY = new List<Date>();
+                                lastTouchOffsetY = new List<int>();
+                                lastTouchTimeY[0] = new Date();
+                                lastTouchOffsetY[0] = currentVerticalScrollPage.OffsetY;
+                            }
+                            else
+                            {
+                                Date currentTime = new Date();
+                                index = lastTouchOffsetY[lastTouchOffsetY.Count - 1] == currentVerticalScrollPage.OffsetY && currentTime - lastTouchTimeY[lastTouchOffsetY.Count - 1] < 100 ? lastTouchOffsetY.Count - 1 : lastTouchOffsetY.Count;
+                                lastTouchTimeY[index] = currentTime;
+                                lastTouchOffsetY[index] = currentVerticalScrollPage.OffsetY;
+                            }
+
+                            if (e.Type == "touch_end" && index > 0)
+                            {
+                                int dy = lastTouchOffsetY[index] - lastTouchOffsetY[index - 1];
+                                int dt = lastTouchTimeY[index] - lastTouchTimeY[index - 1] + 1;
+                                int distance = Math.Round(dy * 100 / dt);
+
+                                lastTouchOffsetY = (List<int>)(object)(lastTouchTimeY = null);
+
+                                if (distance != 0)
+                                {
+                                    inTransition = true;
+                                    currentVerticalScrollPage.AttachedObject.AddClass("inertia");
+                                    currentVerticalScrollPage.OffsetY += distance;
+                                    Utility.OnTransitionEnd(
+                                        currentVerticalScrollPage.AttachedObject,
+                                        delegate
+                                        {
+                                            inTransition = false;
+                                            currentVerticalScrollPage.AttachedObject.RemoveClass("inertia");
+
+                                            if (currentVerticalScrollPage.OffsetY < minOffset || currentVerticalScrollPage.OffsetY > maxOffset)
+                                            {
+                                                inTransition = true;
+                                                currentVerticalScrollPage.AttachedObject.AddClass("inertia-bounce");
+                                                currentVerticalScrollPage.OffsetY = currentVerticalScrollPage.OffsetY < minOffset ? minOffset : maxOffset;
+                                                Utility.OnTransitionEnd(
+                                                    currentVerticalScrollPage.AttachedObject,
+                                                    delegate
+                                                    {
+                                                        inTransition = false;
+                                                        currentVerticalScrollPage.AttachedObject.RemoveClass("inertia-bounce");
+                                                    });
+                                            }
+                                        });
+                                }
                             }
                         }
                     }
