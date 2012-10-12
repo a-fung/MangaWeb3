@@ -137,6 +137,8 @@ namespace afung.MangaWeb3.Client.Module
         private int sliderTouchInitialOffset;
         private int sliderTouchInitialXPosition;
 
+        private SelfClearingTimeout resizeTimeout = new SelfClearingTimeout();
+
         private ReadModule()
             : base("client", "read-module")
         {
@@ -167,6 +169,7 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select(".arrow-btn").Click(ArrowButtonClicked);
             jQuery.Document.Keyup(OnKeyUp);
             jQuery.Document.Bind("mousewheel DOMMouseScroll", MouseWheelHandler);
+            jQuery.Window.Resize(OnResize);
         }
 
         protected override void OnShow()
@@ -844,6 +847,32 @@ namespace afung.MangaWeb3.Client.Module
                     Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
                     RefreshMangaArea(false);
                 }
+            }
+        }
+
+        private void OnResize(jQueryEvent e)
+        {
+            if (attachedObject.Is(":visible"))
+            {
+                resizeTimeout.Start(
+                    delegate
+                    {
+                        if (attachedObject.Is(":visible"))
+                        {
+                            if (Settings.DisplayType == 0 && attachedObject.GetHeight() == jQuery.Window.GetHeight())
+                            {
+                                return;
+                            }
+
+                            if (Settings.DisplayType == 1 && attachedObject.GetHeight() == jQuery.Window.GetHeight() && oldWidth == jQuery.Window.GetWidth())
+                            {
+                                return;
+                            }
+
+                            InitializeRead();
+                        }
+                    },
+                    1200);
             }
         }
     }
