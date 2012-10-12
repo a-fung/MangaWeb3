@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Html;
 
 namespace afung.MangaWeb3.Client
 {
@@ -22,6 +23,19 @@ namespace afung.MangaWeb3.Client
         public static int MangaPagesToPreload = 1;
 
         public static int MangaPagesUnloadDistance = 3;
+
+        public static double PixelRatio
+        {
+            get
+            {
+                if (Number.IsFinite(ExtendedWindow.DevicePixelRatio))
+                {
+                    return ExtendedWindow.DevicePixelRatio;
+                }
+
+                return 1.0;
+            }
+        }
     }
 
     /// <summary>

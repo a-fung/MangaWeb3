@@ -64,12 +64,20 @@ namespace afung.MangaWeb3.Client.Widget
             }
         }
 
+        private ImageElement imageElement
+        {
+            get
+            {
+                return imageObject == null || !imageObject.Is("img") ? null : (ImageElement)imageObject.GetElement(0);
+            }
+        }
+
         public MangaPage(int mangaId, int page, int width, int height)
         {
             this.mangaId = mangaId;
             this.page = page;
-            this.width = Settings.DisplayType == 0 ? 0 : width; // Fit Height?
-            this.height = Settings.DisplayType == 2 ? 0 : height; // Fit Width?
+            this.width = width - 2;
+            this.height = height;
             unloaded = loading = loaded = false;
         }
 
@@ -88,8 +96,8 @@ namespace afung.MangaWeb3.Client.Widget
             pageRequest = new MangaPageRequest();
             pageRequest.id = mangaId;
             pageRequest.page = page;
-            pageRequest.width = width;
-            pageRequest.height = height;
+            pageRequest.width = Settings.DisplayType == 0 ? 0 : (int)Math.Round(width * Environment.PixelRatio); // Fit Height?
+            pageRequest.height = Settings.DisplayType == 2 ? 0 : (int)Math.Round(height * Environment.PixelRatio); // Fit Width?
 
             Request.Send(pageRequest, MangaPageRequestSucess);
         }
@@ -109,6 +117,24 @@ namespace afung.MangaWeb3.Client.Widget
                     "load",
                     delegate(jQueryEvent e)
                     {
+                        if (Settings.DisplayType == 0)
+                        {
+                            imageObject.Height(height);
+                        }
+                        else if (Settings.DisplayType == 2)
+                        {
+                            imageObject.Width(width);
+                        }
+                        else
+                        {
+                            double widthFactor = width / imageElement.Width;
+                            double heightFactor = height / imageElement.Height;
+                            double factor = widthFactor < heightFactor ? widthFactor : heightFactor;
+                            imageObject
+                                .Width(Math.Round(imageElement.Width * factor))
+                                .Height(Math.Round(imageElement.Height * factor));
+                        }
+
                         loading = false;
                         loaded = true;
                         onload();
