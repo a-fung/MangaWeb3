@@ -125,6 +125,45 @@ namespace afung.MangaWeb3.Client.Module
         private void MangaListRequestSuccess(MangaListResponse response)
         {
             items = response.items;
+
+            CompareCallback<MangaListItemJson> compare = null;
+
+            switch (Settings.Sort)
+            {
+                case 1:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return a.pages - b.pages;
+                    };
+                    break;
+                case 2:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return (int)a.size - (int)b.size;
+                    };
+                    break;
+                case 3:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return b.date - a.date;
+                    };
+                    break;
+                case -1:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return Math.Round(Math.Random() * 2 - 1);
+                    };
+                    break;
+                case 0:
+                default:
+                    break;
+            }
+
+            if (compare != null)
+            {
+                ((List<MangaListItemJson>)(object)items).Sort(compare);
+            }
+
             ChangePage(1);
             pagination.Refresh(true);
         }

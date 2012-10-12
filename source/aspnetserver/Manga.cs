@@ -318,7 +318,9 @@ namespace afung.MangaWeb3.Server
                 }
             }
 
-            return GetMangas(where);
+            Manga[] mangas = GetMangas(where);
+            Array.Sort<Manga>(mangas, (a, b) => Utility.StrCmpLogicalW(a.Meta.Title, b.Meta.Title));
+            return mangas;
         }
 
         public static Manga[] GetAllMangas()
@@ -438,6 +440,7 @@ namespace afung.MangaWeb3.Server
             obj.title = Meta.Title;
             obj.pages = NumberOfPages;
             obj.size = Size;
+            obj.date = ModifiedTime;
             return obj;
         }
 

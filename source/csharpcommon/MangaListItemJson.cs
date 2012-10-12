@@ -12,5 +12,6 @@ namespace afung.MangaWeb3.Common
         public string title;
         public int pages;
         public long size;
+        public int date;
     }
 }

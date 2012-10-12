@@ -284,7 +284,12 @@ class Manga
             }
         }
         
-        return GetMangas(where);
+        var mangas:Array<Manga> = GetMangas(where);
+        mangas.sort(function(a:Manga, b:Manga):Int
+        {
+           return untyped __call__("strnatcmp", a.Meta.Title, b.Meta.Title);
+        });
+        return mangas;
     }
     
     public static function GetAllMangas():Array<Manga>
@@ -410,6 +415,7 @@ class Manga
         obj.title = Meta.Title;
         obj.pages = NumberOfPages;
         obj.size = Size;
+        obj.date = ModifiedTime;
         return obj;
     }
     

@@ -11,6 +11,7 @@ class MangaListItemJson
     public var title:String;
     public var pages:Int;
     public var size:Int;
+    public var date:Int;
     
     public function new()
     {
