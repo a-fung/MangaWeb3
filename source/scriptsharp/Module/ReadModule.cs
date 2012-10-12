@@ -38,6 +38,7 @@ namespace afung.MangaWeb3.Client.Module
 
         private bool sendingReadReqeust;
         private bool hasHorizonalMouseWheelScroll;
+        private bool inTransition;
 
         private int _currentPage;
         private int CurrentPage
@@ -79,8 +80,8 @@ namespace afung.MangaWeb3.Client.Module
         private Date lastRefreshMangaArea;
         private int pagesHead = 0;
         private int pagesTail = 0;
-        private int _offset;
 
+        private int _offset;
         private int Offset
         {
             get
@@ -126,9 +127,13 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        private bool inTouchHandler;
         private int touchInitialOffset;
         private int touchInitialXPosition;
+        private List<int> lastTouchOffset;
+        private List<Date> lastTouchTime;
 
+        private bool inSliderTouchHandler;
         private int sliderTouchInitialOffset;
         private int sliderTouchInitialXPosition;
 
@@ -198,8 +203,11 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ToggleInfoButtonClicked(jQueryEvent e)
         {
-            e.PreventDefault();
-            ToggleInfo();
+            if (!inTransition)
+            {
+                e.PreventDefault();
+                ToggleInfo();
+            }
         }
 
         public static void ReadManga(MangaReadResponse manga)
@@ -234,30 +242,32 @@ namespace afung.MangaWeb3.Client.Module
 
         private void InitializeRead()
         {
-            RemoveAllPages();
-            UnloadAllPages();
-            attachedObject.Height(jQuery.Window.GetHeight());
-            oldWidth = attachedObject.GetWidth();
-
-            if (CurrentPage == -1)
+            RemoveAllPages(delegate
             {
-                if (readNext)
+                UnloadAllPages();
+                attachedObject.Height(jQuery.Window.GetHeight());
+                oldWidth = attachedObject.GetWidth();
+
+                if (CurrentPage == -1)
                 {
-                    CurrentPage = 0;
-                }
-                else
-                {
-                    CurrentPage = Settings.GetCurrentPage(manga.id);
-                    if (!Number.IsFinite(CurrentPage))
+                    if (readNext)
                     {
                         CurrentPage = 0;
                     }
+                    else
+                    {
+                        CurrentPage = Settings.GetCurrentPage(manga.id);
+                        if (!Number.IsFinite(CurrentPage))
+                        {
+                            CurrentPage = 0;
+                        }
+                    }
                 }
-            }
 
-            readNext = true;
+                readNext = true;
 
-            NavigateTo(CurrentPage);
+                NavigateTo(CurrentPage);
+            });
         }
 
         private void NavigateTo(int page)
@@ -267,26 +277,37 @@ namespace afung.MangaWeb3.Client.Module
                 return;
             }
 
-            RemoveAllPages();
+            RemoveAllPages(delegate
+            {
+                CurrentPage = page;
 
-            CurrentPage = page;
-
-            LoadPages(page);
-            RefreshMangaArea();
+                LoadPages(page);
+                RefreshMangaArea();
+            });
         }
 
-        private void RemoveAllPages()
+        private void RemoveAllPages(Action callback)
         {
-            List<int> keys = new List<int>();
-            foreach (int key in insertedPages.Keys)
-            {
-                keys.Add(key);
-            }
+            inTransition = true;
+            Utility.OnTransitionEnd(
+                mangaArea.AddClass("fade"),
+                delegate
+                {
+                    List<int> keys = new List<int>();
+                    foreach (int key in insertedPages.Keys)
+                    {
+                        keys.Add(key);
+                    }
 
-            foreach (int key in keys)
-            {
-                Remove(insertedPages[key]);
-            }
+                    foreach (int key in keys)
+                    {
+                        Remove(insertedPages[key]);
+                    }
+
+                    mangaArea.RemoveClass("fade");
+                    inTransition = false;
+                    callback();
+                });
         }
 
         [AlternateSignature]
@@ -294,7 +315,7 @@ namespace afung.MangaWeb3.Client.Module
         private void RefreshMangaArea(bool force)
         {
             if (Script.IsNullOrUndefined(force)) force = true;
-            if (!force && !Script.IsNullOrUndefined(lastRefreshMangaArea) && Date.Now - lastRefreshMangaArea <= RefreshMangaAreaInterval)
+            if (inTransition || (!force && !Script.IsNullOrUndefined(lastRefreshMangaArea) && Date.Now - lastRefreshMangaArea <= RefreshMangaAreaInterval))
             {
                 return;
             }
@@ -503,19 +524,87 @@ namespace afung.MangaWeb3.Client.Module
         private extern void TouchHandler(jQueryEvent e);
         private void TouchHandler(jQueryTouchEvent e)
         {
-            if (e.Type == "touch_start")
+            if (!inTransition)
             {
-                touchInitialOffset = Offset;
-                touchInitialXPosition = e.ClientX;
-            }
-            else
-            {
-                MangaPage firstPage;
-                int targetOffset = e.ClientX - touchInitialXPosition + touchInitialOffset;
-                int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
-                int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
-                Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
-                RefreshMangaArea(false);
+                if (e.Type == "touch_start")
+                {
+                    inTouchHandler = true;
+                    touchInitialOffset = Offset;
+                    touchInitialXPosition = e.ClientX;
+                }
+
+                if (inTouchHandler)
+                {
+                    MangaPage firstPage;
+                    int targetOffset = e.ClientX - touchInitialXPosition + touchInitialOffset;
+                    int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                    int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+                    Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
+                    RefreshMangaArea(false);
+                    inTouchHandler = e.Type != "touch_end";
+
+                    if (BootstrapTransition.Support)
+                    {
+                        int index = 0;
+
+                        if (e.Type == "touch_start")
+                        {
+                            lastTouchTime = new List<Date>();
+                            lastTouchOffset = new List<int>();
+                            lastTouchTime[0] = new Date();
+                            lastTouchOffset[0] = Offset;
+                        }
+                        else
+                        {
+                            Date currentTime = new Date();
+                            index = lastTouchOffset[lastTouchOffset.Count - 1] == Offset && currentTime - lastTouchTime[lastTouchOffset.Count - 1] < 100 ? lastTouchOffset.Count - 1 : lastTouchOffset.Count;
+                            lastTouchTime[index] = currentTime;
+                            lastTouchOffset[index] = Offset;
+                        }
+
+                        if (e.Type == "touch_end")
+                        {
+                            int dx = lastTouchOffset[index] - lastTouchOffset[index - 1];
+                            int dt = lastTouchTime[index] - lastTouchTime[index - 1] + 1;
+                            int distance = Math.Round(dx * 200 / dt);
+
+                            lastTouchOffset = (List<int>)(object)(lastTouchTime = null);
+
+                            if (distance != 0)
+                            {
+                                inTransition = true;
+                                mangaArea.AddClass("inertia");
+                                Offset += distance;
+                                Utility.OnTransitionEnd(
+                                    mangaArea,
+                                    delegate
+                                    {
+                                        inTransition = false;
+                                        mangaArea.RemoveClass("inertia");
+                                        RefreshMangaArea();
+
+                                        minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                                        maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+
+                                        if (Offset < minOffset || Offset > maxOffset)
+                                        {
+                                            inTransition = true;
+                                            mangaArea.AddClass("inertia");
+                                            Offset = Offset < minOffset ? minOffset : maxOffset;
+                                            Utility.OnTransitionEnd(
+                                                mangaArea,
+                                                delegate
+                                                {
+                                                    inTransition = false;
+                                                    mangaArea.RemoveClass("inertia");
+                                                    RefreshMangaArea();
+                                                });
+                                        }
+                                    });
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -523,51 +612,64 @@ namespace afung.MangaWeb3.Client.Module
         private extern void SliderTouchHandler(jQueryEvent e);
         private void SliderTouchHandler(jQueryTouchEvent e)
         {
-            if (e.Type == "touch_start")
+            if (!inTransition)
             {
-                sliderTouchInitialOffset = SliderOffset;
-                sliderTouchInitialXPosition = e.ClientX;
-            }
-            else
-            {
-                int targetOffset = e.ClientX - sliderTouchInitialXPosition + sliderTouchInitialOffset;
-                int maxOffset = sliderHandle.Parent().GetInnerWidth() - sliderHandle.GetOuterWidth();
-                targetOffset = targetOffset < 0 ? 0 : targetOffset > maxOffset ? maxOffset : targetOffset;
-                CurrentPage = manga.pages - 1 - Math.Floor(targetOffset / (maxOffset + 1) * manga.pages);
-                SliderOffset = targetOffset;
-                if (e.Type == "touch_end")
+                if (e.Type == "touch_start")
                 {
-                    NavigateTo(CurrentPage);
+                    inSliderTouchHandler = true;
+                    sliderTouchInitialOffset = SliderOffset;
+                    sliderTouchInitialXPosition = e.ClientX;
+                }
+                else if (inSliderTouchHandler)
+                {
+                    int targetOffset = e.ClientX - sliderTouchInitialXPosition + sliderTouchInitialOffset;
+                    int maxOffset = sliderHandle.Parent().GetInnerWidth() - sliderHandle.GetOuterWidth();
+                    targetOffset = targetOffset < 0 ? 0 : targetOffset > maxOffset ? maxOffset : targetOffset;
+                    CurrentPage = manga.pages - 1 - Math.Floor(targetOffset / (maxOffset + 1) * manga.pages);
+                    SliderOffset = targetOffset;
+                    if (e.Type == "touch_end")
+                    {
+                        inSliderTouchHandler = false;
+                        NavigateTo(CurrentPage);
+                    }
                 }
             }
         }
 
         private void ExitButtonClicked(jQueryEvent e)
         {
-            e.PreventDefault();
-            Exit();
+            if (!inTransition)
+            {
+                e.PreventDefault();
+                Exit();
+            }
         }
 
         private void Exit()
         {
             readNext = false;
-            RemoveAllPages();
-            UnloadAllPages();
             HideInfo();
-            MangasModule.Instance.Show();
+            RemoveAllPages(delegate
+            {
+                UnloadAllPages();
+                MangasModule.Instance.Show();
+            });
         }
 
         private void NextButtonClicked(jQueryEvent e)
         {
-            e.PreventDefault();
-
-            if (!sendingReadReqeust && manga.nextId != -1)
+            if (!inTransition)
             {
-                sendingReadReqeust = true;
-                MangaReadRequest request = new MangaReadRequest();
-                request.id = manga.nextId;
-                request.nextId = MangasModule.Instance.GetNextMangaId(manga.nextId);
-                Request.Send(request, ReadRequestSuccess, ReadRequestFailure);
+                e.PreventDefault();
+
+                if (!sendingReadReqeust && manga.nextId != -1)
+                {
+                    sendingReadReqeust = true;
+                    MangaReadRequest request = new MangaReadRequest();
+                    request.id = manga.nextId;
+                    request.nextId = MangasModule.Instance.GetNextMangaId(manga.nextId);
+                    Request.Send(request, ReadRequestSuccess, ReadRequestFailure);
+                }
             }
         }
 
@@ -587,14 +689,17 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ArrowButtonClicked(jQueryEvent e)
         {
-            e.PreventDefault();
-            jQueryObject target = jQuery.FromElement(e.Target);
-            while (!target.Is("a"))
+            if (!inTransition)
             {
-                target = target.Parent();
-            }
+                e.PreventDefault();
+                jQueryObject target = jQuery.FromElement(e.Target);
+                while (!target.Is("a"))
+                {
+                    target = target.Parent();
+                }
 
-            NavigateLeftOrRight(target.GetAttribute("data-direction") == "left");
+                NavigateLeftOrRight(target.GetAttribute("data-direction") == "left");
+            }
         }
 
         private void NavigateForwardOrBackward(bool backward)
@@ -634,14 +739,23 @@ namespace afung.MangaWeb3.Client.Module
                     distance = attachedObject.GetWidth() * (distance.Value > 0 ? 1 : -1);
                 }
 
+                inTransition = true;
+                mangaArea.AddClass("navigate");
                 Offset -= distance.Value;
-                RefreshMangaArea();
+                Utility.OnTransitionEnd(
+                    mangaArea,
+                    delegate
+                    {
+                        inTransition = false;
+                        mangaArea.RemoveClass("navigate");
+                        RefreshMangaArea();
+                    });
             }
         }
 
         private void OnKeyUp(jQueryEvent keyEvent)
         {
-            if (attachedObject.Is(":visible"))
+            if (attachedObject.Is(":visible") && !inTransition)
             {
                 if (Script.IsNullOrUndefined(keyEvent))
                 {
@@ -685,7 +799,7 @@ namespace afung.MangaWeb3.Client.Module
 
         private void MouseWheelHandler(jQueryEvent e)
         {
-            if (attachedObject.Is(":visible"))
+            if (attachedObject.Is(":visible") && !inTransition)
             {
                 e.PreventDefault();
                 MouseWheelEvent wheelEvent = (MouseWheelEvent)(object)((Dictionary<string, object>)(object)e)["originalEvent"];
