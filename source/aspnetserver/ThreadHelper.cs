@@ -29,7 +29,7 @@ namespace afung.MangaWeb3.Server
 
             if (manga != null)
             {
-                manga.ProcessFile((string)parameters[1], (int)parameters[2], (int)parameters[3], (string)parameters[4], (string)parameters[5]);
+                manga.ProcessFile((string)parameters[1], (int)parameters[2], (int)parameters[3], (int)parameters[4], (string)parameters[5], (string)parameters[6]);
             }
         }
     }

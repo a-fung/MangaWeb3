@@ -577,7 +577,7 @@ class Manga
             var resizedDimensions:Array<Int> = GetResizedDimensions(0, 260, 200);
             if (resizedDimensions != null)
             {
-                ThreadHelper.Run("MangaProcessFile", [Id, Content[0], resizedDimensions[0], resizedDimensions[1], coverPath, lockPath]);
+                ThreadHelper.Run("MangaProcessFile", [Id, Content[0], resizedDimensions[0], resizedDimensions[1], 0, coverPath, lockPath]);
             }
 
             return null;
@@ -588,7 +588,7 @@ class Manga
         }
     }
     
-    public function GetPage(page:Int, width:Int, height:Int):String
+    public function GetPage(page:Int, width:Int, height:Int, part:Int):String
     {
         var resizedDimensions:Array<Int> = GetResizedDimensions(page, width, height);
         if (resizedDimensions == null)
@@ -596,7 +596,7 @@ class Manga
             return null;
         }
         
-        var hash:String = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1]);
+        var hash:String = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1] + "." + part);
         var lockPath:String = "mangacache/" + hash + ".lock";
         var outputRelativePath:String = "mangacache/" + hash + ".jpg";
         var outputPath:String = outputRelativePath;
@@ -607,7 +607,7 @@ class Manga
         }
         else if (!FileSystem.exists(outputPath))
         {
-            ThreadHelper.Run("MangaProcessFile", [Id, Content[page], resizedDimensions[0], resizedDimensions[1], outputPath, lockPath]);
+            ThreadHelper.Run("MangaProcessFile", [Id, Content[page], resizedDimensions[0], resizedDimensions[1], part, outputPath, lockPath]);
             return null;
         }
         else
@@ -640,7 +640,7 @@ class Manga
         return tempFilePath;
     }
     
-    public function ProcessFile(content:String, width:Int, height:Int, outputPath:String, lockPath:String):Void
+    public function ProcessFile(content:String, width:Int, height:Int, part:Int, outputPath:String, lockPath:String):Void
     {
         if (!FileSystem.exists(outputPath))
         {
@@ -655,7 +655,7 @@ class Manga
                     
                     if (tempFilePath != null)
                     {
-                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height);
+                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height, part);
                         FileSystem.deleteFile(tempFilePath);
                     }
                 }
@@ -666,7 +666,7 @@ class Manga
         }
     }
     
-    private function GetDimensions(page:Int):Array<Int>
+    public function GetDimensions(page:Int):Array<Int>
     {
         if (Dimensions[page] == null)
         {

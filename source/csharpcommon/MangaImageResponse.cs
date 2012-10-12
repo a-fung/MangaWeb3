@@ -10,5 +10,6 @@ namespace afung.MangaWeb3.Common
     {
         public int status;
         public string url;
+        public int[] dimensions;
     }
 }

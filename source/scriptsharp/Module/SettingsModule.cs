@@ -37,13 +37,13 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select("#settings-sort").Value(Settings.Sort.ToString());
             jQuery.Select("#settings-display-type").Value(Settings.DisplayType.ToString());
 
-            if (Settings.FixAutoResize)
+            if (Settings.FixAutoDownscale)
             {
-                jQuery.Select("#settings-fix-auto-resize").Attribute("checked", "checked");
+                jQuery.Select("#settings-fix-auto-downscale").Attribute("checked", "checked");
             }
             else
             {
-                jQuery.Select("#settings-fix-auto-resize").RemoveAttr("checked");
+                jQuery.Select("#settings-fix-auto-downscale").RemoveAttr("checked");
             }
         }
 
@@ -53,7 +53,7 @@ namespace afung.MangaWeb3.Client.Module
 
             Settings.Sort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
-            Settings.FixAutoResize = jQuery.Select("#settings-fix-auto-resize").GetAttribute("checked") == "checked";
+            Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").GetAttribute("checked") == "checked";
 
             string newLanguage = jQuery.Select("#settings-language").GetValue();
             if (newLanguage != Settings.UserLanguage)

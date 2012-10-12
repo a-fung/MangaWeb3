@@ -43,9 +43,13 @@ namespace afung.MangaWeb3.Server.Provider
             }
         }
 
-        public static void ResizeFile(string inputFile, string outputFile, int width, int height)
+        public static void ResizeFile(string inputFile, string outputFile, int width, int height, int part)
         {
-            int part = -1;
+            if (part != 0)
+            {
+                width = (int)Math.Round(width / 2.0);
+            }
+
             using (Image image = Image.FromFile(inputFile))
             {
                 using (Bitmap resizedImage = new Bitmap(width, height))
@@ -57,13 +61,13 @@ namespace afung.MangaWeb3.Server.Provider
                         g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                         g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
-                        if (part == -1)
+                        if (part == 0)
                         {
                             g.DrawImage(image, 0, 0, resizedImage.Width, resizedImage.Height);
                         }
                         else
                         {
-                            g.DrawImage(image, part == 0 ? 0 : -resizedImage.Width, 0, resizedImage.Width * 2, resizedImage.Height);
+                            g.DrawImage(image, part == 1 ? 0 : -resizedImage.Width, 0, resizedImage.Width * 2, resizedImage.Height);
                         }
                     }
 

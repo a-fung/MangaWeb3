@@ -11,7 +11,7 @@ import php.Lib;
 
 class ImageProvider 
 {
-    public static function ResizeFile(inputFile:String, outputFile:String, width:Int, height:Int):Void
+    public static function ResizeFile(inputFile:String, outputFile:String, width:Int, height:Int, part:Int):Void
     {
         var image:Dynamic;
         var ext:String = "." + Path.extension(inputFile).toLowerCase();
@@ -27,11 +27,24 @@ class ImageProvider
                 return;
         }
         
+        if (part != 0)
+        {
+            width = Math.round(width / 2.0);
+        }
+        
         if (image != false)
         {
             var imageSize:Array<Dynamic> = Lib.toHaxeArray(untyped __call__("getimagesize", inputFile));
             var resizedImage:Dynamic = untyped __call__("imagecreatetruecolor", width, height);
-            untyped __call__("imagecopyresampled", resizedImage, image, 0, 0, 0, 0, width, height, imageSize[0], imageSize[1]);
+            if (part == 0)
+            {
+                untyped __call__("imagecopyresampled", resizedImage, image, 0, 0, 0, 0, width, height, imageSize[0], imageSize[1]);
+            }
+            else
+            {
+                untyped __call__("imagecopyresampled", resizedImage, image, part == 1 ? 0 : -width, 0, 0, 0, width * 2, height, imageSize[0], imageSize[1]);
+            }
+            
             untyped __call__("imagejpeg", resizedImage, outputFile, 90);
             untyped __call__("imagedestroy", resizedImage);
             untyped __call__("imagedestroy", image);

@@ -53,7 +53,13 @@ namespace afung.MangaWeb3.Client.Module
         public extern void Refresh();
         public void Refresh(MangaFilter filter)
         {
-            Show();
+            if (!attachedObject.Is("visible"))
+            {
+                items = new MangaListItemJson[] { };
+                ChangePage(1);
+                pagination.Refresh(true);
+                Show();
+            }
 
             if (Script.IsNullOrUndefined(filter))
             {

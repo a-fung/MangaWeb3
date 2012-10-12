@@ -12,5 +12,7 @@ namespace afung.MangaWeb3.Common
         public int page;
         public int width;
         public int height;
+        public int part;
+        public bool dimensions;
     }
 }

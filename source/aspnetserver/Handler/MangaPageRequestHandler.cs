@@ -34,9 +34,10 @@ namespace afung.MangaWeb3.Server.Handler
 
             if (manga.Status == 0)
             {
-                string page = manga.GetPage(request.page, request.width, request.height);
+                string page = manga.GetPage(request.page, request.width, request.height, request.part);
                 response.status = page == null ? 1 : 0;
                 response.url = page;
+                response.dimensions = request.dimensions && request.part == 0 && page != null ? manga.GetDimensions(request.page) : null;
             }
             else
             {

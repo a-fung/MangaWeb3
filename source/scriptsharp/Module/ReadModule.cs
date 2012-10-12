@@ -206,9 +206,9 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ToggleInfoButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             if (!inTransition)
             {
-                e.PreventDefault();
                 ToggleInfo();
             }
         }
@@ -592,14 +592,14 @@ namespace afung.MangaWeb3.Client.Module
                                         if (Offset < minOffset || Offset > maxOffset)
                                         {
                                             inTransition = true;
-                                            mangaArea.AddClass("inertia");
+                                            mangaArea.AddClass("navigate");
                                             Offset = Offset < minOffset ? minOffset : maxOffset;
                                             Utility.OnTransitionEnd(
                                                 mangaArea,
                                                 delegate
                                                 {
                                                     inTransition = false;
-                                                    mangaArea.RemoveClass("inertia");
+                                                    mangaArea.RemoveClass("navigate");
                                                     RefreshMangaArea();
                                                 });
                                         }
@@ -641,9 +641,9 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ExitButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             if (!inTransition)
             {
-                e.PreventDefault();
                 Exit();
             }
         }
@@ -661,10 +661,9 @@ namespace afung.MangaWeb3.Client.Module
 
         private void NextButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             if (!inTransition)
             {
-                e.PreventDefault();
-
                 if (!sendingReadReqeust && manga.nextId != -1)
                 {
                     sendingReadReqeust = true;
@@ -692,9 +691,9 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ArrowButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             if (!inTransition)
             {
-                e.PreventDefault();
                 jQueryObject target = jQuery.FromElement(e.Target);
                 while (!target.Is("a"))
                 {

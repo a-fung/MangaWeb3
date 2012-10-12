@@ -55,7 +55,7 @@ class ThreadHelper
         
         if (manga != null)
         {
-            manga.ProcessFile(parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]);
+            manga.ProcessFile(parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]);
         }
     }
 }

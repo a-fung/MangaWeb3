@@ -602,7 +602,7 @@ namespace afung.MangaWeb3.Server
                 int[] resizedDimensions = GetResizedDimensions(0, 260, 200);
                 if (resizedDimensions != null)
                 {
-                    ThreadHelper.Run("MangaProcessFile", Id, Content[0], resizedDimensions[0], resizedDimensions[1], coverPath, lockPath);
+                    ThreadHelper.Run("MangaProcessFile", Id, Content[0], resizedDimensions[0], resizedDimensions[1], 0, coverPath, lockPath);
                 }
 
                 return null;
@@ -613,7 +613,7 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        public string GetPage(int page, int width, int height)
+        public string GetPage(int page, int width, int height, int part)
         {
             int[] resizedDimensions = GetResizedDimensions(page, width, height);
             if (resizedDimensions == null)
@@ -621,7 +621,7 @@ namespace afung.MangaWeb3.Server
                 return null;
             }
 
-            string hash = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1]);
+            string hash = Utility.Md5(MangaPath) + "_" + Utility.Md5(page + "." + resizedDimensions[0] + "x" + resizedDimensions[1] + "." + part);
             string lockPath = Path.Combine(AjaxBase.DirectoryPath, "mangacache", hash + ".lock");
             string outputRelativePath = "mangacache/" + hash + ".jpg";
             string outputPath = Path.Combine(AjaxBase.DirectoryPath, "mangacache", hash + ".jpg");
@@ -632,7 +632,7 @@ namespace afung.MangaWeb3.Server
             }
             else if (!File.Exists(outputPath))
             {
-                ThreadHelper.Run("MangaProcessFile", Id, Content[page], resizedDimensions[0], resizedDimensions[1], outputPath, lockPath);
+                ThreadHelper.Run("MangaProcessFile", Id, Content[page], resizedDimensions[0], resizedDimensions[1], part, outputPath, lockPath);
                 return null;
             }
             else
@@ -658,7 +658,7 @@ namespace afung.MangaWeb3.Server
             return tempFilePath;
         }
 
-        public void ProcessFile(string content, int width, int height, string outputPath, string lockPath)
+        public void ProcessFile(string content, int width, int height, int part, string outputPath, string lockPath)
         {
             if (!File.Exists(outputPath))
             {
@@ -679,7 +679,7 @@ namespace afung.MangaWeb3.Server
 
                     if (tempFilePath != null)
                     {
-                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height);
+                        ImageProvider.ResizeFile(tempFilePath, outputPath, width, height, part);
                         File.Delete(tempFilePath);
                     }
                 }
@@ -689,7 +689,7 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        private int[] GetDimensions(int page)
+        public int[] GetDimensions(int page)
         {
             if (Dimensions[page] == null)
             {

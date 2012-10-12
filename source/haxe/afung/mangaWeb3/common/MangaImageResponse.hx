@@ -9,4 +9,5 @@ class MangaImageResponse extends JsonResponse
 {
     public var status:Int;
     public var url:String;
+    public var dimensions:Array<Int>;
 }

@@ -214,10 +214,10 @@ textarea {
 		}
 		
 		#read-manga-area-inner.navigate {
-			-webkit-transition: all 0.2s ease-out;
-			-moz-transition: all 0.2s ease-out;
-			-o-transition: all 0.2s ease-out;
-			transition: all 0.2s ease-out;
+			-webkit-transition: all 0.2s ease-in-out;
+			-moz-transition: all 0.2s ease-in-out;
+			-o-transition: all 0.2s ease-in-out;
+			transition: all 0.2s ease-in-out;
 		}
 		
 		#read-manga-area-inner.fade {
@@ -235,13 +235,21 @@ textarea {
 		}
 		
 		.read-manga-page {
+			position: absolute;
 			border: 1px solid white;
 			border-width: 0 1px;
 		}
 		
+		.read-manga-page img:first-child {
+			float: left;
+		}
+		
+		.read-manga-page img:last-child {
+			float: right;
+		}
+		
 		img {
 			display:block;
-			position: absolute;
 			width: auto;
 			height: auto;
 			max-width: none;

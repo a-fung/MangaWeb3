@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Html;
+using jQueryApi;
 
 namespace afung.MangaWeb3.Client
 {
@@ -34,6 +35,14 @@ namespace afung.MangaWeb3.Client
                 }
 
                 return 1.0;
+            }
+        }
+
+        public static bool IsiOS
+        {
+            get
+            {
+                return jQuery.Browser.WebKit && (Window.Navigator.UserAgent.IndexOf("iPhone") != -1 || Window.Navigator.UserAgent.IndexOf("iPad") != -1 || Window.Navigator.UserAgent.IndexOf("iPod") != -1);
             }
         }
     }

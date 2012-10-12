@@ -48,15 +48,15 @@ namespace afung.MangaWeb3.Client
             }
         }
 
-        public static bool FixAutoResize
+        public static bool FixAutoDownscale
         {
             get
             {
-                return Load("FixAutoResize") == "true";
+                return Load("FixAutoDownscale") == "true";
             }
             set
             {
-                Save("FixAutoResize", value ? "true" : "false");
+                Save("FixAutoDownscale", value ? "true" : "false");
             }
         }
 

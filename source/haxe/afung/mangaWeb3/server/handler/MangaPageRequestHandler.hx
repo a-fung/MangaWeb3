@@ -37,9 +37,10 @@ class MangaPageRequestHandler extends HandlerBase
 
         if (manga.Status == 0)
         {
-            var page:String = manga.GetPage(request.page, request.width, request.height);
+            var page:String = manga.GetPage(request.page, request.width, request.height, request.part);
             response.status = page == null ? 1 : 0;
             response.url = page;
+            response.dimensions = request.dimensions && request.part == 0 && page != null ? manga.GetDimensions(request.page) : null;
         }
         else
         {

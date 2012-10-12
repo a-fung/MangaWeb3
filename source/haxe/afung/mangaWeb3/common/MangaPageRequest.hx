@@ -11,4 +11,6 @@ class MangaPageRequest extends JsonRequest
     public var page:Int;
     public var width:Int;
     public var height:Int;
+    public var part:Int;
+    public var dimensions:Bool;
 }
