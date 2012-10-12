@@ -625,7 +625,7 @@ namespace afung.MangaWeb3.Client.Module
                             {
                                 int dx = lastTouchOffset[index] - lastTouchOffset[index - 1];
                                 int dt = lastTouchTime[index] - lastTouchTime[index - 1] + 1;
-                                int distance = Math.Round(dx * 200 / dt);
+                                int distance = Math.Round(dx * 100 / dt);
 
                                 lastTouchOffset = (List<int>)(object)(lastTouchTime = null);
 
@@ -648,14 +648,14 @@ namespace afung.MangaWeb3.Client.Module
                                             if (Offset < minOffset || Offset > maxOffset)
                                             {
                                                 inTransition = true;
-                                                mangaArea.AddClass("navigate");
+                                                mangaArea.AddClass("inertia-bounce");
                                                 Offset = Offset < minOffset ? minOffset : maxOffset;
                                                 Utility.OnTransitionEnd(
                                                     mangaArea,
                                                     delegate
                                                     {
                                                         inTransition = false;
-                                                        mangaArea.RemoveClass("navigate");
+                                                        mangaArea.RemoveClass("inertia-bounce");
                                                         RefreshMangaArea();
                                                     });
                                             }
@@ -993,7 +993,7 @@ namespace afung.MangaWeb3.Client.Module
                             InitializeRead();
                         }
                     },
-                    1200);
+                    1000);
             }
         }
     }
