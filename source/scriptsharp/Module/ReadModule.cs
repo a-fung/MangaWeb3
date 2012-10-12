@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
+using System.Runtime.CompilerServices;
 using afung.MangaWeb3.Client.Modal;
 using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
 using jQueryApi;
-using System.Runtime.CompilerServices;
 
 namespace afung.MangaWeb3.Client.Module
 {
@@ -34,6 +35,9 @@ namespace afung.MangaWeb3.Client.Module
         private jQueryObject infoArea;
         private jQueryObject buttonArea;
         private jQueryObject sliderHandle;
+
+        private bool sendingReadReqeust;
+        private bool hasHorizonalMouseWheelScroll;
 
         private int _currentPage;
         private int CurrentPage
@@ -156,6 +160,8 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select("#read-exit-btn").Click(ExitButtonClicked);
             jQuery.Select("#read-next-btn").Click(NextButtonClicked);
             jQuery.Select(".arrow-btn").Click(ArrowButtonClicked);
+            jQuery.Document.Keyup(OnKeyUp);
+            jQuery.Document.Bind("mousewheel DOMMouseScroll", MouseWheelHandler);
         }
 
         protected override void OnShow()
@@ -462,7 +468,7 @@ namespace afung.MangaWeb3.Client.Module
                 }
                 else
                 {
-                    Offset = 0;
+                    Offset = jQuery.Window.GetWidth() - page.Width;
                 }
             }
             else if (page.Page == pagesTail + 1)
@@ -554,6 +560,29 @@ namespace afung.MangaWeb3.Client.Module
         private void NextButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
+
+            if (!sendingReadReqeust && manga.nextId != -1)
+            {
+                sendingReadReqeust = true;
+                MangaReadRequest request = new MangaReadRequest();
+                request.id = manga.nextId;
+                request.nextId = MangasModule.Instance.GetNextMangaId(manga.nextId);
+                Request.Send(request, ReadRequestSuccess, ReadRequestFailure);
+            }
+        }
+
+        [AlternateSignature]
+        private extern void ReadRequestSuccess(JsonResponse response);
+        private void ReadRequestSuccess(MangaReadResponse response)
+        {
+            sendingReadReqeust = false;
+            ReadManga(response);
+        }
+
+        private void ReadRequestFailure(Exception error)
+        {
+            sendingReadReqeust = false;
+            ErrorModal.ShowError(error.ToString());
         }
 
         private void ArrowButtonClicked(jQueryEvent e)
@@ -566,6 +595,11 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             NavigateLeftOrRight(target.GetAttribute("data-direction") == "left");
+        }
+
+        private void NavigateForwardOrBackward(bool backward)
+        {
+            NavigateLeftOrRight(!backward);
         }
 
         private void NavigateLeftOrRight(bool left)
@@ -602,6 +636,100 @@ namespace afung.MangaWeb3.Client.Module
 
                 Offset -= distance.Value;
                 RefreshMangaArea();
+            }
+        }
+
+        private void OnKeyUp(jQueryEvent keyEvent)
+        {
+            if (attachedObject.Is(":visible"))
+            {
+                if (Script.IsNullOrUndefined(keyEvent))
+                {
+                    keyEvent = (jQueryEvent)(object)Window.Event;
+                }
+
+                ElementEvent evt = (ElementEvent)(object)keyEvent;
+
+                if (evt.KeyCode == 33)
+                {
+                    // 33 == page up
+                    NavigateForwardOrBackward(true); // previous page
+                    evt.PreventDefault();
+                }
+                else if (evt.KeyCode == 34)
+                {
+                    // 34 == page down
+                    NavigateForwardOrBackward(false); // next page
+                    evt.PreventDefault();
+                }
+                else if (evt.KeyCode == 37)
+                {
+                    // 37 == left arrow
+                    NavigateLeftOrRight(true); // left
+                    evt.PreventDefault();
+                }
+                else if (evt.KeyCode == 39)
+                {
+                    // 39 == right arrow
+                    NavigateLeftOrRight(false); // right
+                    evt.PreventDefault();
+                }
+                else if (evt.KeyCode == 27)
+                {
+                    // 27 == Escape
+                    Exit();
+                    evt.PreventDefault();
+                }
+            }
+        }
+
+        private void MouseWheelHandler(jQueryEvent e)
+        {
+            if (attachedObject.Is(":visible"))
+            {
+                e.PreventDefault();
+                MouseWheelEvent wheelEvent = (MouseWheelEvent)(object)((Dictionary<string, object>)(object)e)["originalEvent"];
+
+                int delta = 0;
+                if (!Script.IsNullOrUndefined(wheelEvent.WheelDelta))
+                {
+                    if (!Script.IsNullOrUndefined(wheelEvent.WheelDeltaX) && wheelEvent.WheelDeltaX != 0)
+                    {
+                        delta = wheelEvent.WheelDeltaX / -120;
+                        hasHorizonalMouseWheelScroll = true;
+                    }
+                    else if (!hasHorizonalMouseWheelScroll)
+                    {
+                        delta = wheelEvent.WheelDelta / 120;
+                    }
+                }
+                else if (!Script.IsNullOrUndefined(wheelEvent.Detail))
+                {
+                    int detail = int.Parse(wheelEvent.Detail, 10);
+                    if (detail != 0)
+                    {
+                        delta = detail / -3;
+                        if (wheelEvent.Axis == wheelEvent.HorizontalAxis)
+                        {
+                            delta *= -1;
+                            hasHorizonalMouseWheelScroll = true;
+                        }
+                        else if (hasHorizonalMouseWheelScroll)
+                        {
+                            delta = 0;
+                        }
+                    }
+                }
+
+                if (delta != 0)
+                {
+                    MangaPage firstPage;
+                    int targetOffset = Offset - delta * 100;
+                    int minOffset = attachedObject.GetWidth() / 2 - (firstPage = GetMangaPage(pagesHead)).Offset - firstPage.Width;
+                    int maxOffset = attachedObject.GetWidth() / 2 - GetMangaPage(pagesTail).Offset;
+                    Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
+                    RefreshMangaArea(false);
+                }
             }
         }
     }

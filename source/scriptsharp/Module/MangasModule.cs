@@ -155,5 +155,18 @@ namespace afung.MangaWeb3.Client.Module
                 j++;
             }
         }
+
+        public int GetNextMangaId(int currentId)
+        {
+            for (int i = 0; i < items.Length - 1; i++)
+            {
+                if (currentId == items[i].id)
+                {
+                    return items[i + 1].id;
+                }
+            }
+
+            return -1;
+        }
     }
 }
