@@ -118,6 +118,19 @@ namespace afung.MangaWeb3.Server
             return collections.ToArray();
         }
 
+        public static Collection[] GetAutoAdd()
+        {
+            Dictionary<string, object>[] resultSet = Database.Select("collection", "`autoadd`='1'");
+            List<Collection> collections = new List<Collection>();
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                collections.Add(FromData(result));
+            }
+
+            return collections.ToArray();
+        }
+
         public static Collection[] GetAllCollections()
         {
             Dictionary<string, object>[] resultSet = Database.Select("collection");

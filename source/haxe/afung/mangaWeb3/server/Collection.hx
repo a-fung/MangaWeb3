@@ -98,6 +98,19 @@ class Collection
         return collections;
     }
     
+    public static function GetAutoAdd():Array<Collection>
+    {
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", "`autoadd`='1'");
+        var collections:Array<Collection> = new Array<Collection>();
+        
+        for (result in resultSet)
+        {
+            collections.push(FromData(result));
+        }
+        
+        return collections;
+    }
+    
     public static function GetAllCollections():Array<Collection>
     {
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection");

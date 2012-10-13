@@ -110,4 +110,17 @@ class Settings
         SetSetting("use_pdf", value ? "true" : "false");
         return value;
     }
+    
+    public static var LastAutoAddProcessTime(get_LastAutoAddProcessTime, set_LastAutoAddProcessTime):Int;
+    
+    private static function get_LastAutoAddProcessTime():Int
+    {
+        return Std.parseInt(GetSettings().get("last_autoadd_time"));
+    }
+    
+    private static function set_LastAutoAddProcessTime(value:Int):Int
+    {
+        SetSetting("last_autoadd_time", Std.string(value));
+        return value;
+    }
 }

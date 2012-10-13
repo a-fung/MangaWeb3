@@ -49,7 +49,7 @@ class Database
 		return DefaultConnection().quote(str);
 	}
 	
-	public static function Select(table:String, where:String = "", order:String = "", limit:String = "", fields:String = "*") : Array<Hash<Dynamic>>
+	public static function Select(table:String, where:String = "", order:String = "", limit:String = "", fields:String = "*"):Array<Hash<Dynamic>>
 	{
 		if (where != "")
 		{

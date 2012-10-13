@@ -67,6 +67,7 @@ class InstallRequestHandler extends HandlerBase
         Settings.UseRar = request.rar;
         Settings.UsePdf = request.pdf;
         Settings.AllowGuest = true;
+        Settings.LastAutoAddProcessTime = 0;
         
         // Delete Install files
         Native.Exec("rm -f ./install.html");

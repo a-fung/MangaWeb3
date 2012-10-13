@@ -146,6 +146,18 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public static int LastAutoAddProcessTime
+        {
+            get
+            {
+                return int.Parse(GetSettings()["last_autoadd_time"]);
+            }
+            set
+            {
+                SetSetting("last_autoadd_time", value.ToString());
+            }
+        }
+
         private static bool? _sevenZipConfigOk = null;
 
         private static bool SevenZipConfigOk

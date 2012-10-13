@@ -361,7 +361,7 @@ class Manga
     private function InnerRefreshContent():Void
     {
         var info:FileStat = FileSystem.stat(MangaPath);
-        ModifiedTime = Math.round(info.mtime.getTime());
+        ModifiedTime = Math.round(info.mtime.getTime() / 1000);
         Size = info.size;
         Content = Provider.GetContent(MangaPath);
         Dimensions = new Array<Array<Int>>();
@@ -729,7 +729,7 @@ class Manga
         var files:Array<Array<Dynamic>> = new Array<Array<Dynamic>>();
         for (file in FileSystem.readDirectory("mangacache/"))
         {
-            if (file.indexOf(".jpg") != -1)
+            if (file.indexOf(".jpg") == file.length - 4 && !FileSystem.isDirectory("mangacache/" + file))
             {
                 files.push([file, FileSystem.stat("mangacache/" + file)]);
             }
