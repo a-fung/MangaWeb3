@@ -39,7 +39,7 @@ namespace afung.MangaWeb3.Client.Install
 
         protected override void LoadFirstModule()
         {
-            InstallModule.Instance.Show();
+            InstallModule.Instance.Show(null);
         }
     }
 }

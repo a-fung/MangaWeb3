@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
+using System.Runtime.CompilerServices;
 using jQueryApi;
 
 namespace afung.MangaWeb3.Client.Module
@@ -13,29 +15,87 @@ namespace afung.MangaWeb3.Client.Module
 
         protected jQueryObject attachedObject = null;
 
-        protected ModuleBase(string template, string templateId)
+        private bool transition;
+
+        [AlternateSignature]
+        protected extern ModuleBase(string template, string templateId);
+        protected ModuleBase(string template, string templateId, bool transition)
         {
+            this.transition = Script.IsNullOrUndefined(transition) ? true : transition;
             attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select("body")).Hide();
+            if (this.transition && BootstrapTransition.Support)
+            {
+                attachedObject.AddClass("fade");
+            }
         }
 
-        public void Show()
+        public void Show(Action callback)
         {
+            Action onShow = delegate
+            {
+                OnShow();
+                if (callback != null)
+                {
+                    callback();
+                }
+            };
+
+            Action afterHideCurrentModule = delegate
+            {
+                CurrentModule = null;
+                CurrentModule = this;
+                OnBeforeShow();
+                attachedObject.Show();
+
+                if (transition && BootstrapTransition.Support)
+                {
+                    Window.SetTimeout(
+                        delegate
+                        {
+                            Utility.OnTransitionEnd(attachedObject.AddClass("in"), onShow);
+                        },
+                        1);
+                }
+                else
+                {
+                    onShow();
+                }
+            };
+
             if (CurrentModule != null)
             {
-                CurrentModule.Hide();
+                CurrentModule.Hide(afterHideCurrentModule);
             }
-
-            CurrentModule = null;
-            CurrentModule = this;
-            attachedObject.Show();
-            OnShow();
+            else
+            {
+                afterHideCurrentModule();
+            }
         }
 
-        public void Hide()
+        public void Hide(Action callback)
         {
-            attachedObject.Hide();
+            Action onHide = delegate
+            {
+                attachedObject.Hide();
+                callback();
+            };
+
+            if (transition && BootstrapTransition.Support)
+            {
+                Utility.OnTransitionEnd(attachedObject.RemoveClass("in"), onHide);
+            }
+            else
+            {
+                onHide();
+            }
         }
 
-        protected abstract void OnShow();
+        protected virtual void OnShow()
+        {
+        }
+
+        protected virtual void OnBeforeShow()
+        {
+        }
     }
 }

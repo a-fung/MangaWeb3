@@ -39,7 +39,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             if (userInfo.admin)
             {
-                AdminCollectionsModule.Instance.Show();
+                AdminCollectionsModule.Instance.Show(null);
             }
             else
             {

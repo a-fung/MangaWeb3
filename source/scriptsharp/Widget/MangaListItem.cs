@@ -19,6 +19,7 @@ namespace afung.MangaWeb3.Client.Widget
         private bool coverLoaded;
         private int coverRequestDelay;
         private int nextMangaId;
+        private MangaListItemJson data;
 
         private static bool sendingReadReqeust = false;
 
@@ -30,6 +31,7 @@ namespace afung.MangaWeb3.Client.Widget
             coverLoaded = false;
             coverRequestDelay = 0;
             this.nextMangaId = nextMangaId;
+            this.data = data;
 
             double size = data.size;
             string unit;

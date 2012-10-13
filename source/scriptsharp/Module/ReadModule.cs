@@ -72,7 +72,7 @@ namespace afung.MangaWeb3.Client.Module
                 {
                     Settings.SetCurrentPage(manga.id, manga.ltr ? manga.pages - value - 1 : value);
                 }
-                
+
                 _currentPage = value;
             }
         }
@@ -152,7 +152,7 @@ namespace afung.MangaWeb3.Client.Module
         private SelfClearingTimeout resizeTimeout = new SelfClearingTimeout();
 
         private ReadModule()
-            : base("client", "read-module")
+            : base("client", "read-module", false)
         {
             readNext = false;
             mangaArea = jQuery.Select("#read-manga-area-inner");
@@ -250,10 +250,11 @@ namespace afung.MangaWeb3.Client.Module
                 jQuery.Select("#read-next-btn").Show();
             }
 
-            Show();
-
-            CurrentPage = -1;
-            InitializeRead();
+            Show(delegate
+            {
+                CurrentPage = -1;
+                InitializeRead();
+            });
         }
 
         private void InitializeRead()
@@ -792,7 +793,7 @@ namespace afung.MangaWeb3.Client.Module
             RemoveAllPages(delegate
             {
                 UnloadAllPages();
-                MangasModule.Instance.Show();
+                MangasModule.Instance.Show(null);
             });
         }
 

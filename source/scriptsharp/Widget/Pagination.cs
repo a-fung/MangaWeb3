@@ -51,9 +51,19 @@ namespace afung.MangaWeb3.Client.Widget
                 }
 
                 AddPage("«", currentPage == 1 ? null : (int?)(currentPage - 1));
+                bool ellipsis = true;
                 for (int page = 1; page <= totalPage; page++)
                 {
-                    AddPage(page.ToString(), page);
+                    if (page <= 3 || (page >= currentPage - 2 && page <= currentPage + 2) || page > totalPage - 3)
+                    {
+                        AddPage(page.ToString(), page);
+                        ellipsis = true;
+                    }
+                    else if (ellipsis)
+                    {
+                        ellipsis = false;
+                        AddPage("…", null);
+                    }
                 }
 
                 AddPage("»", currentPage == totalPage ? null : (int?)(currentPage + 1));

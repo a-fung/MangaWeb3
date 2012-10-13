@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
@@ -38,29 +39,31 @@ namespace afung.MangaWeb3.Client.Module
             }
         }
 
+        private int currentPage;
+
         private MangasModule()
             : base("mangas-module")
         {
+            items = new MangaListItemJson[] { };
+            currentPage = 1;
             pagination = new Pagination(jQuery.Select(".mangas-pagination", attachedObject), ChangePage, GetTotalPage, "centered");
             Refresh();
         }
 
+        protected override void OnBeforeShow()
+        {
+            jQuery.Select("#mangas-list").Children().Remove();
+        }
+
         protected override void OnShow()
         {
+            ChangePage(currentPage);
         }
 
         [AlternateSignature]
         public extern void Refresh();
         public void Refresh(MangaFilter filter)
         {
-            if (!attachedObject.Is("visible"))
-            {
-                items = new MangaListItemJson[] { };
-                ChangePage(1);
-                pagination.Refresh(true);
-                Show();
-            }
-
             if (Script.IsNullOrUndefined(filter))
             {
                 filter = new MangaFilter();
@@ -108,9 +111,22 @@ namespace afung.MangaWeb3.Client.Module
                 currentFolder = "";
             }
 
-            MangaListRequest request = new MangaListRequest();
-            request.filter = filter;
-            Request.Send(request, MangaListRequestSuccess);
+            Action onReady = delegate
+            {
+                MangaListRequest request = new MangaListRequest();
+                request.filter = filter;
+                Request.Send(request, MangaListRequestSuccess);
+            };
+
+            if (!attachedObject.Is(":visible"))
+            {
+                jQuery.Select(".mangas-pagination").Children().Remove();
+                Show(onReady);
+            }
+            else
+            {
+                onReady();
+            }
         }
 
         private void BreadcrumbFolderClicked(jQueryEvent e)
@@ -186,18 +202,40 @@ namespace afung.MangaWeb3.Client.Module
 
         private void ChangePage(int page)
         {
+            currentPage = page;
             int j = 0;
             jQueryObject row = null;
-            jQuery.Select("#mangas-list").Children().Remove();
-            for (int i = (page - 1) * Environment.ElementsPerPage; i < items.Length && i < page * Environment.ElementsPerPage; i++)
-            {
-                if (j % Environment.MangaListItemPerRow == 0)
-                {
-                    row = Template.Get("client", "mangas-list-row", true).AppendTo(jQuery.Select("#mangas-list"));
-                }
+            jQueryObject mangaList = jQuery.Select("#mangas-list");
+            List<MangaListItem> listItems = new List<MangaListItem>();
 
-                new MangaListItem(row, items[i], i + 1 < items.Length ? items[i + 1].id : -1);
-                j++;
+            Action onReady = delegate
+            {
+                mangaList.Children().Remove();
+                for (int i = (page - 1) * Environment.ElementsPerPage; i < items.Length && i < page * Environment.ElementsPerPage; i++)
+                {
+                    if (j % Environment.MangaListItemPerRow == 0)
+                    {
+                        row = Template.Get("client", "mangas-list-row", true).AppendTo(jQuery.Select("#mangas-list"));
+                    }
+
+                    listItems.Add(new MangaListItem(row, items[i], i + 1 < items.Length ? items[i + 1].id : -1));
+                    j++;
+                }
+            };
+
+            if (mangaList.Is(":visible") && BootstrapTransition.Support && mangaList.Children().Length > 0)
+            {
+                Utility.OnTransitionEnd(
+                    mangaList.AddClass("fade"),
+                    delegate
+                    {
+                        mangaList.RemoveClass("fade");
+                        onReady();
+                    });
+            }
+            else
+            {
+                onReady();
             }
         }
 

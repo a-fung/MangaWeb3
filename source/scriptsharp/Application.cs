@@ -93,7 +93,7 @@ namespace afung.MangaWeb3.Client
 
         protected virtual void LoadFirstModule()
         {
-            MangasModule.Instance.Show();
+            MangasModule.Instance.Show(null);
         }
 
         /// <summary>

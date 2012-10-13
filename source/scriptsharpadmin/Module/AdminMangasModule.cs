@@ -44,7 +44,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select("#admin-mangas-paste-meta-btn").Click(PasteMetaButtonClicked);
             jQuery.Select("#admin-mangas-filter-btn").Click(FilterButtonClicked);
             Utility.FixDropdownTouch(jQuery.Select("#admin-mangas-action-dropdown"));
-            pagination = new Pagination(jQuery.Select("#admin-collections-pagination"), ChangePage, GetTotalPage, "right");
+            pagination = new Pagination(jQuery.Select("#admin-mangas-pagination"), ChangePage, GetTotalPage, "right");
             Refresh();
         }
 

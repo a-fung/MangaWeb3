@@ -169,16 +169,29 @@ textarea {
 }
 #folders-module {
 	td {
-		vertical-align:baseline;
+		vertical-align:top;
 		white-space:nowrap;
+		
+		.folders-expand-btn {
+			display:block;
+			margin-top:8px;
+			
+			i {
+				display:block;
+			}
+		}
 	}
 }
 
+.pagination {
+	height: auto;
+}
+
 .height-transition {
-	-webkit-transition: height .15s ease-out;
-	-moz-transition: height .15s ease-out;
-	-o-transition: height .15s ease-out;
-	transition: height .15s ease-out;
+	-webkit-transition: height .25s ease-out;
+	-moz-transition: height .25s ease-out;
+	-o-transition: height .25s ease-out;
+	transition: height .25s ease-out;
 }
 
 .height-transition-suppress {

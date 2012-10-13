@@ -30,7 +30,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminCollectionsModule))
             {
-                AdminCollectionsModule.Instance.Show();
+                AdminCollectionsModule.Instance.Show(null);
             }
         }
 
@@ -40,7 +40,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminMangasModule))
             {
-                AdminMangasModule.Instance.Show();
+                AdminMangasModule.Instance.Show(null);
             }
         }
 
@@ -50,7 +50,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
 
             if (this.GetType() != typeof(AdminUsersModule))
             {
-                AdminUsersModule.Instance.Show();
+                AdminUsersModule.Instance.Show(null);
             }
         }
 

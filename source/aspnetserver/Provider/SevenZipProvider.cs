@@ -95,6 +95,12 @@ namespace afung.MangaWeb3.Server.Provider
                     }
                 }
             }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                InvalidOperationException exception = new InvalidOperationException("File not found", fileNotFoundException);
+                exception.Data["manga_status"] = 1;
+                throw exception;
+            }
             catch (SevenZipException sevenZipException)
             {
                 InvalidOperationException exception = new InvalidOperationException("Read Archive file error", sevenZipException);

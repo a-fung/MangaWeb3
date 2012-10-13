@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using afung.MangaWeb3.Client.Module;
 using afung.MangaWeb3.Common;
 using jQueryApi;
+using System.Diagnostics;
 
 namespace afung.MangaWeb3.Client.Widget
 {
@@ -18,23 +19,23 @@ namespace afung.MangaWeb3.Client.Widget
             string separator = Environment.ServerType == ServerType.AspNet ? "\\" : "/";
             attachedObject = Template.Get("client", "folders-table", true).AppendTo(parent).Attribute("data-path", folderPath);
 
-            if (folderPath != "")
-            {
-                attachedObject.Hide();
-            }
-
             foreach (FolderJson folder in folders)
             {
                 string subfolderPath = folderPath + separator + folder.name;
                 jQueryObject row = Template.Get("client", "folders-trow", true).AppendTo(attachedObject.Children());
-                jQuery.Select(".folders-btn", row).Text(folder.name).Click(FolderButtonClick).Attribute("data-path", subfolderPath);
-                jQuery.Select(".folders-expand-btn", row).Click(ExpandButtonClick);
+                jQueryObject btn = jQuery.Select(".folders-btn", row).Text(folder.name).Click(FolderButtonClick).Attribute("data-path", subfolderPath);
+                jQueryObject expandBtn = jQuery.Select(".folders-expand-btn", row).Click(ExpandButtonClick);
 
                 if (folder.subfolders != null && folder.subfolders.Length > 0)
                 {
-                    jQuery.Select(".folders-expand-btn", row).Attribute("data-path", subfolderPath).Children().AddClass("icon-plus");
+                    expandBtn.Attribute("data-path", subfolderPath).Children().AddClass("icon-plus");
                     new FoldersWidget(jQuery.Select(".folders-tcell", row), folder.subfolders, subfolderPath);
                 }
+            }
+
+            if (folderPath != "")
+            {
+                attachedObject.Hide();
             }
         }
 

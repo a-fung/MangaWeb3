@@ -122,10 +122,9 @@ namespace afung.MangaWeb3.Client.Modal
             Request.Send(request, LoginSuccess, LoginFailure);
         }
 
-        [AlternateSignature]
-        private extern void CancelButtonClicked(jQueryEvent e);
-        private void CancelButtonClicked()
+        private void CancelButtonClicked(jQueryEvent e)
         {
+            e.PreventDefault();
             if (loggingIn)
             {
                 return;

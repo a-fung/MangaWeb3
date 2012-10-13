@@ -26,7 +26,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (this.GetType() != typeof(MangasModule))
             {
-                MangasModule.Instance.Show();
+                MangasModule.Instance.Show(null);
             }
         }
 
@@ -36,7 +36,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (this.GetType() != typeof(FoldersModule))
             {
-                FoldersModule.Instance.Show();
+                FoldersModule.Instance.Show(null);
             }
         }
 
@@ -46,7 +46,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (this.GetType() != typeof(SearchModule))
             {
-                SearchModule.Instance.Show();
+                SearchModule.Instance.Show(null);
             }
         }
 
@@ -56,7 +56,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (this.GetType() != typeof(SettingsModule))
             {
-                SettingsModule.Instance.Show();
+                SettingsModule.Instance.Show(null);
             }
         }
     }

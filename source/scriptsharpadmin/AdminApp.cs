@@ -40,7 +40,7 @@ namespace afung.MangaWeb3.Client.Admin
 
         protected override void LoadFirstModule()
         {
-            AdminModule.Instance.Show();
+            AdminModule.Instance.Show(null);
         }
     }
 }
