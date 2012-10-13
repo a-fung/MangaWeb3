@@ -356,7 +356,6 @@ class Manga
     
     private function InnerRefreshContent():Void
     {
-        
         var info:FileStat = FileSystem.stat(MangaPath);
         ModifiedTime = Math.round(info.mtime.getTime());
         Size = info.size;
@@ -662,6 +661,7 @@ class Manga
                 
                 untyped __call__("@fclose", lockFile);
                 FileSystem.deleteFile(lockPath);
+                ThreadHelper.Run("MangaCacheLimit", []);
             }
         }
     }
@@ -715,6 +715,36 @@ class Manga
             if (file.indexOf(hash) == 0)
             {
                 FileSystem.deleteFile("mangacache/" + file);
+            }
+        }
+    }
+    
+    public static function CacheLimit():Void
+    {
+        var files:Array<Array<Dynamic>> = new Array<Array<Dynamic>>();
+        for (file in FileSystem.readDirectory("mangacache/"))
+        {
+            if (file.indexOf(".jpg") != -1)
+            {
+                files.push([file, FileSystem.stat("mangacache/" + file)]);
+            }
+        }
+        
+        files.sort(function(x:Array<Dynamic>, y:Array<Dynamic>):Int
+        {
+            var xStat:FileStat = x[1];
+            var yStat:FileStat = y[1];
+            return Math.round(yStat.mtime.getTime() - xStat.mtime.getTime()); 
+        });
+        
+        var totalSize:Int = 0;
+        var sizeLimit:Int = 200 * 1024 * 1024; // 200 MB
+        for (i in 0...files.length)
+        {
+            var fileStat:FileStat = files[i][1];
+            if (totalSize > sizeLimit || (totalSize += fileStat.size) > sizeLimit)
+            {
+                FileSystem.deleteFile("mangacache/" + files[i][0]);
             }
         }
     }

@@ -43,6 +43,8 @@ class ThreadHelper
         {
             case "MangaProcessFile":
                 MangaProcessFile(parameters);
+            case "MangaCacheLimit":
+                MangaCacheLimit(parameters);
             default:
                 return;
         }
@@ -57,5 +59,10 @@ class ThreadHelper
         {
             manga.ProcessFile(parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]);
         }
+    }
+    
+    private static function MangaCacheLimit(parameters:Array<Dynamic>):Void
+    {
+        Manga.CacheLimit();
     }
 }

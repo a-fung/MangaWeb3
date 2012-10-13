@@ -686,6 +686,7 @@ namespace afung.MangaWeb3.Server
 
                 lockFile.Close();
                 File.Delete(lockPath);
+                ThreadHelper.Run("MangaCacheLimit");
             }
         }
 
@@ -737,7 +738,6 @@ namespace afung.MangaWeb3.Server
                 }
             }
 
-
             DirectoryInfo mangaCacheDirectory = new DirectoryInfo(Path.Combine(AjaxBase.DirectoryPath, "mangacache"));
             foreach (FileInfo file in mangaCacheDirectory.GetFiles(hash + "*"))
             {
@@ -747,6 +747,29 @@ namespace afung.MangaWeb3.Server
                 }
                 catch (Exception)
                 {
+                }
+            }
+        }
+
+        public static void CacheLimit()
+        {
+            DirectoryInfo mangaCacheDirectory = new DirectoryInfo(Path.Combine(AjaxBase.DirectoryPath, "mangacache"));
+            List<FileInfo> files = new List<FileInfo>(mangaCacheDirectory.GetFiles("*.jpg"));
+            files.Sort((x, y) => (int)Math.Round((y.LastWriteTimeUtc - x.LastWriteTimeUtc).TotalSeconds));
+
+            long totalSize = 0;
+            long sizeLimit = 209715200L; // 200 MB
+            foreach (FileInfo file in files)
+            {
+                if (totalSize > sizeLimit || (totalSize += file.Length) > sizeLimit)
+                {
+                    try
+                    {
+                        file.Delete();
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
         }
