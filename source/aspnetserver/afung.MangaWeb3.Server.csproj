@@ -138,6 +138,7 @@
     <Compile Include="Handler\FolderRequestHandler.cs" />
     <Compile Include="Handler\HandlerBase.cs" />
     <Compile Include="Handler\LoginRequestHandler.cs" />
+    <Compile Include="Handler\MangaDirectionRequestHandler.cs" />
     <Compile Include="Handler\MangaListItemCoverRequestHandler.cs" />
     <Compile Include="Handler\MangaListItemDetailsRequestHandler.cs" />
     <Compile Include="Handler\MangaListRequestHandler.cs" />

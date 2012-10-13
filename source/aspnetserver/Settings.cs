@@ -125,6 +125,8 @@ namespace afung.MangaWeb3.Server
                                     {
                                         return (_usePdf = false).Value;
                                     }
+
+                                    return (_usePdf = true).Value;
                                 }
                                 catch (Exception)
                                 {

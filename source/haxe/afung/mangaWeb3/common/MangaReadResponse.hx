@@ -10,4 +10,5 @@ class MangaReadResponse extends JsonResponse
     public var id:Int;
     public var pages:Int;
     public var nextId:Int;
+    public var ltr:Bool;
 }

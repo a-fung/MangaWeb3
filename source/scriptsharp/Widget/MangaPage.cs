@@ -17,6 +17,8 @@ namespace afung.MangaWeb3.Client.Widget
         private int page;
         private int width;
         private int height;
+        private bool ltr;
+        private int totalPages;
         private Action onload;
         private jQueryObject imageObject;
         private jQueryObject imagePart1Object;
@@ -103,12 +105,14 @@ namespace afung.MangaWeb3.Client.Widget
             }
         }
 
-        public MangaPage(int mangaId, int page, int width, int height)
+        public MangaPage(int mangaId, int page, int width, int height, bool ltr, int totalPages)
         {
             this.mangaId = mangaId;
             this.page = page;
             this.width = width - 2;
             this.height = height;
+            this.ltr = ltr;
+            this.totalPages = totalPages;
             unloaded = loading = loaded = false;
         }
 
@@ -126,7 +130,7 @@ namespace afung.MangaWeb3.Client.Widget
 
             pageRequest = new MangaPageRequest();
             pageRequest.id = mangaId;
-            pageRequest.page = page;
+            pageRequest.page = ltr ? totalPages - page - 1 : page;
             pageRequest.width = Settings.DisplayType == 0 ? 0 : (int)Math.Round(width * Environment.PixelRatio); // Fit Height?
             pageRequest.height = Settings.DisplayType == 2 ? 0 : (int)Math.Round(height * Environment.PixelRatio); // Fit Width?
             pageRequest.dimensions = Environment.IsiOS && Settings.FixAutoDownscale;

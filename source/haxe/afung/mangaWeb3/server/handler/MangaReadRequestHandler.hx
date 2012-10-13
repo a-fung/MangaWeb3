@@ -32,6 +32,7 @@ class MangaReadRequestHandler extends HandlerBase
         {
             response.id = manga.Id;
             response.pages = manga.NumberOfPages;
+            response.ltr = manga.LeftToRight;
             manga.IncreaseViewCount();
         }
 

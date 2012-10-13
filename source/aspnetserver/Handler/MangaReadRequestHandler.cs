@@ -29,6 +29,7 @@ namespace afung.MangaWeb3.Server.Handler
             {
                 response.id = manga.Id;
                 response.pages = manga.NumberOfPages;
+                response.ltr = manga.LeftToRight;
                 manga.IncreaseViewCount();
             }
 

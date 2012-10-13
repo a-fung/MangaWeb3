@@ -88,6 +88,7 @@
     <Compile Include="JsonResponse.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
+    <Compile Include="MangaDirectionRequest.cs" />
     <Compile Include="MangaFilter.cs" />
     <Compile Include="MangaImageResponse.cs" />
     <Compile Include="MangaJson.cs" />

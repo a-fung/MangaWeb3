@@ -11,5 +11,6 @@ namespace afung.MangaWeb3.Common
         public int id;
         public int pages;
         public int nextId;
+        public bool ltr;
     }
 }
