@@ -41,6 +41,8 @@ class MangaPageRequestHandler extends HandlerBase
             response.status = page == null ? 1 : 0;
             response.url = page;
             response.dimensions = request.dimensions && request.part == 0 && page != null ? manga.GetDimensions(request.page) : null;
+            
+            ThreadHelper.Run(request.part == 0 ? "MangaPreprocessFiles" : "MangaPreprocessParts", [request.id, request.page, request.width, request.height]);
         }
         else
         {

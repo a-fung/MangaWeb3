@@ -19,6 +19,12 @@ namespace afung.MangaWeb3.Server
                 case "MangaCacheLimit":
                     new Thread(MangaCacheLimit).Start(parameters);
                     break;
+                case "MangaPreprocessFiles":
+                    new Thread(MangaPreprocessFiles).Start(parameters);
+                    break;
+                case "MangaPreprocessParts":
+                    new Thread(MangaPreprocessParts).Start(parameters);
+                    break;
                 default:
                     return;
             }
@@ -39,6 +45,44 @@ namespace afung.MangaWeb3.Server
         private static void MangaCacheLimit(object data)
         {
             Manga.CacheLimit();
+        }
+
+        private static void MangaPreprocessFiles(object data)
+        {
+            object[] parameters = (object[])data;
+            int id = (int)parameters[0];
+            Manga manga = Manga.GetById(id);
+
+            if (manga != null)
+            {
+                int page = (int)parameters[1];
+
+                for (int i = 1; i <= 5; i++)
+                {
+                    if (page + i >= 0 && page + i < manga.NumberOfPages)
+                    {
+                        manga.GetPage(page + i, (int)parameters[2], (int)parameters[3], 0);
+                    }
+
+                    if (page - i >= 0 && page - i < manga.NumberOfPages)
+                    {
+                        manga.GetPage(page - i, (int)parameters[2], (int)parameters[3], 0);
+                    }
+                }
+            }
+        }
+
+        private static void MangaPreprocessParts(object data)
+        {
+            object[] parameters = (object[])data;
+            int id = (int)parameters[0];
+            Manga manga = Manga.GetById(id);
+
+            if (manga != null)
+            {
+                manga.GetPage((int)parameters[1], (int)parameters[2], (int)parameters[3], 1);
+                manga.GetPage((int)parameters[1], (int)parameters[2], (int)parameters[3], 2);
+            }
         }
     }
 }

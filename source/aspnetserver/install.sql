@@ -32,6 +32,7 @@ CREATE TABLE `manga` (
   `numpages` int(11) NOT NULL,
   `view` int(11) NOT NULL,
   `status` int(11) NOT NULL,
+  `ltr` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`),
   KEY `path` (`path`),

@@ -129,7 +129,10 @@ namespace afung.MangaWeb3.Server
             value = value.Substring(1);
 
             string sql = method + " INTO `" + table + "` ( " + field + " ) VALUES ( " + value + " )";
-            new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            lock (mySqlReaderLock)
+            {
+                new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            }
         }
 
         public static void Insert(string table, Dictionary<string, object> data)
@@ -168,29 +171,44 @@ namespace afung.MangaWeb3.Server
             }
 
             string sql = "UPDATE `" + table + "` SET " + clause + " WHERE " + where + limit;
-            new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            lock (mySqlReaderLock)
+            {
+                new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            }
         }
 
         public static void Clear(string table)
         {
             string sql = "TRUNCATE TABLE `" + table + "`";
-            new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            lock (mySqlReaderLock)
+            {
+                new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            }
         }
 
         public static void Delete(string table, string where)
         {
             string sql = "DELETE FROM `" + table + "` WHERE " + where;
-            new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            lock (mySqlReaderLock)
+            {
+                new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            }
         }
 
         public static void ExecuteSql(string sql)
         {
-            new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            lock (mySqlReaderLock)
+            {
+                new MySqlCommand(sql, DefaultConnection()).ExecuteScalar();
+            }
         }
 
         public static int LastInsertId()
         {
-            return Convert.ToInt32(new MySqlCommand("SELECT LAST_INSERT_ID()", DefaultConnection()).ExecuteScalar());
+            lock (mySqlReaderLock)
+            {
+                return Convert.ToInt32(new MySqlCommand("SELECT LAST_INSERT_ID()", DefaultConnection()).ExecuteScalar());
+            }
         }
 
         public static string BuildWhereClauseOr(string field, IEnumerable values)

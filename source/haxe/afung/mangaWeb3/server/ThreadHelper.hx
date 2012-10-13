@@ -45,6 +45,10 @@ class ThreadHelper
                 MangaProcessFile(parameters);
             case "MangaCacheLimit":
                 MangaCacheLimit(parameters);
+            case "MangaPreprocessFiles":
+                MangaPreprocessFiles(parameters);
+            case "MangaPreprocessParts":
+                MangaPreprocessParts(parameters);
             default:
                 return;
         }
@@ -64,5 +68,41 @@ class ThreadHelper
     private static function MangaCacheLimit(parameters:Array<Dynamic>):Void
     {
         Manga.CacheLimit();
+    }
+    
+    private static function MangaPreprocessFiles(parameters:Array<Dynamic>):Void
+    {
+        var id:Int = parameters[0];
+        var manga:Manga = Manga.GetById(id);
+        
+        if (manga != null)
+        {
+            var page:Int = parameters[1];
+            
+            for (i in 1...6)
+            {
+                if (page + i >= 0 && page + i < manga.NumberOfPages)
+                {
+                    manga.GetPage(page + i, parameters[2], parameters[3], 0);
+                }
+
+                if (page - i >= 0 && page - i < manga.NumberOfPages)
+                {
+                    manga.GetPage(page - i, parameters[2], parameters[3], 0);
+                }
+            }
+        }
+    }
+    
+    private static function MangaPreprocessParts(parameters:Array<Dynamic>):Void
+    {
+        var id:Int = parameters[0];
+        var manga:Manga = Manga.GetById(id);
+        
+        if (manga != null)
+        {
+            manga.GetPage(parameters[1], parameters[2], parameters[3], 1);
+            manga.GetPage(parameters[1], parameters[2], parameters[3], 2);
+        }
     }
 }

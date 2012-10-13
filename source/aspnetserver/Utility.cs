@@ -29,14 +29,17 @@ namespace afung.MangaWeb3.Server
 
         public static string Md5(string input)
         {
-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
-            bs = crypto.ComputeHash(bs);
-            System.Text.StringBuilder s = new System.Text.StringBuilder();
-            foreach (byte b in bs)
+            lock (crypto)
             {
-                s.Append(b.ToString("x2").ToLower());
+                byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+                bs = crypto.ComputeHash(bs);
+                System.Text.StringBuilder s = new System.Text.StringBuilder();
+                foreach (byte b in bs)
+                {
+                    s.Append(b.ToString("x2").ToLower());
+                }
+                return s.ToString();
             }
-            return s.ToString();
         }
 
         public static bool IsValidStringForDatabase(string str)

@@ -48,6 +48,8 @@ class Manga
     
     public var Status(default, null):Int;
     
+    public var LeftToRight(default, default):Bool;
+    
     private var provider:IMangaProvider;
     
     private var Provider(get_Provider, never):IMangaProvider;
@@ -100,6 +102,7 @@ class Manga
         newManga.InnerRefreshContent();
         newManga.View = newManga.Status = 0;
         newManga._meta = MangaMeta.CreateNewMeta(newManga);
+        newManga.LeftToRight = false;
         return newManga;
     }
     
@@ -117,6 +120,7 @@ class Manga
         newManga.NumberOfPages = Std.parseInt(data.get("numpages"));
         newManga.View = Std.parseInt(data.get("view"));
         newManga.Status = Std.parseInt(data.get("status"));
+        newManga.LeftToRight = Std.parseInt(data.get("ltr")) == 1;
         return newManga;
     }
     
@@ -393,6 +397,7 @@ class Manga
         data.set("numpages", NumberOfPages);
         data.set("view", View);
         data.set("status", Status);
+        data.set("ltr", LeftToRight ? 1 : 0);
 
         if (Id == -1)
         {

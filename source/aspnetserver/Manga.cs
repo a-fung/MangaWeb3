@@ -77,6 +77,12 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        public bool LeftToRight
+        {
+            get;
+            set;
+        }
+
         private IMangaProvider provider;
 
         private IMangaProvider Provider
@@ -134,6 +140,7 @@ namespace afung.MangaWeb3.Server
             newManga.InnerRefreshContent();
             newManga.View = newManga.Status = 0;
             newManga._meta = MangaMeta.CreateNewMeta(newManga);
+            newManga.LeftToRight = false;
             return newManga;
         }
 
@@ -151,6 +158,7 @@ namespace afung.MangaWeb3.Server
             newManga.NumberOfPages = Convert.ToInt32(data["numpages"]);
             newManga.View = Convert.ToInt32(data["view"]);
             newManga.Status = Convert.ToInt32(data["status"]);
+            newManga.LeftToRight = Convert.ToInt32(data["ltr"]) == 1;
             return newManga;
         }
 
@@ -419,6 +427,7 @@ namespace afung.MangaWeb3.Server
             data.Add("numpages", NumberOfPages);
             data.Add("view", View);
             data.Add("status", Status);
+            data.Add("ltr", LeftToRight ? 1 : 0);
 
             if (Id == -1)
             {
