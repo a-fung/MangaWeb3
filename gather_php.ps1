@@ -29,6 +29,7 @@ mkdir $path\temp
 
 # HTML files
 copy source\aspnetserver\*.html $path
+copy source\aspnetserver\favicon.ico $path
 
 
 # CSS files

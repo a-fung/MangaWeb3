@@ -26,6 +26,12 @@ namespace afung.MangaWeb3.Client
         /// </summary>
         public Application()
         {
+            // Work around for iPhone 5 add to home screen letterbox bug
+            if (Window.Screen.Width == 320 && Window.Screen.Height == 568)
+            {
+                jQuery.Select("meta[name=\"viewport\"]").Attribute("content", "width=320.01, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0");
+            }
+
             // Load default language first
             Action<Exception> defaultLanguageLoadFailed = delegate(Exception error)
             {

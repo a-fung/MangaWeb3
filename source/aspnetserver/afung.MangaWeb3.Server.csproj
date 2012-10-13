@@ -66,9 +66,11 @@
     <Content Include="css\bootstrap-responsive.min.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\mangaweb.css" />
+    <Content Include="favicon.ico" />
     <Content Include="img\cover.png" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
+    <Content Include="img\icon.png" />
     <Content Include="img\loading.gif" />
     <Content Include="index.html" />
     <Content Include="install.html" />
