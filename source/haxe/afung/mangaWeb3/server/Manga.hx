@@ -738,7 +738,7 @@ class Manga
         });
         
         var totalSize:Int = 0;
-        var sizeLimit:Int = 200 * 1024 * 1024; // 200 MB
+        var sizeLimit:Int = 209715200; // 200 MB
         for (i in 0...files.length)
         {
             var fileStat:FileStat = files[i][1];
