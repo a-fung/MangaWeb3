@@ -11,22 +11,30 @@ namespace afung.MangaWeb3.Server
     {
         public static void Run(string methodName, params object[] parameters)
         {
+            Thread newThread = null;
+
             switch (methodName)
             {
                 case "MangaProcessFile":
-                    new Thread(MangaProcessFile).Start(parameters);
+                    newThread = new Thread(MangaProcessFile);
                     break;
                 case "MangaCacheLimit":
-                    new Thread(MangaCacheLimit).Start(parameters);
+                    newThread = new Thread(MangaCacheLimit);
                     break;
                 case "MangaPreprocessFiles":
-                    new Thread(MangaPreprocessFiles).Start(parameters);
+                    newThread = new Thread(MangaPreprocessFiles);
                     break;
                 case "MangaPreprocessParts":
-                    new Thread(MangaPreprocessParts).Start(parameters);
+                    newThread = new Thread(MangaPreprocessParts);
                     break;
                 default:
                     return;
+            }
+
+            if (newThread != null)
+            {
+                newThread.Priority = ThreadPriority.BelowNormal;
+                newThread.Start(parameters);
             }
         }
 
