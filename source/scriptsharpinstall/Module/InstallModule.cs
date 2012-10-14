@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 using afung.MangaWeb3.Client.Install.Modal;
 using afung.MangaWeb3.Client.Modal;
@@ -103,11 +104,13 @@ namespace afung.MangaWeb3.Client.Install.Module
             : base("install", "install-module")
         {
             jQuery.Select("#install-form").Hide();
+            jQuery.Select("#install-language").Change(LanguageChange);
         }
 
         protected override void OnShow()
         {
             Request.Send(new PreInstallCheckRequest(), OnPreInstallCheckRequestFinished);
+            jQuery.Select("#install-language").Value(Settings.UserLanguage);
         }
 
         [AlternateSignature]
@@ -651,6 +654,18 @@ namespace afung.MangaWeb3.Client.Install.Module
             request.password2 = password2;
 
             new InstallingModal().SendInstallRequest(request);
+        }
+
+        [AlternateSignature]
+        private extern void LanguageChange(jQueryEvent e);
+        private void LanguageChange()
+        {
+            string newLanguage = jQuery.Select("#install-language").GetValue();
+            if (newLanguage != Settings.UserLanguage)
+            {
+                Settings.UserLanguage = newLanguage;
+                Window.Location.Href = "install.html";
+            }
         }
     }
 }
