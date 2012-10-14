@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using afung.MangaWeb3.Client.Module;
 using afung.MangaWeb3.Common;
 using jQueryApi;
@@ -13,6 +14,7 @@ namespace afung.MangaWeb3.Client.Widget
     public class FoldersWidget
     {
         private jQueryObject attachedObject;
+        private bool inTransition = false;
 
         public FoldersWidget(jQueryObject parent, FolderJson[] folders, string folderPath)
         {
@@ -36,6 +38,10 @@ namespace afung.MangaWeb3.Client.Widget
             if (folderPath != "")
             {
                 attachedObject.Hide();
+                if (BootstrapTransition.Support)
+                {
+                    attachedObject.AddClass("fade");
+                }
             }
         }
 
@@ -57,18 +63,63 @@ namespace afung.MangaWeb3.Client.Widget
             jQueryObject target = jQuery.FromElement(e.Target);
             while (!target.Is("a")) target = target.Parent();
             string dataPath = target.GetAttribute("data-path");
-            if (!String.IsNullOrEmpty(dataPath))
+            if (!String.IsNullOrEmpty(dataPath) && !inTransition)
             {
                 jQueryObject table = jQuery.Select("table[data-path=\"" + dataPath.Replace("\\", "\\\\") + "\"]", attachedObject);
                 if (target.Children().HasClass("icon-plus"))
                 {
                     table.Show();
                     target.Children().RemoveClass("icon-plus").AddClass("icon-minus");
+
+                    if (BootstrapTransition.Support)
+                    {
+                        inTransition = true;
+                        int targetHeight = table.GetHeight();
+                        table.Height(0);
+
+                        Window.SetTimeout(
+                            delegate
+                            {
+                                Utility.OnTransitionEnd(
+                                    table.AddClass("height-transition").Height(targetHeight),
+                                    delegate
+                                    {
+                                        Utility.OnTransitionEnd(
+                                            table.RemoveClass("height-transition").CSS("height", "").AddClass("in"),
+                                            delegate
+                                            {
+                                                inTransition = false;
+                                            });
+                                    });
+                            },
+                            1);
+                    }
                 }
                 else if (target.Children().HasClass("icon-minus"))
                 {
-                    table.Hide();
                     target.Children().AddClass("icon-plus").RemoveClass("icon-minus");
+
+                    if (BootstrapTransition.Support)
+                    {
+                        inTransition = true;
+
+                        Utility.OnTransitionEnd(
+                            table.RemoveClass("in").Height(table.GetHeight()),
+                            delegate
+                            {
+                                Utility.OnTransitionEnd(
+                                    table.AddClass("height-transition").Height(0),
+                                    delegate
+                                    {
+                                        table.Hide().CSS("height", "");
+                                        inTransition = false;
+                                    });
+                            });
+                    }
+                    else
+                    {
+                        table.Hide();
+                    }
                 }
             }
         }

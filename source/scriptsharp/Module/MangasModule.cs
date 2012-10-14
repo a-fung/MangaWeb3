@@ -223,7 +223,7 @@ namespace afung.MangaWeb3.Client.Module
                 }
             };
 
-            if (mangaList.Is(":visible") && BootstrapTransition.Support && mangaList.Children().Length > 0)
+            if (mangaList.Is(":visible") && BootstrapTransition.Support)
             {
                 Utility.OnTransitionEnd(
                     mangaList.AddClass("fade"),
