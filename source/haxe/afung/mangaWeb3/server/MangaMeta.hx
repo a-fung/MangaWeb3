@@ -1,6 +1,7 @@
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.AdminMangaMetaJson;
+import haxe.Utf8;
 
 /**
  * ...
@@ -37,7 +38,7 @@ class MangaMeta
 
         var title:String = manga.MangaPath.substr(0, manga.MangaPath.lastIndexOf("."));
         title = title.substr(title.lastIndexOf("/") + 1);
-        newMeta.Title = title.length > 100 ? title.substr(0, 100) : title;
+        newMeta.Title = Utf8.length(title) > 100 ? Utf8.sub(title, 0, 100) : title;
 
         newMeta.Author = newMeta.Series = newMeta.Publisher = "";
         newMeta.Volume = newMeta.Year = -1;

@@ -40,7 +40,7 @@ namespace afung.MangaWeb3.Client.Module
         private void AllFoldersButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
-            MangasModule.Instance.Refresh();
+            MangasModule.Instance.Refresh(new MangaFilter());
         }
 
         [AlternateSignature]

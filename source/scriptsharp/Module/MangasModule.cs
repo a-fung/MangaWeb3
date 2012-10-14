@@ -67,6 +67,11 @@ namespace afung.MangaWeb3.Client.Module
             if (Script.IsNullOrUndefined(filter))
             {
                 filter = new MangaFilter();
+
+                if (!String.IsNullOrEmpty(Settings.CurrentFolder))
+                {
+                    filter.folder = Settings.CurrentFolder;
+                }
             }
 
             jQueryObject breadcrumb = jQuery.Select("#mangas-breadcrumb");
@@ -92,7 +97,7 @@ namespace afung.MangaWeb3.Client.Module
                 }
 
                 Template.Get("client", "mangas-breadcrumb-active-folder", true).AppendTo(breadcrumb).Text(filter.folder.Substr(j));
-                currentFolder = filter.folder;
+                Settings.CurrentFolder = currentFolder = filter.folder;
             }
             else if (!String.IsNullOrEmpty(filter.tag))
             {
@@ -108,7 +113,7 @@ namespace afung.MangaWeb3.Client.Module
             else
             {
                 Template.Get("client", "mangas-breadcrumb-active-folder", true).AppendTo(breadcrumb).Text(Strings.Get("AllMangas"));
-                currentFolder = "";
+                Settings.CurrentFolder = currentFolder = "";
             }
 
             Action onReady = delegate

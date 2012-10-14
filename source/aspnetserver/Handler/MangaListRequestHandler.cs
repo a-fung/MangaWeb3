@@ -18,16 +18,8 @@ namespace afung.MangaWeb3.Server.Handler
             MangaListRequest request = Utility.ParseJson<MangaListRequest>(jsonString);
             MangaListResponse response = new MangaListResponse();
             response.items = Manga.ToListItemJsonArray(Manga.GetMangaList(ajax, request.filter));
-
-            if (request.filter == null ||
-                (
-                    (request.filter.folder == null || request.filter.folder == "") &&
-                    (request.filter.tag == null || request.filter.tag == "") &&
-                    request.filter.search == null
-                ))
-            {
-                ThreadHelper.Run("ProcessAutoAddStage1");
-            }
+            
+            ThreadHelper.Run("ProcessAutoAddStage1");
 
             ajax.ReturnJson(response);
         }

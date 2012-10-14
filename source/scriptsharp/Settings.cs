@@ -60,6 +60,18 @@ namespace afung.MangaWeb3.Client
             }
         }
 
+        public static string CurrentFolder
+        {
+            get
+            {
+                return Load("CurrentFolder");
+            }
+            set
+            {
+                Save("CurrentFolder", value);
+            }
+        }
+
         public static int GetCurrentPage(int mangaId)
         {
             return int.Parse(Load("CurrentPage." + mangaId), 10);
