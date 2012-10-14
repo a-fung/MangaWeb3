@@ -68,7 +68,7 @@ namespace afung.MangaWeb3.Server
 
             string title = manga.MangaPath.Substring(0, manga.MangaPath.LastIndexOf("."));
             title = title.Substring(title.LastIndexOf("\\") + 1);
-            newMeta.Title = title;
+            newMeta.Title = title.Length > 100 ? title.Substring(0, 100) : title;
 
             newMeta.Author = newMeta.Series = newMeta.Publisher = string.Empty;
             newMeta.Volume = newMeta.Year = -1;
@@ -116,8 +116,7 @@ namespace afung.MangaWeb3.Server
 
             if (Id == -1)
             {
-                Database.Insert("meta", data);
-                Id = Database.LastInsertId();
+                Id = Database.InsertAndReturnId("meta", data);
             }
             else
             {

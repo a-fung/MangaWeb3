@@ -37,7 +37,7 @@ class MangaMeta
 
         var title:String = manga.MangaPath.substr(0, manga.MangaPath.lastIndexOf("."));
         title = title.substr(title.lastIndexOf("/") + 1);
-        newMeta.Title = title;
+        newMeta.Title = title.length > 100 ? title.substr(0, 100) : title;
 
         newMeta.Author = newMeta.Series = newMeta.Publisher = "";
         newMeta.Volume = newMeta.Year = -1;
@@ -85,8 +85,7 @@ class MangaMeta
 
         if (Id == -1)
         {
-            Database.Insert("meta", data);
-            Id = Database.LastInsertId();
+            Id = Database.InsertAndReturnId("meta", data);
         }
         else
         {

@@ -116,6 +116,12 @@ class Database
 		InsertOrReplace("INSERT", table, data);
 	}
 	
+	public static function InsertAndReturnId(table:String, data:Hash<Dynamic>):Int
+	{
+		InsertOrReplace("INSERT", table, data);
+        return LastInsertId();
+	}
+	
 	public static function Replace(table:String, data:Hash<Dynamic>):Void
 	{
 		InsertOrReplace("REPLACE", table, data);
@@ -162,7 +168,7 @@ class Database
 		DefaultConnection().request(sql);
 	}
 	
-	public static function LastInsertId():Int
+	private static function LastInsertId():Int
 	{
 		return DefaultConnection().lastInsertId();
 	}

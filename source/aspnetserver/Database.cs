@@ -140,6 +140,15 @@ namespace afung.MangaWeb3.Server
             InsertOrReplace("INSERT", table, data);
         }
 
+        public static int InsertAndReturnId(string table, Dictionary<string, object> data)
+        {
+            lock (mySqlReaderLock)
+            {
+                InsertOrReplace("INSERT", table, data);
+                return LastInsertId();
+            }
+        }
+
         public static void Replace(string table, Dictionary<string, object> data)
         {
             InsertOrReplace("REPLACE", table, data);
@@ -203,7 +212,7 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        public static int LastInsertId()
+        private static int LastInsertId()
         {
             lock (mySqlReaderLock)
             {

@@ -164,7 +164,7 @@ namespace afung.MangaWeb3.Server
 
         public static Manga GetById(int id)
         {
-            Dictionary<string, object>[] resultSet = Database.Select("manga", "`id`=" + Database.Quote(id.ToString()));
+            Dictionary<string, object>[] resultSet = Database.Select("manga", "`id` IN (SELECT `mid` FROM `meta`) AND `id`=" + Database.Quote(id.ToString()));
 
             if (resultSet.Length > 0)
             {
@@ -178,7 +178,7 @@ namespace afung.MangaWeb3.Server
         {
             if (path != null && path != "")
             {
-                Dictionary<string, object>[] resultSet = Database.Select("manga", "`path`=" + Database.Quote(path));
+                Dictionary<string, object>[] resultSet = Database.Select("manga", "`id` IN (SELECT `mid` FROM `meta`) AND `path`=" + Database.Quote(path));
 
                 if (resultSet.Length > 0)
                 {
@@ -191,7 +191,8 @@ namespace afung.MangaWeb3.Server
 
         private static Manga[] GetMangas(string where)
         {
-            Dictionary<string, object>[] resultSet = Database.Select("manga", where);
+            string additionalWhere = "`id` IN (SELECT `mid` FROM `meta`)";
+            Dictionary<string, object>[] resultSet = Database.Select("manga", where == null ? additionalWhere : where + " AND " + additionalWhere);
             List<Manga> mangas = new List<Manga>();
 
             foreach (Dictionary<string, object> result in resultSet)
@@ -326,9 +327,7 @@ namespace afung.MangaWeb3.Server
                 }
             }
 
-            Manga[] mangas = GetMangas(where);
-            Array.Sort<Manga>(mangas, (a, b) => Utility.StrCmpLogicalW(a.Meta.Title, b.Meta.Title));
-            return mangas;
+            return GetMangas(where);
         }
 
         public static Manga[] GetAllMangas()
@@ -431,8 +430,7 @@ namespace afung.MangaWeb3.Server
 
             if (Id == -1)
             {
-                Database.Insert("manga", data);
-                Id = Database.LastInsertId();
+                Id = Database.InsertAndReturnId("manga", data);
                 Meta.Save();
             }
             else
@@ -493,6 +491,7 @@ namespace afung.MangaWeb3.Server
                 objs.Add(manga.ToMangaListItemJson());
             }
 
+            objs.Sort((a, b) => Utility.StrCmpLogicalW(a.title, b.title));
             return objs.ToArray();
         }
 
@@ -544,8 +543,7 @@ namespace afung.MangaWeb3.Server
                     {
                         Dictionary<string, object> tagData = new Dictionary<string, object>();
                         tagData["name"] = tag;
-                        Database.Insert("tag", tagData);
-                        id = Database.LastInsertId();
+                        id = Database.InsertAndReturnId("tag", tagData);
                     }
 
                     Dictionary<string, object> mangaTagData = new Dictionary<string, object>();

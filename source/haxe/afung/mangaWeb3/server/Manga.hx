@@ -126,7 +126,7 @@ class Manga
     
     public static function GetById(id:Int):Manga
     {
-        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`id`=" + Database.Quote(Std.string(id)));
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`id` IN (SELECT `mid` FROM `meta`) AND `id`=" + Database.Quote(Std.string(id)));
         
         if (resultSet.length > 0)
         {
@@ -140,7 +140,7 @@ class Manga
     {
         if (path != null && path != "")
         {
-            var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`path` COLLATE utf8_bin =" + Database.Quote(path));
+            var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`id` IN (SELECT `mid` FROM `meta`) AND `path` COLLATE utf8_bin =" + Database.Quote(path));
             
             if (resultSet.length > 0)
             {
@@ -153,7 +153,8 @@ class Manga
     
     private static function GetMangas(where:String):Array<Manga>
     {
-        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", where);
+        var additionalWhere:String = "`id` IN (SELECT `mid` FROM `meta`)";
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", where == null ? additionalWhere : where + " AND " + additionalWhere);
         var mangas:Array<Manga> = new Array<Manga>();
         
         for (result in resultSet)
@@ -288,12 +289,7 @@ class Manga
             }
         }
         
-        var mangas:Array<Manga> = GetMangas(where);
-        mangas.sort(function(a:Manga, b:Manga):Int
-        {
-           return untyped __call__("strnatcmp", a.Meta.Title, b.Meta.Title);
-        });
-        return mangas;
+        return GetMangas(where);
     }
     
     public static function GetAllMangas():Array<Manga>
@@ -401,8 +397,7 @@ class Manga
 
         if (Id == -1)
         {
-            Database.Insert("manga", data);
-            Id = Database.LastInsertId();
+            Id = Database.InsertAndReturnId("manga", data);
             Meta.Save();
         }
         else
@@ -463,6 +458,10 @@ class Manga
             objs.push(manga.ToMangaListItemJson());
         }
         
+        objs.sort(function(a:MangaListItemJson, b:MangaListItemJson):Int
+        {
+            return untyped __call__("strnatcmp", a.title, b.title);
+        });
         return objs;
     }
     
@@ -514,8 +513,7 @@ class Manga
                 {
                     var tagData:Hash<Dynamic> = new Hash<Dynamic>();
                     tagData.set("name", tag);
-                    Database.Insert("tag", tagData);
-                    id = Database.LastInsertId();
+                    id = Database.InsertAndReturnId("tag", tagData);
                 }
 
                 var mangaTagData:Hash<Dynamic> = new Hash<Dynamic>();

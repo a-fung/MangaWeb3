@@ -192,8 +192,7 @@ namespace afung.MangaWeb3.Server
 
             if (Id == -1)
             {
-                Database.Insert("collection", data);
-                Id = Database.LastInsertId();
+                Id = Database.InsertAndReturnId("collection", data);
             }
             else
             {

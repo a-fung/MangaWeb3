@@ -128,8 +128,7 @@ namespace afung.MangaWeb3.Server
 
             if (Id == -1)
             {
-                Database.Insert("user", userData);
-                Id = Database.LastInsertId();
+                Id = Database.InsertAndReturnId("user", userData);
             }
             else
             {
