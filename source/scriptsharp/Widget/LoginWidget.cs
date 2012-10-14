@@ -31,6 +31,7 @@ namespace afung.MangaWeb3.Client.Widget
             jQuery.Select(".nav-login", loginButton).Click(LoginButtonClicked);
             jQuery.Select(".nav-logout", logoutDropdown).Click(LogoutButtonClicked);
             jQuery.Select(".nav-change-password", logoutDropdown).Click(ChangePasswordButtonClicked);
+            Utility.FixDropdownTouch(jQuery.Select(".dropdown-menu", logoutDropdown));
 
             Refresh();
             instances.Add(this);
