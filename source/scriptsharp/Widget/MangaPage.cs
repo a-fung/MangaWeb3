@@ -175,7 +175,7 @@ namespace afung.MangaWeb3.Client.Widget
                     {
                         Request.Send(pageRequest, MangaPageRequestSucess);
                     },
-                    pageRequestDelay = pageRequestDelay * 2 + 1000);
+                    pageRequestDelay = pageRequestDelay + 1000);
             }
             else
             {

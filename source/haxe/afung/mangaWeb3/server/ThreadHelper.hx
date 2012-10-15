@@ -124,88 +124,74 @@ class ThreadHelper
         }
         
         Settings.LastAutoAddProcessTime = Math.round(Date.now().getTime() / 1000);
-        var files:Array<Array<Dynamic>> = new Array<Array<Dynamic>>();
+        var filesUnderCollections:Array<Array<Dynamic>> = [];
         var collections:Array<Collection> = Collection.GetAutoAdd();
+        var directoriesToRead:Array<Array<Dynamic>> = [];
         
         for (collection in collections)
         {
-            var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`cid`=" + Database.Quote(Std.string(collection.Id)), null, null, "`path`");
-            var filesUnderCollection:Array<Array<Dynamic>> = new Array<Array<Dynamic>>();
-            ReadDirectory(collection.Path, filesUnderCollection);
-            
-            for (fileUnderCollection in filesUnderCollection)
-            {
-                var fileStat:FileStat = fileUnderCollection[1];
-                if (Settings.LastAutoAddProcessTime - fileStat.mtime.getTime() / 1000 <= 60)
-                {
-                    continue;
-                }
-                
-                var hit:Bool = false;
-                for (result in resultSet)
-                {
-                    if (fileUnderCollection[0] == Std.string(result.get("path")))
-                    {
-                        hit = true;
-                        break;
-                    }
-                }
-                
-                if (!hit)
-                {
-                    files.push([fileUnderCollection[0], collection.Id]);
-                }
-            }
+            directoriesToRead.push([collection.Path, collection.Id]);
         }
         
-        ThreadHelper.Run("ProcessAutoAddStage2", [files, 0]);
-    }
-    
-    private static function ReadDirectory(directoryPath:String, filesUnderCollection:Array<Array<Dynamic>>):Void
-    {
-        for (file in FileSystem.readDirectory(directoryPath))
-        {
-            if (FileSystem.isDirectory(directoryPath + file))
-            {
-                ReadDirectory(directoryPath + file + "/", filesUnderCollection);
-            }
-            else if ((Settings.UseZip && file.toLowerCase().indexOf(ZipProvider.Extension) == file.length - ZipProvider.Extension.length) ||
-                (Settings.UseRar && file.toLowerCase().indexOf(RarProvider.Extension) == file.length - RarProvider.Extension.length) ||
-                (Settings.UsePdf && file.toLowerCase().indexOf(PdfProvider.Extension) == file.length - PdfProvider.Extension.length))
-            {
-                filesUnderCollection.push([directoryPath + file, FileSystem.stat(directoryPath + file)]);
-            }
-        }
+        ThreadHelper.Run("ProcessAutoAddStage2", [directoriesToRead, null, []]);
     }
     
     private static function ProcessAutoAddStage2(parameters:Array<Dynamic>):Void
     {
+        untyped __call__("set_time_limit", 60);
         Settings.LastAutoAddProcessTime = Math.round(Date.now().getTime() / 1000);
-        var files:Array<Array<Dynamic>> = parameters[0];
-        var index:Int = parameters[1];
+        var directoriesToRead:Array<Array<Dynamic>> = parameters[0];
+        var currentDirectory:Array<Dynamic> = parameters[1];
+        var filesInCurrentDirectory:Array<String> = parameters[2];
+        var directoryPath:String = null;
         
-        if (index >= files.length)
+        if (filesInCurrentDirectory.length != 0)
         {
-            return;
-        }
-        
-        try
-        {
-            var collection:Collection = Collection.GetById(files[index][1]);
-            var path:String = files[index][0];
+            directoryPath = currentDirectory[0];
+            var file:String = filesInCurrentDirectory[Math.floor(Math.random() * filesInCurrentDirectory.length)];
+            filesInCurrentDirectory.remove(file);
             
-            if (collection != null && (path = Manga.CheckMangaPath(path)) != null && Utility.IsValidStringForDatabase(path))
+            if (Utility.IsValidStringForDatabase(file))
             {
-                if (path.indexOf(collection.Path) == 0 && Manga.CheckMangaType(path) != -1)
+                if (FileSystem.isDirectory(directoryPath + file))
                 {
-                    Manga.CreateNewManga(collection, path).Save();
+                    directoriesToRead.push([directoryPath + file + "/", currentDirectory[1]]);
+                }
+                else if ((file.toLowerCase().substr(file.length - ZipProvider.Extension.length) == ZipProvider.Extension && Settings.UseZip) ||
+                    (file.toLowerCase().substr(file.length - RarProvider.Extension.length) == RarProvider.Extension && Settings.UseRar) ||
+                    (file.toLowerCase().substr(file.length - PdfProvider.Extension.length) == PdfProvider.Extension && Settings.UsePdf))
+                {
+                    try
+                    {
+                        // try to add file here
+                        var collection:Collection;
+                        var path:String = directoryPath + file;
+                        
+                        if ((path = Manga.CheckMangaPath(path)) != null && (collection = Collection.GetById(currentDirectory[1])) != null)
+                        {
+                            if (path.indexOf(collection.Path) == 0 && Manga.CheckMangaType(path) != -1)
+                            {
+                                Manga.CreateNewManga(collection, path).Save();
+                            }
+                        }
+                    }
+                    catch (e:Exception)
+                    {
+                    }
                 }
             }
+            
+            ThreadHelper.Run("ProcessAutoAddStage2", [directoriesToRead, currentDirectory, filesInCurrentDirectory]);
         }
-        catch (e:Exception)
+        else if (directoriesToRead.length != 0)
         {
+            currentDirectory = directoriesToRead[Math.floor(Math.random() * directoriesToRead.length)];
+            directoriesToRead.remove(currentDirectory);
+            directoryPath = currentDirectory[0];
+            
+            filesInCurrentDirectory = FileSystem.readDirectory(directoryPath);
+            
+            ThreadHelper.Run("ProcessAutoAddStage2", [directoriesToRead, currentDirectory, filesInCurrentDirectory]);
         }
-        
-        ThreadHelper.Run("ProcessAutoAddStage2", [files, index + 1]);
     }
 }

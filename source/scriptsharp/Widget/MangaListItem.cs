@@ -100,7 +100,11 @@ namespace afung.MangaWeb3.Client.Widget
         private extern void CoverRequestSuccess(JsonResponse response);
         private void CoverRequestSuccess(MangaImageResponse response)
         {
-            if (response.status == 0)
+            if (!attachedObject.Is(":visible"))
+            {
+                // do nothing
+            }
+            else if (response.status == 0)
             {
                 jQueryObject wrap = jQuery.Select(".mangas-list-item-thumbnail-wrap", attachedObject);
                 wrap.Height(wrap.GetHeight());
@@ -110,11 +114,23 @@ namespace afung.MangaWeb3.Client.Widget
                     "load",
                     delegate(jQueryEvent e)
                     {
+                        if (!attachedObject.Is(":visible"))
+                        {
+                            thumbnail.Attribute("src", "");
+                            return;
+                        }
+
                         thumbnail.AddClass("fade");
                         Utility.OnTransitionEnd(
                             placeholderThumbnail.AddClass("fade"),
                             delegate
                             {
+                                if (!attachedObject.Is(":visible"))
+                                {
+                                    thumbnail.Attribute("src", "");
+                                    return;
+                                }
+
                                 placeholderThumbnail.After(thumbnail);
                                 placeholderThumbnail.Remove();
                                 Utility.OnTransitionEnd(
@@ -141,10 +157,7 @@ namespace afung.MangaWeb3.Client.Widget
                     {
                         Request.Send(coverRequest, CoverRequestSuccess);
                     },
-                    coverRequestDelay = coverRequestDelay * 2 + 1000);
-            }
-            else
-            {
+                    coverRequestDelay = coverRequestDelay + 1000);
             }
         }
 

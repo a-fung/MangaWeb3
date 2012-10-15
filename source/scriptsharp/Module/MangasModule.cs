@@ -125,6 +125,7 @@ namespace afung.MangaWeb3.Client.Module
 
             if (!attachedObject.Is(":visible"))
             {
+                items = new MangaListItemJson[] { };
                 jQuery.Select(".mangas-pagination").Children().Remove();
                 Show(onReady);
             }
