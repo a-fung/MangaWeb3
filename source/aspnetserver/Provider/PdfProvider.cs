@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Windows.Forms;
 
 namespace afung.MangaWeb3.Server.Provider
 {
@@ -19,22 +23,20 @@ namespace afung.MangaWeb3.Server.Provider
 
         private int GetNumberOfPages(string path)
         {
-            string output;
-            int exitCode;
-
-            ProcessLauncher.Run(Config.PdfinfoPath, "\"" + path + "\"", out output, out exitCode);
-
-            if (exitCode == 0)
+            try
             {
-                int index = output.IndexOf("Pages:");
-                if (index != -1)
+                using (PdfFile pdfFile = new PdfFile(path))
                 {
-                    int index2 = output.IndexOf('\n', index);
-                    return int.Parse(output.Substring(index + 6, index2 - index - 6));
+                    lock (pdfFile.Wrapper)
+                    {
+                        return pdfFile.Wrapper.PageCount;
+                    }
                 }
             }
-
-            return 0;
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         public bool TryOpen(string path)
@@ -60,21 +62,42 @@ namespace afung.MangaWeb3.Server.Provider
             if (!int.TryParse(page, out pageInt) || pageInt < 1 || pageInt > (numberOfPages = GetNumberOfPages(path)))
             {
                 InvalidOperationException exception = new InvalidOperationException("Read PDF file error");
-                exception.Data["manga_status"] = System.IO.File.Exists(path) ? (numberOfPages == 0 ? 2 : 3) : 1;
+                exception.Data["manga_status"] = File.Exists(path) ? (numberOfPages == 0 ? 2 : 3) : 1;
                 throw exception;
             }
 
-            string output;
-            int exitCode;
             outputPath = outputPath + ".png";
 
-            ProcessLauncher.Run(Config.MudrawPath, "-o \"" + outputPath + "\" -r 300 \"" + path + "\" " + page, out output, out exitCode);
-
-            if (exitCode != 0)
+            using (PdfFile pdfFile = new PdfFile(path))
             {
-                InvalidOperationException exception = new InvalidOperationException("Render PDF file error");
-                exception.Data["manga_status"] = 2;
-                throw exception;
+                lock (pdfFile.Wrapper)
+                {
+                    pdfFile.Wrapper.CurrentPage = pageInt;
+                    using (PictureBox pictureBox = new PictureBox())
+                    {
+                        pictureBox.Width = pictureBox.Height = 3000;
+                        pdfFile.Wrapper.FitToHeight(pictureBox.Handle);
+                        pictureBox.Width = pdfFile.Wrapper.PageWidth;
+                        pdfFile.Wrapper.RenderPage(pictureBox.Handle);
+
+                        using (Bitmap image = new Bitmap(pdfFile.Wrapper.PageWidth, pdfFile.Wrapper.PageHeight))
+                        {
+                            using (Graphics g = Graphics.FromImage(image))
+                            {
+                                pdfFile.Wrapper.ClientBounds = new Rectangle(0, 0, pdfFile.Wrapper.PageWidth, pdfFile.Wrapper.PageHeight);
+                                pdfFile.Wrapper.CurrentX = pdfFile.Wrapper.CurrentY = 0;
+                                IntPtr ptr = g.GetHdc();
+                                pdfFile.Wrapper.DrawPageHDC(ptr);
+                                g.ReleaseHdc(ptr);
+                            }
+
+                            using (FileStream outputFile = new FileStream(outputPath, FileMode.Create))
+                            {
+                                image.Save(outputFile, ImageFormat.Png);
+                            }
+                        }
+                    }
+                }
             }
 
             return outputPath;

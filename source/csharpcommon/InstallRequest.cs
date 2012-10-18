@@ -15,8 +15,6 @@ namespace afung.MangaWeb3.Common
         public string mysqlDatabase;
 
         public string sevenZipPath;
-        public string pdfinfoPath;
-        public string mudrawPath;
 
         public bool zip;
         public bool rar;

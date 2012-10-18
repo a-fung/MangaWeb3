@@ -53,8 +53,6 @@ namespace afung.MangaWeb3.Server.Install.Handler
             section.Settings.Add("MangaWebMySQLDatabase", request.mysqlDatabase);
 
             section.Settings.Add("MangaWeb7zDll", request.sevenZipPath);
-            section.Settings.Add("MangaWebPdfinfo", request.pdfinfoPath);
-            section.Settings.Add("MangaWebMudraw", request.mudrawPath);
 
             configuration.Save();
             NameValueCollection settings = new NameValueCollection();

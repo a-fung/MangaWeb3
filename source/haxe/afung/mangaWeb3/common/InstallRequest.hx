@@ -14,8 +14,6 @@ class InstallRequest extends JsonRequest
 	public var mysqlDatabase:String;
 
 	public var sevenZipPath:String;
-	public var pdfinfoPath:String;
-	public var mudrawPath:String;
 
 	public var zip:Bool;
 	public var rar:Bool;

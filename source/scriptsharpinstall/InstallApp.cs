@@ -19,10 +19,8 @@ namespace afung.MangaWeb3.Client.Install
             Template.TemplateIds["install"] = new string[] {
                 "install-finish-module",
                 "installing-modal",
-                "install-mudraw-error",
                 "install-pdfdraw-error",
                 "install-pdfinfo-error",
-                "install-pdfinfoexe-error",
                 "install-rar-error",
                 "install-zip-error",
                 "install-sevenzip-error",

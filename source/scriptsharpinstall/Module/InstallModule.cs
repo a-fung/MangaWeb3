@@ -132,31 +132,21 @@ namespace afung.MangaWeb3.Client.Install.Module
             jQuery.Select("#install-sevenzip-check").Hide();
             jQuery.Select("#install-sevenzip-loading").Hide();
 
-            jQuery.Select("#install-pdfinfoexe-check").Hide();
-            jQuery.Select("#install-pdfinfoexe-loading").Hide();
-
-            jQuery.Select("#install-mudraw-check").Hide();
-            jQuery.Select("#install-mudraw-loading").Hide();
-
             jQuery.Select("#install-admin-username-check").Hide();
             jQuery.Select("#install-admin-password-check").Hide();
             jQuery.Select("#install-admin-password2-check").Hide();
 
             if (Environment.ServerType == ServerType.AspNet)
             {
-                CanEnableZip = CanEnableRar = CanEnablePdf = false;
-                AllRequiredComponentLoaded = true;
+                CanEnableZip = CanEnableRar = false;
+                CanEnablePdf = AllRequiredComponentLoaded = true;
 
                 // other components text input
                 jQuery.Select("#install-sevenzip-dll").Change(OtherComponentInputChanged);
-                jQuery.Select("#install-pdfinfo-exe").Change(OtherComponentInputChanged);
-                jQuery.Select("#install-mudraw-exe").Change(OtherComponentInputChanged);
             }
             else
             {
                 jQuery.Select("#install-sevenzip").Hide();
-                jQuery.Select("#install-pdfinfoexe").Hide();
-                jQuery.Select("#install-mudraw").Hide();
 
                 CanEnableZip = response.zip;
                 CanEnableRar = response.rar;
@@ -353,96 +343,6 @@ namespace afung.MangaWeb3.Client.Install.Module
             }
         }
 
-        private bool _pdfinfoSettingChecking = false;
-        private bool PdfinfoSettingChecking
-        {
-            get
-            {
-                return _pdfinfoSettingChecking;
-            }
-            set
-            {
-                _pdfinfoSettingChecking = value;
-                if (value)
-                {
-                    jQuery.Select("#install-pdfinfoexe-loading").Show();
-                    jQuery.Select("#install-pdfinfo-exe").Attribute("disabled", "disabled");
-                }
-                else
-                {
-                    jQuery.Select("#install-pdfinfoexe-loading").Hide();
-                    jQuery.Select("#install-pdfinfo-exe").RemoveAttr("disabled");
-                }
-            }
-        }
-
-        private bool _pdfinfoSettingOkay = false;
-        private bool PdfinfoSettingOkay
-        {
-            get
-            {
-                return _pdfinfoSettingOkay;
-            }
-            set
-            {
-                _pdfinfoSettingOkay = value;
-                CanEnablePdf = value && MudrawSettingOkay;
-                if (value)
-                {
-                    jQuery.Select("#install-pdfinfoexe-check").Show();
-                }
-                else
-                {
-                    jQuery.Select("#install-pdfinfoexe-check").Hide();
-                }
-            }
-        }
-
-        private bool _mudrawSettingChecking = false;
-        private bool MudrawSettingChecking
-        {
-            get
-            {
-                return _mudrawSettingChecking;
-            }
-            set
-            {
-                _mudrawSettingChecking = value;
-                if (value)
-                {
-                    jQuery.Select("#install-mudraw-loading").Show();
-                    jQuery.Select("#install-mudraw-exe").Attribute("disabled", "disabled");
-                }
-                else
-                {
-                    jQuery.Select("#install-mudraw-loading").Hide();
-                    jQuery.Select("#install-mudraw-exe").RemoveAttr("disabled");
-                }
-            }
-        }
-
-        private bool _mudrawSettingOkay = false;
-        private bool MudrawSettingOkay
-        {
-            get
-            {
-                return _mudrawSettingOkay;
-            }
-            set
-            {
-                _mudrawSettingOkay = value;
-                CanEnablePdf = value && PdfinfoSettingOkay;
-                if (value)
-                {
-                    jQuery.Select("#install-mudraw-check").Show();
-                }
-                else
-                {
-                    jQuery.Select("#install-mudraw-check").Hide();
-                }
-            }
-        }
-
         private int checkingComponent;
 
         private void OtherComponentInputChanged(jQueryEvent e)
@@ -455,12 +355,6 @@ namespace afung.MangaWeb3.Client.Install.Module
             {
                 case "install-sevenzip-dll":
                     checking = SevenZipSettingChecking;
-                    break;
-                case "install-pdfinfo-exe":
-                    checking = PdfinfoSettingChecking;
-                    break;
-                case "install-mudraw-exe":
-                    checking = MudrawSettingChecking;
                     break;
                 default:
                     return;
@@ -484,18 +378,6 @@ namespace afung.MangaWeb3.Client.Install.Module
                     SevenZipSettingOkay = false;
                     request.component = 0;
                     jQuery.Select("#install-sevenzip-error").Remove();
-                    break;
-                case "install-pdfinfo-exe":
-                    PdfinfoSettingChecking = checking;
-                    PdfinfoSettingOkay = false;
-                    request.component = 1;
-                    jQuery.Select("#install-pdfinfoexe-error").Remove();
-                    break;
-                case "install-mudraw-exe":
-                    MudrawSettingChecking = checking;
-                    MudrawSettingOkay = false;
-                    request.component = 2;
-                    jQuery.Select("#install-mudraw-error").Remove();
                     break;
                 default:
                     return;
@@ -522,14 +404,6 @@ namespace afung.MangaWeb3.Client.Install.Module
                         SevenZipSettingChecking = false;
                         SevenZipSettingOkay = true;
                         break;
-                    case 1:
-                        PdfinfoSettingChecking = false;
-                        PdfinfoSettingOkay = true;
-                        break;
-                    case 2:
-                        MudrawSettingChecking = false;
-                        MudrawSettingOkay = true;
-                        break;
                     default:
                         return;
                 }
@@ -549,14 +423,6 @@ namespace afung.MangaWeb3.Client.Install.Module
                 case 0:
                     SevenZipSettingOkay = SevenZipSettingChecking = false;
                     Template.Get("install", "install-sevenzip-error").AppendTo(jQuery.Select("#sevenzip-error-area"));
-                    break;
-                case 1:
-                    PdfinfoSettingOkay = PdfinfoSettingChecking = false;
-                    Template.Get("install", "install-pdfinfoexe-error").AppendTo(jQuery.Select("#pdfinfo-error-area"));
-                    break;
-                case 2:
-                    MudrawSettingOkay = MudrawSettingChecking = false;
-                    Template.Get("install", "install-mudraw-error").AppendTo(jQuery.Select("#mudraw-error-area"));
                     break;
                 default:
                     return;
@@ -605,7 +471,7 @@ namespace afung.MangaWeb3.Client.Install.Module
         private void SubmitButtonClicked(jQueryEvent e)
         {
             // return if anything is checking
-            if (MySqlSettingChecking || SevenZipSettingChecking || PdfinfoSettingChecking || MudrawSettingChecking)
+            if (MySqlSettingChecking || SevenZipSettingChecking)
             {
                 return;
             }
@@ -642,8 +508,6 @@ namespace afung.MangaWeb3.Client.Install.Module
             request.mysqlDatabase = jQuery.Select("#install-mysql-database").GetValue();
 
             request.sevenZipPath = jQuery.Select("#install-sevenzip-dll").GetValue();
-            request.pdfinfoPath = jQuery.Select("#install-pdfinfo-exe").GetValue();
-            request.mudrawPath = jQuery.Select("#install-mudraw-exe").GetValue();
 
             request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute("checked") == "checked";
             request.rar = jQuery.Select("#install-rar-checkbox").GetAttribute("checked") == "checked";

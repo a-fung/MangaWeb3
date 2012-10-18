@@ -82,22 +82,6 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        public static string PdfinfoPath
-        {
-            get
-            {
-                return AppSettings["MangaWebPdfinfo"];
-            }
-        }
-
-        public static string MudrawPath
-        {
-            get
-            {
-                return AppSettings["MangaWebMudraw"];
-            }
-        }
-
         public static void Refresh(NameValueCollection settings)
         {
             __section = settings;

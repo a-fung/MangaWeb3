@@ -102,28 +102,21 @@ namespace afung.MangaWeb3.Server
                             {
                                 try
                                 {
-                                    int exitCode;
-                                    string output;
-                                    ProcessLauncher.Run(Config.PdfinfoPath, Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), out output, out exitCode);
-                                    if (exitCode != 0)
+                                    using (PDFLibNet.PDFWrapper wrapper = new PDFLibNet.PDFWrapper())
                                     {
-                                        return (_usePdf = false).Value;
-                                    }
+                                        if (wrapper.SupportsMuPDF)
+                                        {
+                                            wrapper.UseMuPDF = true;
+                                        }
 
-                                    if (!output.Contains("Pages"))
-                                    {
-                                        return (_usePdf = false).Value;
-                                    }
-
-                                    ProcessLauncher.Run(Config.MudrawPath, Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), out output, out exitCode);
-                                    if (exitCode != 0)
-                                    {
-                                        return (_usePdf = false).Value;
-                                    }
-
-                                    if (!output.Contains("nothing to do"))
-                                    {
-                                        return (_usePdf = false).Value;
+                                        using (FileStream inputFile = new FileStream(Path.Combine(AjaxBase.DirectoryPath, "empty.pdf"), FileMode.Open))
+                                        {
+                                            wrapper.LoadPDF(inputFile);
+                                            if (wrapper.PageCount <= 0)
+                                            {
+                                                return (_usePdf = false).Value;
+                                            }
+                                        }
                                     }
 
                                     return (_usePdf = true).Value;
