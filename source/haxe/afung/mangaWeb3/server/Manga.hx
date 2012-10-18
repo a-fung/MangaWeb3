@@ -72,7 +72,7 @@ class Manga
     
     private var _dimensions:Array<Array<Int>>;
     
-    private var Dimensions(null, null):Array<Array<Int>>;
+    private var Dimensions(get_Dimensions, set_Dimensions):Array<Array<Int>>;
     
     private function get_Dimensions():Array<Array<Int>>
     {
