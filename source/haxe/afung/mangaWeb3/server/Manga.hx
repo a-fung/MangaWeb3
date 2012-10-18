@@ -51,9 +51,43 @@ class Manga
     
     public var MangaType(default, null):Int;
     
-    public var Content(default, null):Array<String>;
+    private var _content:Array<String>;
+    
+    public var Content(get_Content, set_Content):Array<String>;
+    
+    private function get_Content():Array<String>
+    {
+        if (_content == null && Id != -1)
+        {
+            _content = cast Lib.toHaxeArray(untyped __call__("json_decode", Std.string(Database.Select("mangacontent", "`id`='" + Id + "'", null, null, "`content`")[0].get("content"))));
+        }
+        
+        return _content;
+    }
+    
+    private function set_Content(value:Array<String>):Array<String>
+    {
+        return _content = value;
+    }
+    
+    private var _dimensions:Array<Array<Int>>;
     
     private var Dimensions(null, null):Array<Array<Int>>;
+    
+    private function get_Dimensions():Array<Array<Int>>
+    {
+        if (_dimensions == null && Id != -1)
+        {
+            _dimensions = Json.parse(Std.string(Database.Select("mangadimensions", "`id`='" + Id + "'", null, null, "`dimensions`")[0].get("dimensions")));
+        }
+        
+        return _dimensions;
+    }
+    
+    private function set_Dimensions(value:Array<Array<Int>>):Array<Array<Int>>
+    {
+        return _dimensions = value;
+    }
     
     public var ModifiedTime(default, null):Int;
     
@@ -138,8 +172,6 @@ class Manga
         newManga.MangaType = Std.parseInt(data.get("type"));
         newManga.ModifiedTime = Std.parseInt(data.get("time"));
         newManga.Size = Std.parseInt(data.get("size"));
-        newManga.Content = cast Lib.toHaxeArray(untyped __call__("json_decode", Std.string(data.get("content"))));
-        newManga.Dimensions = Json.parse(Std.string(data.get("dimensions")));
         newManga.NumberOfPages = Std.parseInt(data.get("numpages"));
         newManga.View = Std.parseInt(data.get("view"));
         newManga.Status = Std.parseInt(data.get("status"));
@@ -410,8 +442,6 @@ class Manga
         data.set("title", Title);
         data.set("path", MangaPath);
         data.set("type", MangaType);
-        data.set("content", untyped __call__("json_encode", Lib.toPhpArray(Content)));
-        data.set("dimensions", Json.stringify(Dimensions));
         data.set("time", ModifiedTime);
         data.set("size", Size);
         data.set("numpages", NumberOfPages);
@@ -428,6 +458,22 @@ class Manga
         {
             data.set("id", Id);
             Database.Replace("manga", data);
+        }
+        
+        if (_content != null)
+        {
+            data = new Hash<Dynamic>();
+            data.set("id", Id);
+            data.set("content", untyped __call__("json_encode", Lib.toPhpArray(Content)));
+            Database.Replace("mangacontent", data);
+        }
+        
+        if (_dimensions != null)
+        {
+            data = new Hash<Dynamic>();
+            data.set("id", Id);
+            data.set("dimensions", Json.stringify(_dimensions));
+            Database.Replace("mangadimensions", data);
         }
     }
 

@@ -26,8 +26,6 @@ CREATE TABLE `manga` (
   `title` varchar(100) NOT NULL,
   `path` varchar(1000) NOT NULL,
   `type` tinyint(4) NOT NULL,
-  `content` longtext NOT NULL,
-  `dimensions` longtext NOT NULL,
   `time` int(11) NOT NULL,
   `size` bigint(20) NOT NULL,
   `numpages` int(11) NOT NULL,
@@ -40,6 +38,21 @@ CREATE TABLE `manga` (
   KEY `type` (`type`),
   KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `mangacontent`;
+CREATE TABLE `mangacontent` (
+  `id` int(11) NOT NULL,
+  `content` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `mangadimensions`;
+CREATE TABLE `mangadimensions` (
+  `id` int(11) NOT NULL,
+  `dimensions` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `meta`;
 CREATE TABLE `meta` (

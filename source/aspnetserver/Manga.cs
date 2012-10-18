@@ -56,16 +56,44 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        private string[] _content;
+
         public string[] Content
         {
-            get;
-            private set;
+            get
+            {
+                if (_content == null && Id != -1)
+                {
+                    _content = Utility.JsonDecodeArchiveContentString(Convert.ToString(Database.Select("mangacontent", "`id`='" + Id + "'", null, null, "`content`")[0]["content"]));
+                }
+
+                return _content;
+            }
+
+            private set
+            {
+                _content = value;
+            }
         }
+
+        private int[][] _dimensions;
 
         private int[][] Dimensions
         {
-            get;
-            set;
+            get
+            {
+                if (_dimensions == null && Id != -1)
+                {
+                    _dimensions = Utility.ParseJson<int[][]>(Convert.ToString(Database.Select("mangadimensions", "`id`='" + Id + "'", null, null, "`dimensions`")[0]["dimensions"]));
+                }
+
+                return _dimensions;
+            }
+
+            set
+            {
+                _dimensions = value;
+            }
         }
 
         public int ModifiedTime
@@ -181,8 +209,6 @@ namespace afung.MangaWeb3.Server
             newManga.MangaType = Convert.ToInt32(data["type"]);
             newManga.ModifiedTime = Convert.ToInt32(data["time"]);
             newManga.Size = Convert.ToInt64(data["size"]);
-            newManga.Content = Utility.JsonDecodeArchiveContentString(Convert.ToString(data["content"]));
-            newManga.Dimensions = Utility.ParseJson<int[][]>(Convert.ToString(data["dimensions"]));
             newManga.NumberOfPages = Convert.ToInt32(data["numpages"]);
             newManga.View = Convert.ToInt32(data["view"]);
             newManga.Status = Convert.ToInt32(data["status"]);
@@ -448,8 +474,6 @@ namespace afung.MangaWeb3.Server
             data.Add("title", Title);
             data.Add("path", MangaPath);
             data.Add("type", MangaType);
-            data.Add("content", Utility.JsonEncodeArchiveContent(Content));
-            data.Add("dimensions", JsonConvert.SerializeObject(Dimensions));
             data.Add("time", ModifiedTime);
             data.Add("size", Size);
             data.Add("numpages", NumberOfPages);
@@ -466,6 +490,22 @@ namespace afung.MangaWeb3.Server
             {
                 data.Add("id", Id);
                 Database.Replace("manga", data);
+            }
+
+            if (_content != null)
+            {
+                data = new Dictionary<string, object>();
+                data.Add("id", Id);
+                data.Add("content", Utility.JsonEncodeArchiveContent(_content));
+                Database.Replace("mangacontent", data);
+            }
+            
+            if (_dimensions != null)
+            {
+                data = new Dictionary<string, object>();
+                data.Add("id", Id);
+                data.Add("dimensions", JsonConvert.SerializeObject(_dimensions));
+                Database.Replace("mangadimensions", data);
             }
         }
 
