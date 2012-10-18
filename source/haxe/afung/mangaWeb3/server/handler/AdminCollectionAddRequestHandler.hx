@@ -3,6 +3,7 @@ package afung.mangaWeb3.server.handler;
 import afung.mangaWeb3.common.AdminCollectionAddRequest;
 import afung.mangaWeb3.common.AdminCollectionAddResponse;
 import afung.mangaWeb3.server.Collection;
+import haxe.Utf8;
 
 /**
  * ...
@@ -34,6 +35,11 @@ class AdminCollectionAddRequestHandler extends HandlerBase
         
         var response:AdminCollectionAddResponse = new AdminCollectionAddResponse();
         request.name = Utility.Remove4PlusBytesUtf8Chars(request.name);
+        
+        if (Utf8.length(request.name) > 50)
+        {
+            request.name = Utf8.sub(request.name, 0, 50);
+        }
 
         if (!Collection.CheckNewCollectionName(request.name))
         {

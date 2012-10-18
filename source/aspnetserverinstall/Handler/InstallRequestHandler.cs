@@ -27,7 +27,7 @@ namespace afung.MangaWeb3.Server.Install.Handler
 
             // Check Admin user name and password
             Regex regex = new Regex("[^a-zA-Z0-9]");
-            if (String.IsNullOrEmpty(request.admin) || regex.IsMatch(request.admin) || request.password == null || request.password.Length < 8 || request.password != request.password2)
+            if (String.IsNullOrEmpty(request.admin) || regex.IsMatch(request.admin) || request.admin.Length > 30 || request.password == null || request.password.Length < 8 || request.password != request.password2)
             {
                 ajax.BadRequest();
                 return;

@@ -1,7 +1,6 @@
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.AdminMangaMetaJson;
-import haxe.Utf8;
 
 /**
  * ...
@@ -15,8 +14,6 @@ class MangaMeta
     public var ParentManga(default, null):Manga;
     
     public var Author(default, null):String;
-    
-    public var Title(default, null):String;
     
     public var Volume(default, null):Int;
     
@@ -36,10 +33,6 @@ class MangaMeta
         var newMeta:MangaMeta = new MangaMeta();
         newMeta.ParentManga = manga;
 
-        var title:String = manga.MangaPath.substr(0, manga.MangaPath.lastIndexOf("."));
-        title = title.substr(title.lastIndexOf("/") + 1);
-        newMeta.Title = Utf8.length(title) > 100 ? Utf8.sub(title, 0, 100) : title;
-
         newMeta.Author = newMeta.Series = newMeta.Publisher = "";
         newMeta.Volume = newMeta.Year = -1;
 
@@ -50,7 +43,6 @@ class MangaMeta
     {
         var newMeta:MangaMeta = new MangaMeta();
         newMeta.Id = Std.parseInt(data.get("id"));
-        newMeta.Title = Std.string(data.get("title"));
         newMeta.Author = Std.string(data.get("author"));
         newMeta.Series = Std.string(data.get("series"));
         newMeta.Publisher = Std.string(data.get("publisher"));
@@ -78,7 +70,6 @@ class MangaMeta
         var data:Hash<Dynamic> = new Hash<Dynamic>();
         data.set("mid", ParentManga.Id);
         data.set("author", Author);
-        data.set("title", Title);
         data.set("volume", Volume);
         data.set("series", Series);
         data.set("year", Year);
@@ -98,7 +89,6 @@ class MangaMeta
     public function Update(obj:AdminMangaMetaJson):Void
     {
         Author = Utility.Remove4PlusBytesUtf8Chars(obj.author);
-        Title = Utility.Remove4PlusBytesUtf8Chars(obj.title);
         Volume = obj.volume;
         Series = Utility.Remove4PlusBytesUtf8Chars(obj.series);
         Year = obj.year;

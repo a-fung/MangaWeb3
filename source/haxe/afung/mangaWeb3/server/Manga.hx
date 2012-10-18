@@ -10,6 +10,7 @@ import afung.mangaWeb3.server.provider.PdfProvider;
 import afung.mangaWeb3.server.provider.RarProvider;
 import afung.mangaWeb3.server.provider.ZipProvider;
 import haxe.Json;
+import haxe.Utf8;
 import php.Exception;
 import php.FileSystem;
 import php.io.File;
@@ -28,7 +29,23 @@ class Manga
 {
     public var Id(default, null):Int;
     
-    public var ParentCollection(default, null):Collection;
+    public var ParentCollectionId(default, null):Int;
+    
+    private var _parentCollection:Collection;
+    
+    public var ParentCollection(get_ParentCollection, never):Collection;
+    
+    private function get_ParentCollection():Collection
+    {
+        if (_parentCollection == null)
+        {
+            _parentCollection = Collection.GetById(ParentCollectionId);
+        }
+        
+        return _parentCollection;
+    }
+    
+    public var Title(default, null):String;
     
     public var MangaPath(default, null):String;
     
@@ -96,13 +113,18 @@ class Manga
     public static function CreateNewManga(collection:Collection, path:String):Manga
     {
         var newManga:Manga = new Manga();
-        newManga.ParentCollection = collection;
+        newManga.ParentCollectionId = collection.Id;
+        newManga._parentCollection = collection;
         newManga.MangaPath = path;
         newManga.MangaType = CheckMangaType(path);
         newManga.InnerRefreshContent();
         newManga.View = newManga.Status = 0;
         newManga._meta = MangaMeta.CreateNewMeta(newManga);
         newManga.LeftToRight = false;
+
+        var title:String = newManga.MangaPath.substr(0, newManga.MangaPath.lastIndexOf("."));
+        title = title.substr(title.lastIndexOf("/") + 1);
+        newManga.Title = Utf8.length(title) > 100 ? Utf8.sub(title, 0, 100) : title;
         return newManga;
     }
     
@@ -110,7 +132,8 @@ class Manga
     {
         var newManga:Manga = new Manga();
         newManga.Id = Std.parseInt(data.get("id"));
-        newManga.ParentCollection = Collection.GetById(Std.parseInt(data.get("cid")));
+        newManga.ParentCollectionId = Std.parseInt(data.get("cid"));
+        newManga.Title = Std.string(data.get("title"));
         newManga.MangaPath = Std.string(data.get("path"));
         newManga.MangaType = Std.parseInt(data.get("type"));
         newManga.ModifiedTime = Std.parseInt(data.get("time"));
@@ -383,7 +406,8 @@ class Manga
     public function Save():Void
     {
         var data:Hash<Dynamic> = new Hash<Dynamic>();
-        data.set("cid", ParentCollection.Id);
+        data.set("cid", ParentCollectionId);
+        data.set("title", Title);
         data.set("path", MangaPath);
         data.set("type", MangaType);
         data.set("content", untyped __call__("json_encode", Lib.toPhpArray(Content)));
@@ -411,7 +435,7 @@ class Manga
     {
         var obj:MangaListItemJson = new MangaListItemJson();
         obj.id = Id;
-        obj.title = Meta.Title;
+        obj.title = Title;
         obj.pages = NumberOfPages;
         obj.size = Size;
         obj.date = ModifiedTime;
@@ -422,7 +446,7 @@ class Manga
     {
         var obj:MangaJson = new MangaJson();
         obj.id = Id;
-        obj.title = Meta.Title;
+        obj.title = Title;
         obj.collection = ParentCollection.Name;
         obj.path = MangaPath;
         obj.type = MangaType;
@@ -435,7 +459,7 @@ class Manga
     {
         var obj:AdminMangaMetaJson = new AdminMangaMetaJson();
         obj.author = Meta.Author;
-        obj.title = Meta.Title;
+        obj.title = Title;
         obj.volume = Meta.Volume;
         obj.series = Meta.Series;
         obj.year = Meta.Year;
@@ -446,8 +470,10 @@ class Manga
     
     public function UpdateMeta(obj:AdminMangaMetaJson):Void
     {
+        Title = Utility.Remove4PlusBytesUtf8Chars(obj.title);
         Meta.Update(obj);
         UpdateTags(obj.tags);
+        Save();
     }
     
     public static function ToListItemJsonArray(mangas:Array<Manga>):Array<MangaListItemJson>
@@ -502,6 +528,10 @@ class Manga
         for (rawTag in tags)
         {
             var tag:String = Utility.Remove4PlusBytesUtf8Chars(rawTag);
+            if (Utf8.length(tag) > 100)
+            {
+                tag = Utf8.sub(tag, 0, 100);
+            }
 
             if (Utility.ArrayStringContains(oldTags, tag))
             {

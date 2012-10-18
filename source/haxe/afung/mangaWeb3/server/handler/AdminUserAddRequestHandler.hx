@@ -26,7 +26,7 @@ class AdminUserAddRequestHandler extends HandlerBase
         
         var request:AdminUserAddRequest = Utility.ParseJson(jsonString);
         var regex:EReg = ~/[^a-zA-Z0-9]/;
-        if (request.username == null || request.username == "" || regex.match(request.username) || request.password == null || request.password.length < 8 || request.password != request.password2)
+        if (request.username == null || request.username == "" || regex.match(request.username) || request.username.length > 30 || request.password == null || request.password.length < 8 || request.password != request.password2)
         {
             ajax.BadRequest();
             return;

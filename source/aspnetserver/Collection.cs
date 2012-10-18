@@ -40,6 +40,8 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        private static Dictionary<int, Collection> cache = new Dictionary<int, Collection>();
+
         private Collection()
         {
             Id = -1;
@@ -57,12 +59,21 @@ namespace afung.MangaWeb3.Server
 
         private static Collection FromData(Dictionary<string, object> data)
         {
-            Collection collection = new Collection();
-            collection.Id = Convert.ToInt32(data["id"]);
+            int id = Convert.ToInt32(data["id"]);
+            Collection collection;
+            if (cache.TryGetValue(id, out collection))
+            {
+                return collection;
+            }
+
+            collection = new Collection();
+            collection.Id = id;
             collection.Name = Convert.ToString(data["name"]);
             collection.Path = Convert.ToString(data["path"]);
             collection.Public = Convert.ToInt32(data["public"]) == 1;
             collection.AutoAdd = Convert.ToInt32(data["autoadd"]) == 1;
+
+            cache[collection.Id] = collection;
             return collection;
         }
 
@@ -83,6 +94,12 @@ namespace afung.MangaWeb3.Server
 
         public static Collection GetById(int id)
         {
+            Collection collection;
+            if (cache.TryGetValue(id, out collection))
+            {
+                return collection;
+            }
+
             Dictionary<string, object>[] resultSet = Database.Select("collection", "`id`=" + Database.Quote(id.ToString()));
 
             if (resultSet.Length > 0)
@@ -199,6 +216,8 @@ namespace afung.MangaWeb3.Server
                 data.Add("id", Id);
                 Database.Replace("collection", data);
             }
+
+            cache[Id] = this;
         }
 
         public CollectionJson ToJson()

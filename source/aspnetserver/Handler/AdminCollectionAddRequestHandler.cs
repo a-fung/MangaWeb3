@@ -32,6 +32,11 @@ namespace afung.MangaWeb3.Server.Handler
             AdminCollectionAddResponse response = new AdminCollectionAddResponse();
             request.name = Utility.Remove4PlusBytesUtf8Chars(request.name);
 
+            if (request.name.Length > 50)
+            {
+                request.name = request.name.Substring(0, 50);
+            }
+
             if (!Collection.CheckNewCollectionName(request.name))
             {
                 response.status = 1;

@@ -38,7 +38,7 @@ class AdminMangaEditPathRequestHandler extends HandlerBase
         if (request.path == null || request.path == "")
         {
             response.path = manga.MangaPath;
-            response.cid = manga.ParentCollection.Id;
+            response.cid = manga.ParentCollectionId;
         }
         else
         {

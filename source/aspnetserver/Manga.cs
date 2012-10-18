@@ -17,7 +17,28 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        public int ParentCollectionId
+        {
+            get;
+            private set;
+        }
+
+        private Collection _parentCollection;
+
         public Collection ParentCollection
+        {
+            get
+            {
+                if (_parentCollection == null)
+                {
+                    _parentCollection = Collection.GetById(ParentCollectionId);
+                }
+
+                return _parentCollection;
+            }
+        }
+
+        public string Title
         {
             get;
             private set;
@@ -134,13 +155,19 @@ namespace afung.MangaWeb3.Server
         public static Manga CreateNewManga(Collection collection, string path)
         {
             Manga newManga = new Manga();
-            newManga.ParentCollection = collection;
+            newManga.ParentCollectionId = collection.Id;
+            newManga._parentCollection = collection;
             newManga.MangaPath = path;
             newManga.MangaType = CheckMangaType(path);
             newManga.InnerRefreshContent();
             newManga.View = newManga.Status = 0;
             newManga._meta = MangaMeta.CreateNewMeta(newManga);
             newManga.LeftToRight = false;
+
+            string title = newManga.MangaPath.Substring(0, newManga.MangaPath.LastIndexOf("."));
+            title = title.Substring(title.LastIndexOf("\\") + 1);
+            newManga.Title = title.Length > 100 ? title.Substring(0, 100) : title;
+
             return newManga;
         }
 
@@ -148,7 +175,8 @@ namespace afung.MangaWeb3.Server
         {
             Manga newManga = new Manga();
             newManga.Id = Convert.ToInt32(data["id"]);
-            newManga.ParentCollection = Collection.GetById(Convert.ToInt32(data["cid"]));
+            newManga.ParentCollectionId = Convert.ToInt32(data["cid"]);
+            newManga.Title = Convert.ToString(data["title"]);
             newManga.MangaPath = Convert.ToString(data["path"]);
             newManga.MangaType = Convert.ToInt32(data["type"]);
             newManga.ModifiedTime = Convert.ToInt32(data["time"]);
@@ -416,7 +444,8 @@ namespace afung.MangaWeb3.Server
         public void Save()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
-            data.Add("cid", ParentCollection.Id);
+            data.Add("cid", ParentCollectionId);
+            data.Add("title", Title);
             data.Add("path", MangaPath);
             data.Add("type", MangaType);
             data.Add("content", Utility.JsonEncodeArchiveContent(Content));
@@ -444,7 +473,7 @@ namespace afung.MangaWeb3.Server
         {
             MangaListItemJson obj = new MangaListItemJson();
             obj.id = Id;
-            obj.title = Meta.Title;
+            obj.title = Title;
             obj.pages = NumberOfPages;
             obj.size = Size;
             obj.date = ModifiedTime;
@@ -455,7 +484,7 @@ namespace afung.MangaWeb3.Server
         {
             MangaJson obj = new MangaJson();
             obj.id = Id;
-            obj.title = Meta.Title;
+            obj.title = Title;
             obj.collection = ParentCollection.Name;
             obj.path = MangaPath;
             obj.type = MangaType;
@@ -468,7 +497,7 @@ namespace afung.MangaWeb3.Server
         {
             AdminMangaMetaJson obj = new AdminMangaMetaJson();
             obj.author = Meta.Author;
-            obj.title = Meta.Title;
+            obj.title = Title;
             obj.volume = Meta.Volume;
             obj.series = Meta.Series;
             obj.year = Meta.Year;
@@ -479,8 +508,10 @@ namespace afung.MangaWeb3.Server
 
         public void UpdateMeta(AdminMangaMetaJson obj)
         {
+            Title = Utility.Remove4PlusBytesUtf8Chars(obj.title);
             Meta.Update(obj);
             UpdateTags(obj.tags);
+            Save();
         }
 
         public static MangaListItemJson[] ToListItemJsonArray(Manga[] mangas)
@@ -532,6 +563,10 @@ namespace afung.MangaWeb3.Server
             foreach (string rawTag in tags)
             {
                 string tag = Utility.Remove4PlusBytesUtf8Chars(rawTag);
+                if (tag.Length > 100)
+                {
+                    tag = tag.Substring(0, 100);
+                }
 
                 if (!oldTags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
                 {

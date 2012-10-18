@@ -19,6 +19,8 @@ class Collection
     public var Public(default, null):Bool;
     
     public var AutoAdd(default, null):Bool;
+    
+    private static var cache:IntHash<Collection> = new IntHash<Collection>();
 
     private function new()
     {
@@ -37,12 +39,21 @@ class Collection
     
     private static function FromData(data:Hash<Dynamic>):Collection
     {
-        var collection:Collection = new Collection();
-        collection.Id = Std.parseInt(data.get("id"));
+        var id:Int = Std.parseInt(data.get("id"));
+        var collection:Collection;
+        if ((collection = cache.get(id)) != null)
+        {
+            return collection;
+        }
+        
+        collection = new Collection();
+        collection.Id = id;
         collection.Name = Std.string(data.get("name"));
         collection.Path = Std.string(data.get("path"));
         collection.Public = Std.parseInt(data.get("public")) == 1;
         collection.AutoAdd = Std.parseInt(data.get("autoadd")) == 1;
+        
+        cache.set(collection.Id, collection);
         return collection;
     }
     
@@ -63,6 +74,11 @@ class Collection
     
     public static function GetById(id:Int):Collection
     {
+        if (cache.exists(id))
+        {
+            return cache.get(id);
+        }
+        
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", "`id`=" + Database.Quote(Std.string(id)));
         
         if (resultSet.length > 0)
@@ -178,6 +194,8 @@ class Collection
             data.set("id", Id);
             Database.Replace("collection", data);
         }
+        
+        cache.set(Id, this);
     }
     
     public function ToJson():CollectionJson

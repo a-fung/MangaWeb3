@@ -29,6 +29,46 @@ namespace afung.MangaWeb3.Server.Handler
                 return;
             }
 
+            if (request.meta.author.Length > 100)
+            {
+                request.meta.author = request.meta.author.Substring(0, 100);
+            }
+
+            if (request.meta.title.Length > 100)
+            {
+                request.meta.title = request.meta.title.Substring(0, 100);
+            }
+
+            if (request.meta.series.Length > 100)
+            {
+                request.meta.series = request.meta.series.Substring(0, 100);
+            }
+
+            if (request.meta.publisher.Length > 100)
+            {
+                request.meta.publisher = request.meta.publisher.Substring(0, 100);
+            }
+
+            if (request.meta.volume < -1)
+            {
+                request.meta.volume = -1;
+            }
+
+            if (request.meta.volume > 999999999)
+            {
+                request.meta.volume = 999999999;
+            }
+
+            if (request.meta.year < -1)
+            {
+                request.meta.year = -1;
+            }
+
+            if (request.meta.year > 9999)
+            {
+                request.meta.year = 9999;
+            }
+
             manga.UpdateMeta(request.meta);
             ajax.ReturnJson(new JsonResponse());
         }

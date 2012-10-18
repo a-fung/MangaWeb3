@@ -26,12 +26,6 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
-        public string Title
-        {
-            get;
-            private set;
-        }
-
         public int Volume
         {
             get;
@@ -66,10 +60,6 @@ namespace afung.MangaWeb3.Server
             MangaMeta newMeta = new MangaMeta();
             newMeta.ParentManga = manga;
 
-            string title = manga.MangaPath.Substring(0, manga.MangaPath.LastIndexOf("."));
-            title = title.Substring(title.LastIndexOf("\\") + 1);
-            newMeta.Title = title.Length > 100 ? title.Substring(0, 100) : title;
-
             newMeta.Author = newMeta.Series = newMeta.Publisher = string.Empty;
             newMeta.Volume = newMeta.Year = -1;
 
@@ -80,7 +70,6 @@ namespace afung.MangaWeb3.Server
         {
             MangaMeta newMeta = new MangaMeta();
             newMeta.Id = Convert.ToInt32(data["id"]);
-            newMeta.Title = Convert.ToString(data["title"]);
             newMeta.Author = Convert.ToString(data["author"]);
             newMeta.Series = Convert.ToString(data["series"]);
             newMeta.Publisher = Convert.ToString(data["publisher"]);
@@ -108,7 +97,6 @@ namespace afung.MangaWeb3.Server
             Dictionary<string, object> data = new Dictionary<string, object>();
             data.Add("mid", ParentManga.Id);
             data.Add("author", Author);
-            data.Add("title", Title);
             data.Add("volume", Volume);
             data.Add("series", Series);
             data.Add("year", Year);
@@ -128,7 +116,6 @@ namespace afung.MangaWeb3.Server
         public void Update(AdminMangaMetaJson obj)
         {
             Author = Utility.Remove4PlusBytesUtf8Chars(obj.author);
-            Title = Utility.Remove4PlusBytesUtf8Chars(obj.title);
             Volume = obj.volume;
             Series = Utility.Remove4PlusBytesUtf8Chars(obj.series);
             Year = obj.year;
