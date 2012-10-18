@@ -23,16 +23,19 @@ namespace afung.MangaWeb3.Server.Provider
 
             try
             {
-                using (SevenZipExtractor extractor = new SevenZipExtractor(path))
+                using (SevenZipFile sevenZipFile = new SevenZipFile(path))
                 {
-                    foreach (string fileName in extractor.ArchiveFileNames)
+                    lock (sevenZipFile.Extractor)
                     {
-                        string extension = Utility.GetExtension(fileName).ToLowerInvariant();
-
-                        if (Constants.FileExtensionsInArchive.Contains(extension))
+                        foreach (string fileName in sevenZipFile.Extractor.ArchiveFileNames)
                         {
-                            validFile = true;
-                            break;
+                            string extension = Utility.GetExtension(fileName).ToLowerInvariant();
+
+                            if (Constants.FileExtensionsInArchive.Contains(extension))
+                            {
+                                validFile = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -51,15 +54,18 @@ namespace afung.MangaWeb3.Server.Provider
 
             try
             {
-                using (SevenZipExtractor extractor = new SevenZipExtractor(path))
+                using (SevenZipFile sevenZipFile = new SevenZipFile(path))
                 {
-                    foreach (string fileName in extractor.ArchiveFileNames)
+                    lock (sevenZipFile.Extractor)
                     {
-                        string extension = Utility.GetExtension(fileName).ToLowerInvariant();
-
-                        if (Constants.FileExtensionsInArchive.Contains(extension))
+                        foreach (string fileName in sevenZipFile.Extractor.ArchiveFileNames)
                         {
-                            content.Add(fileName);
+                            string extension = Utility.GetExtension(fileName).ToLowerInvariant();
+
+                            if (Constants.FileExtensionsInArchive.Contains(extension))
+                            {
+                                content.Add(fileName);
+                            }
                         }
                     }
                 }
@@ -77,20 +83,23 @@ namespace afung.MangaWeb3.Server.Provider
         {
             try
             {
-                using (SevenZipExtractor extractor = new SevenZipExtractor(path))
+                using (SevenZipFile sevenZipFile = new SevenZipFile(path))
                 {
-                    outputPath = outputPath + Utility.GetExtension(content).ToLowerInvariant();
-                    using (FileStream outputFile = File.Open(outputPath, FileMode.Create))
+                    lock (sevenZipFile.Extractor)
                     {
-                        try
+                        outputPath = outputPath + Utility.GetExtension(content).ToLowerInvariant();
+                        using (FileStream outputFile = File.Open(outputPath, FileMode.Create))
                         {
-                            extractor.ExtractFile(content, outputFile);
-                        }
-                        catch (SevenZipException sevenZipException)
-                        {
-                            InvalidOperationException exception = new InvalidOperationException("Read Archive file error", sevenZipException);
-                            exception.Data["manga_status"] = 3;
-                            throw exception;
+                            try
+                            {
+                                sevenZipFile.Extractor.ExtractFile(content, outputFile);
+                            }
+                            catch (SevenZipException sevenZipException)
+                            {
+                                InvalidOperationException exception = new InvalidOperationException("Read Archive file error", sevenZipException);
+                                exception.Data["manga_status"] = 3;
+                                throw exception;
+                            }
                         }
                     }
                 }

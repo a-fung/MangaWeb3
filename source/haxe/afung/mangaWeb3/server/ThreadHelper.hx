@@ -138,7 +138,7 @@ class ThreadHelper
     
     private static function ProcessAutoAddStage2(parameters:Array<Dynamic>):Void
     {
-        untyped __call__("set_time_limit", 60);
+        untyped __call__("set_time_limit", 120);
         Settings.LastAutoAddProcessTime = Math.round(Date.now().getTime() / 1000);
         var directoriesToRead:Array<Array<Dynamic>> = parameters[0];
         var currentDirectory:Array<Dynamic> = parameters[1];

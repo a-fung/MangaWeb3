@@ -156,6 +156,7 @@
     <Compile Include="Provider\IMangaProvider.cs" />
     <Compile Include="Provider\PdfProvider.cs" />
     <Compile Include="Provider\RarProvider.cs" />
+    <Compile Include="Provider\SevenZipFile.cs" />
     <Compile Include="Provider\SevenZipProvider.cs" />
     <Compile Include="Provider\ZipProvider.cs" />
     <Compile Include="ServerAjax.aspx.cs">

@@ -86,9 +86,10 @@ class RarProvider implements IMangaProvider
             }
             
             rar.close();
-            var nContent:NativeArray = Lib.toPhpArray(content);
-            untyped __call__("natsort", nContent);
-            content = cast Lib.toHaxeArray(nContent);
+            content.sort(function(a:String, b:String):Int
+            {
+                return untyped __call__("strnatcmp", a, b);
+            });
         }
         
         return content;
