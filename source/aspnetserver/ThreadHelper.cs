@@ -54,6 +54,7 @@ namespace afung.MangaWeb3.Server
             catch (Exception ex)
             {
                 Utility.TryLogError(ex);
+                throw;
             }
         }
 

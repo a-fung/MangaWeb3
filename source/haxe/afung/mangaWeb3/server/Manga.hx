@@ -283,7 +283,7 @@ class Manga
                 {
                     var title:String = Database.Quote(filter.search.title);
                     title = StringTools.replace(StringTools.replace(title.substr(1, title.length - 2), "\\", "\\\\"), "%", "\\%");
-                    metaSelect += " AND `title` LIKE '%" + title + "%'";
+                    where += " AND `title` LIKE '%" + title + "%'";
                 }
 
                 if (filter.search.author != null && filter.search.author != "")

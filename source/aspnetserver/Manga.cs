@@ -320,7 +320,7 @@ namespace afung.MangaWeb3.Server
                     {
                         string title = Database.Quote(filter.search.title);
                         title = title.Substring(1, title.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
-                        metaSelect += " AND `title` LIKE '%" + title + "%'";
+                        where += " AND `title` LIKE '%" + title + "%'";
                     }
 
                     if (filter.search.author != null && filter.search.author != "")

@@ -83,6 +83,7 @@ namespace afung.MangaWeb3.Server.Provider
             catch (Exception ex)
             {
                 Utility.TryLogError(ex);
+                throw;
             }
         }
 

@@ -55,6 +55,7 @@ class AjaxBase
         catch (ex:Dynamic)
         {
             Utility.TryLogError(ex);
+            throw ex;
         }
     }
     
