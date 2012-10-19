@@ -21,6 +21,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
             jQuery.Select(".nav-admin-mangas", attachedObject).Click(NavMangasClicked);
             jQuery.Select(".nav-admin-users", attachedObject).Click(NavUsersClicked);
             jQuery.Select(".nav-admin-settings", attachedObject).Click(NavSettingsClicked);
+            jQuery.Select(".nav-admin-errorlogs", attachedObject).Click(NavErrorLogsClicked);
             jQuery.Select(".nav-admin-logout", attachedObject).Click(NavLogoutClicked);
         }
 
@@ -51,6 +52,16 @@ namespace afung.MangaWeb3.Client.Admin.Module
             if (this.GetType() != typeof(AdminUsersModule))
             {
                 AdminUsersModule.Instance.Show(null);
+            }
+        }
+
+        private void NavErrorLogsClicked(jQueryEvent e)
+        {
+            e.PreventDefault();
+
+            if (this.GetType() != typeof(AdminErrorLogsModule))
+            {
+                AdminErrorLogsModule.Instance.Show(null);
             }
         }
 

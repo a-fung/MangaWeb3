@@ -13,6 +13,9 @@ namespace afung.MangaWeb3.Client.Admin
         {
             Template.Templates[Template.Templates.Length] = "admin";
             Template.TemplateIds["admin"] = new string[] {
+                "admin-stacktrace-modal",
+                "admin-errorlogs-trow",
+                "admin-errorlogs-module",
                 "admin-manga-filter-modal",
                 "admin-manga-meta-modal",
                 "admin-manga-edit-path-modal",

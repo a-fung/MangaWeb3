@@ -60,9 +60,11 @@
     <Compile Include="Modal\AdminMangaFilterModal.cs" />
     <Compile Include="Modal\AdminMangaMetaModal.cs" />
     <Compile Include="Modal\AdminSettingsModal.cs" />
+    <Compile Include="Modal\AdminStackTraceModal.cs" />
     <Compile Include="Modal\AdminUserAddModal.cs" />
     <Compile Include="Modal\AdminUserCollectionsModal.cs" />
     <Compile Include="Module\AdminCollectionsModule.cs" />
+    <Compile Include="Module\AdminErrorLogsModule.cs" />
     <Compile Include="Module\AdminMangasModule.cs" />
     <Compile Include="Module\AdminModule.cs" />
     <Compile Include="Module\AdminModuleBase.cs" />

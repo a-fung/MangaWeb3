@@ -59,23 +59,30 @@ namespace afung.MangaWeb3.Server.Provider
 
         private static void TryDisposeExtractor(object data)
         {
-            Thread.Sleep(60000);
-
-            string path = (string)data;
-            ExtractorUseCountPair extractor;
-
-            if (extractors.TryGetValue(path, out extractor) && extractor.Count == 0 && !extractor.Disposed && DateTime.Now - extractor.LastUsedTime >= TimeSpan.FromSeconds(60))
+            try
             {
-                lock (lockObject)
-                {
-                    if (extractor.Count == 0 && !extractor.Disposed)
-                    {
-                        extractor.Dispose();
-                        extractors.Remove(path);
-                    }
+                Thread.Sleep(60000);
 
-                    extractor = null;
+                string path = (string)data;
+                ExtractorUseCountPair extractor;
+
+                if (extractors.TryGetValue(path, out extractor) && extractor.Count == 0 && !extractor.Disposed && DateTime.Now - extractor.LastUsedTime >= TimeSpan.FromSeconds(60))
+                {
+                    lock (lockObject)
+                    {
+                        if (extractor.Count == 0 && !extractor.Disposed)
+                        {
+                            extractor.Dispose();
+                            extractors.Remove(path);
+                        }
+
+                        extractor = null;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Utility.TryLogError(ex);
             }
         }
 

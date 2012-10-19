@@ -248,5 +248,33 @@ namespace afung.MangaWeb3.Server
 
             return c;
         }
+
+        public static void TryLogError(Exception ex)
+        {
+            if (!Config.IsInstalled)
+            {
+                return;
+            }
+
+            try
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                data["time"] = ToUnixTimeStamp(DateTime.Now);
+                data["type"] = ex.GetType().FullName.Length > 50 ? ex.GetType().FullName.Substring(0, 50) : ex.GetType().FullName;
+                data["source"] = ex.Source.Length > 100 ? ex.Source.Substring(0, 100) : ex.Source;
+                data["message"] = ex.Message.Length > 200 ? ex.Message.Substring(0, 200) : ex.Message;
+                data["stacktrace"] = ex.StackTrace;
+                Database.Insert("errorlog", data);
+            }
+            catch (Exception)
+            {
+                // ignore error here...
+            }
+
+            if (ex.InnerException != null)
+            {
+                TryLogError(ex);
+            }
+        }
     }
 }

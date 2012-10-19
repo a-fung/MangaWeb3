@@ -14,42 +14,51 @@ namespace afung.MangaWeb3.Server
 
         public static void Run(string methodName, params object[] parameters)
         {
-            Thread newThread = null;
+            Thread newThread = new Thread(InnerRun);
+            newThread.Priority = ThreadPriority.BelowNormal;
+            newThread.Start(new object[] { methodName, parameters });
+        }
 
-            switch (methodName)
+        public static void InnerRun(object data)
+        {
+            try
             {
-                case "MangaProcessFile":
-                    newThread = new Thread(MangaProcessFile);
-                    break;
-                case "MangaCacheLimit":
-                    newThread = new Thread(MangaCacheLimit);
-                    break;
-                case "MangaPreprocessFiles":
-                    newThread = new Thread(MangaPreprocessFiles);
-                    break;
-                case "MangaPreprocessParts":
-                    newThread = new Thread(MangaPreprocessParts);
-                    break;
-                case "ProcessAutoAddStage1":
-                    newThread = new Thread(ProcessAutoAddStage1);
-                    break;
-                case "ProcessAutoAddStage2":
-                    newThread = new Thread(ProcessAutoAddStage2);
-                    break;
-                default:
-                    return;
+                object[] parameters = (object[])data;
+                string methodName = (string)parameters[0];
+                parameters = (object[])parameters[1];
+
+                switch (methodName)
+                {
+                    case "MangaProcessFile":
+                        MangaProcessFile(parameters);
+                        break;
+                    case "MangaCacheLimit":
+                        MangaCacheLimit(parameters);
+                        break;
+                    case "MangaPreprocessFiles":
+                        MangaPreprocessFiles(parameters);
+                        break;
+                    case "MangaPreprocessParts":
+                        MangaPreprocessParts(parameters);
+                        break;
+                    case "ProcessAutoAddStage1":
+                        ProcessAutoAddStage1(parameters);
+                        break;
+                    case "ProcessAutoAddStage2":
+                        ProcessAutoAddStage2(parameters);
+                        break;
+                    default:
+                        return;
+                }
             }
-
-            if (newThread != null)
+            catch (Exception ex)
             {
-                newThread.Priority = ThreadPriority.BelowNormal;
-                newThread.Start(parameters);
+                Utility.TryLogError(ex);
             }
         }
 
-        private static void MangaProcessFile(object data)
+        private static void MangaProcessFile(object[] parameters)
         {
-            object[] parameters = (object[])data;
             int id = (int)parameters[0];
             Manga manga = Manga.GetById(id);
 
@@ -59,14 +68,13 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        private static void MangaCacheLimit(object data)
+        private static void MangaCacheLimit(object[] parameters)
         {
             Manga.CacheLimit();
         }
 
-        private static void MangaPreprocessFiles(object data)
+        private static void MangaPreprocessFiles(object[] parameters)
         {
-            object[] parameters = (object[])data;
             int id = (int)parameters[0];
             Manga manga = Manga.GetById(id);
 
@@ -89,9 +97,8 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        private static void MangaPreprocessParts(object data)
+        private static void MangaPreprocessParts(object[] parameters)
         {
-            object[] parameters = (object[])data;
             int id = (int)parameters[0];
             Manga manga = Manga.GetById(id);
 
@@ -102,7 +109,7 @@ namespace afung.MangaWeb3.Server
             }
         }
 
-        private static void ProcessAutoAddStage1(object data)
+        private static void ProcessAutoAddStage1(object[] parameters)
         {
             if (Utility.ToUnixTimeStamp(DateTime.UtcNow) - Settings.LastAutoAddProcessTime < 300)
             {
@@ -160,9 +167,8 @@ namespace afung.MangaWeb3.Server
             ThreadHelper.Run("ProcessAutoAddStage2", files.ToArray(), 0);
         }
 
-        private static void ProcessAutoAddStage2(object data)
+        private static void ProcessAutoAddStage2(object[] parameters)
         {
-            object[] parameters = (object[])data;
             Settings.LastAutoAddProcessTime = Utility.ToUnixTimeStamp(DateTime.UtcNow);
             object[][] files = (object[][])parameters[0];
             int index = (int)parameters[1];
@@ -185,8 +191,9 @@ namespace afung.MangaWeb3.Server
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Utility.TryLogError(ex);
             }
 
             ThreadHelper.Run("ProcessAutoAddStage2", files, index + 1);

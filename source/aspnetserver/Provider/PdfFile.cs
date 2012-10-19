@@ -60,23 +60,30 @@ namespace afung.MangaWeb3.Server.Provider
 
         private static void TryDisposeWrapper(object data)
         {
-            Thread.Sleep(60000);
-
-            string path = (string)data;
-            WrapperUseCountPair wrapper;
-
-            if (wrappers.TryGetValue(path, out wrapper) && wrapper.Count == 0 && !wrapper.Disposed && DateTime.Now - wrapper.LastUsedTime >= TimeSpan.FromSeconds(60))
+            try
             {
-                lock (lockObject)
-                {
-                    if (wrapper.Count == 0 && !wrapper.Disposed)
-                    {
-                        wrapper.Dispose();
-                        wrappers.Remove(path);
-                    }
+                Thread.Sleep(60000);
 
-                    wrapper = null;
+                string path = (string)data;
+                WrapperUseCountPair wrapper;
+
+                if (wrappers.TryGetValue(path, out wrapper) && wrapper.Count == 0 && !wrapper.Disposed && DateTime.Now - wrapper.LastUsedTime >= TimeSpan.FromSeconds(60))
+                {
+                    lock (lockObject)
+                    {
+                        if (wrapper.Count == 0 && !wrapper.Disposed)
+                        {
+                            wrapper.Dispose();
+                            wrappers.Remove(path);
+                        }
+
+                        wrapper = null;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Utility.TryLogError(ex);
             }
         }
 

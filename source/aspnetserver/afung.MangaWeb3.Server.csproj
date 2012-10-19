@@ -125,6 +125,7 @@
     <Compile Include="Handler\AdminCollectionsUsersDeleteRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionsUsersGetRequestHandler.cs" />
     <Compile Include="Handler\AdminCollectionUserAddRequestHandler.cs" />
+    <Compile Include="Handler\AdminErrorLogsGetRequestHandler.cs" />
     <Compile Include="Handler\AdminFinderRequestHandler.cs" />
     <Compile Include="Handler\AdminMangaAddRequestHandler.cs" />
     <Compile Include="Handler\AdminMangaEditPathRequestHandler.cs" />

@@ -57,6 +57,8 @@
     <Compile Include="AdminCollectionsUsersGetRequest.cs" />
     <Compile Include="AdminCollectionsUsersGetResponse.cs" />
     <Compile Include="AdminCollectionUserAddRequest.cs" />
+    <Compile Include="AdminErrorLogsGetRequest.cs" />
+    <Compile Include="AdminErrorLogsGetResponse.cs" />
     <Compile Include="AdminFinderRequest.cs" />
     <Compile Include="AdminFinderResponse.cs" />
     <Compile Include="AdminMangaAddRequest.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="ChangePasswordResponse.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="CollectionUserJson.cs" />
+    <Compile Include="ErrorLogJson.cs" />
     <Compile Include="FolderJson.cs" />
     <Compile Include="FolderRequest.cs" />
     <Compile Include="FolderResponse.cs" />

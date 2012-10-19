@@ -27,6 +27,10 @@
             <i class="icon-check"></i>
             <span class="msg msg-Settings"></span>
         </a></li>
+        <li><a href="#" class="nav-admin-errorlogs">
+            <i class="icon-th-list"></i>
+            <span class="msg msg-ErrorLogs"></span>
+        </a></li>
         <li class="pull-right"><a href="#" class="nav-admin-logout">
             <i class="icon-off"></i>
             <span class="msg msg-Logout"></span>
@@ -114,6 +118,10 @@
         <li><a href="#" class="nav-admin-settings">
             <i class="icon-check"></i>
             <span class="msg msg-Settings"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-errorlogs">
+            <i class="icon-th-list"></i>
+            <span class="msg msg-ErrorLogs"></span>
         </a></li>
         <li class="pull-right"><a href="#" class="nav-admin-logout">
             <i class="icon-off"></i>
@@ -213,6 +221,10 @@
         <li><a href="#" class="nav-admin-settings">
             <i class="icon-check"></i>
             <span class="msg msg-Settings"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-errorlogs">
+            <i class="icon-th-list"></i>
+            <span class="msg msg-ErrorLogs"></span>
         </a></li>
         <li class="pull-right"><a href="#" class="nav-admin-logout">
             <i class="icon-off"></i>
@@ -690,4 +702,65 @@
         <input class="val val-Apply btn btn-primary" id="admin-manga-filter-submit" type="submit" />
     </div>
     </form>
+</div>
+<div class="container" id="admin-errorlogs-module">
+    <ul class="nav nav-pills nav-admin">
+        <li><a href="#" class="nav-admin-collections">
+            <i class="icon-inbox"></i>
+            <span class="msg msg-Collections"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-mangas">
+            <i class="icon-book"></i>
+            <span class="msg msg-Mangas"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-users">
+            <i class="icon-user"></i>
+            <span class="msg msg-Users"></span>
+        </a></li>
+        <li><a href="#" class="nav-admin-settings">
+            <i class="icon-check"></i>
+            <span class="msg msg-Settings"></span>
+        </a></li>
+        <li class="active"><a href="#" class="nav-admin-errorlogs">
+            <i class="icon-th-list"></i>
+            <span class="msg msg-ErrorLogs"></span>
+        </a></li>
+        <li class="pull-right"><a href="#" class="nav-admin-logout">
+            <i class="icon-off"></i>
+            <span class="msg msg-Logout"></span>
+        </a></li>
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="msg msg-Time"></th>
+                <th class="msg msg-Type"></th>
+                <th class="msg msg-Source"></th>
+                <th class="msg msg-Message"></th>
+                <th class="msg msg-StackTrace text-center td-small"></th>
+            </tr>
+        </thead>
+        <tbody id="admin-errorlogs-tbody">
+            <tr class="vmiddle" id="admin-errorlogs-trow">
+                <td class="break-word admin-errorlogs-time"></td>
+                <td class="break-word"><code class="admin-errorlogs-type"></code></td>
+                <td class="break-word admin-errorlogs-source"></td>
+                <td class="break-word admin-errorlogs-message"></td>
+                <td class="text-center td-small"><a href="#" class="msg msg-Show btn admin-errorlogs-stacktrace"></a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row row-after-table">
+        <div class="span12" id="admin-errorlogs-pagination">
+        </div>
+    </div>
+</div>
+<div id="admin-stacktrace-modal" class="modal hide fade">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3 class="msg msg-StackTrace"></h3>
+    </div>
+    <div class="modal-body">
+        <pre id="admin-stacktrace-body"></pre>
+    </div>
 </div>

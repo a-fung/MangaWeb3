@@ -28,30 +28,37 @@ namespace afung.MangaWeb3.Server
 
         protected void HandleRequest(HandlerBase[] handlers)
         {
-            string jsonString = RequestParams("j");
-            if (String.IsNullOrEmpty(jsonString) || String.IsNullOrEmpty(jsonString.Trim()))
+            try
             {
-                BadRequest();
-                return;
-            }
-
-            JsonRequest jsonRequest = Utility.ParseJson<JsonRequest>(jsonString);
-            if (jsonRequest == null || String.IsNullOrEmpty(jsonRequest.type))
-            {
-                BadRequest();
-                return;
-            }
-
-            foreach (HandlerBase handler in handlers)
-            {
-                if (handler.CanHandle(jsonRequest))
+                string jsonString = RequestParams("j");
+                if (String.IsNullOrEmpty(jsonString) || String.IsNullOrEmpty(jsonString.Trim()))
                 {
-                    handler.HandleRequest(jsonString, this);
+                    BadRequest();
                     return;
                 }
-            }
 
-            BadRequest();
+                JsonRequest jsonRequest = Utility.ParseJson<JsonRequest>(jsonString);
+                if (jsonRequest == null || String.IsNullOrEmpty(jsonRequest.type))
+                {
+                    BadRequest();
+                    return;
+                }
+
+                foreach (HandlerBase handler in handlers)
+                {
+                    if (handler.CanHandle(jsonRequest))
+                    {
+                        handler.HandleRequest(jsonString, this);
+                        return;
+                    }
+                }
+
+                BadRequest();
+            }
+            catch (Exception ex)
+            {
+                Utility.TryLogError(ex);
+            }
         }
 
         private string RequestParams(string name)
@@ -64,7 +71,6 @@ namespace afung.MangaWeb3.Server
             Response.StatusCode = 400;
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write("Bad Request");
-            Response.End();
         }
 
         public void Unauthorized()
@@ -72,7 +78,6 @@ namespace afung.MangaWeb3.Server
             Response.StatusCode = 401;
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write("Unauthorized");
-            Response.End();
         }
 
         public void Redirect(string url)
@@ -88,7 +93,6 @@ namespace afung.MangaWeb3.Server
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.ContentType = "application/json";
             Response.Write(output);
-            Response.End();
         }
 
         protected abstract void PageLoad();

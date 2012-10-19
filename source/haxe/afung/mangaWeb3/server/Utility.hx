@@ -1,5 +1,6 @@
 package afung.mangaWeb3.server;
 
+import php.Exception;
 import php.Lib;
 import php.NativeArray;
 
@@ -197,5 +198,49 @@ class Utility
             buf.addChar("\n".code);
         }
         return buf.toString();
+    }
+    
+    public static function TryLogError(ex:Dynamic)
+    {
+        if (!Config.IsInstalled)
+        {
+            return;
+        }
+        
+        try
+        {
+            var data:Hash<Dynamic> = new Hash<Dynamic>();
+            var value:String;
+            data.set("time", Math.round(Date.now().getTime() / 1000));
+            value = Type.getClassName(Type.getClass(ex));
+            if (value == "")
+            {
+                value = untyped __call__("get_class", ex);
+                if (value == "")
+                {
+                    value = untyped __call__("gettype", ex);
+                }
+            }
+            
+            data.set("type", value.length > 50 ? value.substr(0, 50) : value);
+            if (untyped __php__("$ex instanceof Exception"))
+            {
+                data.set("source", (value = ex.getFile() + ":" + Std.string(ex.getLine())).length > 100 ? value.substr(0, 100) : value);
+                data.set("message", (value = ex.getMessage()).length > 200 ? value.substr(0, 200) : value);
+                data.set("stacktrace", ex.getTraceAsString());
+            }
+            else
+            {
+                data.set("source", "");
+                data.set("message", Std.string(ex));
+                data.set("stacktrace", "");
+            }
+            
+            Database.Insert("errorlog", data);
+        }
+        catch (ex2:Dynamic)
+        {
+            // ignore error here...
+        }
     }
 }

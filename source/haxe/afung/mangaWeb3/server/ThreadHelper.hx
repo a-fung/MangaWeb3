@@ -175,8 +175,9 @@ class ThreadHelper
                             }
                         }
                     }
-                    catch (e:Exception)
+                    catch (ex:Exception)
                     {
+                        Utility.TryLogError(ex);
                     }
                 }
             }

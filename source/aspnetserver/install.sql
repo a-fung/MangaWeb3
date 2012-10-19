@@ -104,3 +104,16 @@ CREATE TABLE `user` (
   KEY `username` (`username`),
   KEY `admin` (`admin`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `errorlog`;
+CREATE TABLE `errorlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `time` int(11) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `source` varchar(100) NOT NULL,
+  `message` varchar(200) NOT NULL,
+  `stacktrace` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `time` (`time`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
