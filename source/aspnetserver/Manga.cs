@@ -499,7 +499,7 @@ namespace afung.MangaWeb3.Server
                 data.Add("content", Utility.JsonEncodeArchiveContent(_content));
                 Database.Replace("mangacontent", data);
             }
-            
+
             if (_dimensions != null)
             {
                 data = new Dictionary<string, object>();
@@ -731,9 +731,22 @@ namespace afung.MangaWeb3.Server
             {
                 tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
             }
-            catch (InvalidOperationException exception)
+            catch (FileNotFoundException ex)
             {
-                this.Status = (int)exception.Data["manga_status"];
+                Utility.TryLogError(ex);
+                this.Status = 1;
+                this.Save();
+            }
+            catch (MangaWrongFormatException ex)
+            {
+                Utility.TryLogError(ex);
+                this.Status = 2;
+                this.Save();
+            }
+            catch (MangaContentMismatchException ex)
+            {
+                Utility.TryLogError(ex);
+                this.Status = 3;
                 this.Save();
             }
 

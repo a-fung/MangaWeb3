@@ -58,12 +58,17 @@ namespace afung.MangaWeb3.Server.Provider
 
         public string OutputFile(string path, string page, string outputPath)
         {
-            int pageInt, numberOfPages = -1;
-            if (!int.TryParse(page, out pageInt) || pageInt < 1 || pageInt > (numberOfPages = GetNumberOfPages(path)))
+            int pageInt = int.Parse(page);
+            int numberOfPages = GetNumberOfPages(path);
+
+            if (numberOfPages == 0)
             {
-                InvalidOperationException exception = new InvalidOperationException("Read PDF file error");
-                exception.Data["manga_status"] = File.Exists(path) ? (numberOfPages == 0 ? 2 : 3) : 1;
-                throw exception;
+                throw new MangaWrongFormatException(path);
+            }
+
+            if (pageInt < 1 || pageInt > numberOfPages)
+            {
+                throw new MangaContentMismatchException(path);
             }
 
             outputPath = outputPath + ".png";
@@ -78,6 +83,7 @@ namespace afung.MangaWeb3.Server.Provider
                         pictureBox.Width = pictureBox.Height = 3000;
                         pdfFile.Wrapper.FitToHeight(pictureBox.Handle);
                         pictureBox.Width = pdfFile.Wrapper.PageWidth;
+                        pictureBox.Height = pdfFile.Wrapper.PageHeight;
                         pdfFile.Wrapper.RenderPage(pictureBox.Handle);
 
                         using (Bitmap image = new Bitmap(pdfFile.Wrapper.PageWidth, pdfFile.Wrapper.PageHeight))

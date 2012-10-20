@@ -1,5 +1,8 @@
 package afung.mangaWeb3.server.provider;
 
+import afung.mangaWeb3.server.FileNotFoundException;
+import afung.mangaWeb3.server.MangaContentMismatchException;
+import afung.mangaWeb3.server.MangaWrongFormatException;
 import afung.mangaWeb3.server.Settings;
 import afung.mangaWeb3.server.Utility;
 import haxe.Utf8;
@@ -84,6 +87,11 @@ class ZipProvider implements IMangaProvider
     
     public function OutputFile(path:String, content:String, outputPath:String):String
     {
+        if (!FileSystem.exists(path))
+        {
+            throw new FileNotFoundException(path);
+        }
+        
         var zip:ZipArchive = new ZipArchive();
         var result:Dynamic = zip.open(path);
         content = Utf8.decode(content);
@@ -99,7 +107,7 @@ class ZipProvider implements IMangaProvider
             {
                 zip.unchangeAll();
                 zip.close();
-                throw new Exception("Read Zip file error", 1003);
+                throw new MangaContentMismatchException(path);
             }
             
             zip.unchangeAll();
@@ -107,7 +115,7 @@ class ZipProvider implements IMangaProvider
         }
         else
         {
-            throw new Exception("Read Zip file error", FileSystem.exists(path) ? 1002 : 1001);
+            throw new MangaWrongFormatException(path);
         }
         
         return outputPath;

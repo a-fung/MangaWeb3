@@ -701,18 +701,23 @@ class Manga
         {
             tempFilePath = Provider.OutputFile(MangaPath, content, Utility.GetTempFileName());
         }
-        catch (exception:Exception)
+        catch (ex:FileNotFoundException)
         {
-            var code:Int = exception.getCode();
-            if (code % 1000 == 1)
-            {
-                this.Status = code - 1000;
-                this.Save();
-            }
-            else
-            {
-                throw exception;
-            }
+            Utility.TryLogError(ex);
+            this.Status = 1;
+            this.Save();
+        }
+        catch (ex:MangaWrongFormatException)
+        {
+            Utility.TryLogError(ex);
+            this.Status = 2;
+            this.Save();
+        }
+        catch (ex:MangaContentMismatchException)
+        {
+            Utility.TryLogError(ex);
+            this.Status = 3;
+            this.Save();
         }
         
         return tempFilePath;

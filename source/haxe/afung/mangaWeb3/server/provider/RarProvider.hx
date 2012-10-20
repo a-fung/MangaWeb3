@@ -1,5 +1,8 @@
 package afung.mangaWeb3.server.provider;
 
+import afung.mangaWeb3.server.FileNotFoundException;
+import afung.mangaWeb3.server.MangaContentMismatchException;
+import afung.mangaWeb3.server.MangaWrongFormatException;
 import afung.mangaWeb3.server.Settings;
 import php.Exception;
 import php.FileSystem;
@@ -97,6 +100,11 @@ class RarProvider implements IMangaProvider
     
     public function OutputFile(path:String, content:String, outputPath:String):String
     {
+        if (!FileSystem.exists(path))
+        {
+            throw new FileNotFoundException(path);
+        }
+        
         var rar:RarArchive = RarArchive.open(path);
         var result:Dynamic = rar;
         
@@ -112,14 +120,14 @@ class RarProvider implements IMangaProvider
             else
             {
                 rar.close();
-                throw new Exception("Read RAR file error", 1003);
+                throw new MangaContentMismatchException(path);
             }
             
             rar.close();
         }
         else
         {
-            throw new Exception("Read RAR file error", FileSystem.exists(path) ? 1002 : 1001);
+            throw new MangaWrongFormatException(path);
         }
         
         return outputPath;

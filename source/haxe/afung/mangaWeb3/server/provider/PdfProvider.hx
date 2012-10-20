@@ -1,5 +1,8 @@
 package afung.mangaWeb3.server.provider;
 
+import afung.mangaWeb3.server.FileNotFoundException;
+import afung.mangaWeb3.server.MangaContentMismatchException;
+import afung.mangaWeb3.server.MangaWrongFormatException;
 import afung.mangaWeb3.server.Settings;
 import php.Exception;
 import php.FileSystem;
@@ -59,11 +62,22 @@ class PdfProvider implements IMangaProvider
     
     public function OutputFile(path:String, page:String, outputPath:String):String
     {
-        var pageInt:Int = Std.parseInt(page);
-        var numberOfPages:Int;
-        if (pageInt < 1 || pageInt > (numberOfPages = GetNumberOfPages(path)))
+        if (!FileSystem.exists(path))
         {
-            throw new Exception("Read PDF file error", FileSystem.exists(path) ? (numberOfPages == 0 ? 1002 : 1003) : 1001);
+            throw new FileNotFoundException(path);
+        }
+        
+        var pageInt:Int = Std.parseInt(page);
+        var numberOfPages:Int = GetNumberOfPages(path);
+        
+        if (numberOfPages == 0)
+        {
+            throw new MangaWrongFormatException(path);
+        }
+
+        if (pageInt < 1 || pageInt > numberOfPages)
+        {
+            throw new MangaContentMismatchException(path);
         }
         
         outputPath = outputPath + ".png";
@@ -72,7 +86,7 @@ class PdfProvider implements IMangaProvider
         
         if (exitCode != 0)
         {
-            throw new Exception("Read PDF file error", 1002);
+            throw new MangaWrongFormatException(path);
         }
         
         return outputPath;

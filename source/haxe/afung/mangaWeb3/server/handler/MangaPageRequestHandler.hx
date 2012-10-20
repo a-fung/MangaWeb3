@@ -37,6 +37,12 @@ class MangaPageRequestHandler extends HandlerBase
 
         if (manga.Status == 0)
         {
+            if (request.page < 0 || request.page >= manga.NumberOfPages)
+            {
+                ajax.BadRequest();
+                return;
+            }
+            
             var page:String = manga.GetPage(request.page, request.width, request.height, request.part);
             response.status = page == null ? 1 : 0;
             response.url = page;
