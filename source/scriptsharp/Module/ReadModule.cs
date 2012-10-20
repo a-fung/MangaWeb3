@@ -98,11 +98,11 @@ namespace afung.MangaWeb3.Client.Module
                 _loadingPage = value;
                 if (value)
                 {
-                    jQuery.Select("#read-loading").AddClass("fade").AddClass("in");
+                    jQuery.Select("#read-loading").AddClass("fade in");
                 }
                 else
                 {
-                    jQuery.Select("#read-loading").AddClass("fade").RemoveClass("in");
+                    jQuery.Select("#read-loading").RemoveClass("in");
                 }
             }
         }
