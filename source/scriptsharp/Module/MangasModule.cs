@@ -189,10 +189,17 @@ namespace afung.MangaWeb3.Client.Module
                     };
                     break;
                 case -1:
-                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    List<MangaListItemJson> list1 = (List<MangaListItemJson>)(object)items;
+                    List<MangaListItemJson> list2 = new List<MangaListItemJson>();
+                    int index;
+                    while (list1.Count > 0)
                     {
-                        return Math.Round(Math.Random() * 2 - 1);
-                    };
+                        index = Math.Floor(Math.Random() * list1.Count);
+                        list2.Add(list1[index]);
+                        list1.RemoveAt(index);
+                    }
+
+                    items = (MangaListItemJson[])(object)list2;
                     break;
                 default:
                     break;

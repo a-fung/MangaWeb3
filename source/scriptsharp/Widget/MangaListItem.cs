@@ -111,14 +111,18 @@ namespace afung.MangaWeb3.Client.Widget
             }
         }
 
-        public void Load()
+        public bool Load()
         {
             if (attachedObject.Is(":visible"))
             {
                 coverRequest = new MangaListItemCoverRequest();
                 coverRequest.id = data.id;
                 Request.Send(coverRequest, CoverRequestSuccess);
+
+                return true;
             }
+
+            return false;
         }
 
         [AlternateSignature]
@@ -377,9 +381,13 @@ namespace afung.MangaWeb3.Client.Widget
                         return;
                     }
 
-                    loadQueue.Dequeue().Load();
+                    MangaListItem item;
+                    while ((item = loadQueue.Dequeue()) != null && !item.Load())
+                    {
+                    }
+
                     LoadNextItem();
-                },
+                }, 
                 1000);
         }
     }
