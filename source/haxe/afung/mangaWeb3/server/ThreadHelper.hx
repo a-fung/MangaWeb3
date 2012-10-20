@@ -59,6 +59,8 @@ class ThreadHelper
                 ProcessAutoAddStage1(parameters);
             case "ProcessAutoAddStage2":
                 ProcessAutoAddStage2(parameters);
+            case "CollectionProcessFolderCache":
+                CollectionProcessFolderCache(parameters);
             default:
                 return;
         }
@@ -172,6 +174,7 @@ class ThreadHelper
                             if (path.indexOf(collection.Path) == 0 && Manga.CheckMangaType(path) != -1)
                             {
                                 Manga.CreateNewManga(collection, path).Save();
+                                collection.MarkFolderCacheDirty();
                             }
                         }
                     }
@@ -193,6 +196,17 @@ class ThreadHelper
             filesInCurrentDirectory = FileSystem.readDirectory(directoryPath);
             
             ThreadHelper.Run("ProcessAutoAddStage2", [directoriesToRead, currentDirectory, filesInCurrentDirectory]);
+        }
+    }
+    
+    private static function CollectionProcessFolderCache(parameters:Array<Dynamic>):Void
+    {
+        var id:Int = parameters[0];
+        var collection:Collection = Collection.GetById(id);
+        
+        if (collection != null)
+        {
+            collection.ProcessFolderCache();
         }
     }
 }

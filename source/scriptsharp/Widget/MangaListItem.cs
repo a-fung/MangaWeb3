@@ -351,7 +351,7 @@ namespace afung.MangaWeb3.Client.Widget
                 sendingReadReqeust = true;
 
                 MangaReadRequest request = new MangaReadRequest();
-                request.id = coverRequest.id;
+                request.id = data.id;
                 request.nextId = nextMangaId;
                 Request.Send(request, ReadRequestSuccess, ReadRequestFailure);
             }
@@ -387,7 +387,7 @@ namespace afung.MangaWeb3.Client.Widget
                     }
 
                     LoadNextItem();
-                }, 
+                },
                 1000);
         }
     }

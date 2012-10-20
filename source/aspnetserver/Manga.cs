@@ -465,6 +465,7 @@ namespace afung.MangaWeb3.Server
             InnerRefreshContent();
             Status = 0;
             Save();
+            ParentCollection.MarkFolderCacheDirty();
         }
 
         public void Save()
@@ -581,6 +582,7 @@ namespace afung.MangaWeb3.Server
             UpdateTags(new string[0]);
             Database.Delete("manga", "`id`=" + Database.Quote(Id.ToString()));
             Database.Delete("meta", "`mid`=" + Database.Quote(Id.ToString()));
+            ParentCollection.MarkFolderCacheDirty();
         }
 
         public static string[] GetAllTags()

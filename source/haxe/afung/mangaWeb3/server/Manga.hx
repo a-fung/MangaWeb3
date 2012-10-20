@@ -433,6 +433,7 @@ class Manga
         InnerRefreshContent();
         Status = 0;
         Save();
+        ParentCollection.MarkFolderCacheDirty();
     }
     
     public function Save():Void
@@ -549,6 +550,7 @@ class Manga
         UpdateTags([]);
         Database.Delete("manga", "`id`=" + Database.Quote(Std.string(Id)));
         Database.Delete("meta", "`mid`=" + Database.Quote(Std.string(Id)));
+        ParentCollection.MarkFolderCacheDirty();
     }
     
     public static function GetAllTags():Array<String>

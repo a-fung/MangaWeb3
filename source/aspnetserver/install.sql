@@ -5,9 +5,17 @@ CREATE TABLE `collection` (
   `public` tinyint(1) NOT NULL,
   `path` varchar(330) NOT NULL,
   `autoadd` tinyint(1) NOT NULL,
+  `cachestatus` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `public` (`public`),
   KEY `autoadd` (`autoadd`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `foldercache`;
+CREATE TABLE `foldercache` (
+  `id` int(11) NOT NULL,
+  `content` longtext NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `collectionuser`;

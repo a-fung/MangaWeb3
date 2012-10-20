@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Html;
 using System.Runtime.CompilerServices;
 using afung.MangaWeb3.Client.Widget;
 using afung.MangaWeb3.Common;
@@ -48,13 +49,25 @@ namespace afung.MangaWeb3.Client.Module
         private extern void FolderRequestSuccess(JsonResponse response);
         private void FolderRequestSuccess(FolderResponse response)
         {
-            jQuery.Select("#folders-area").Children().Remove();
-            if (response.folders.Length == 0)
+            if (response.status == 0)
             {
-                Template.Get("client", "noitem-well", true).AppendTo(jQuery.Select("#folders-area"));
-            }
+                jQuery.Select("#folders-area").Children().Remove();
+                if (response.folders.Length == 0)
+                {
+                    Template.Get("client", "noitem-well", true).AppendTo(jQuery.Select("#folders-area"));
+                }
 
-            new FoldersWidget(jQuery.Select("#folders-area"), response.folders, "");
+                new FoldersWidget(jQuery.Select("#folders-area"), response.folders, "");
+            }
+            else
+            {
+                Window.SetTimeout(
+                    delegate
+                    {
+                        Request.Send(new FolderRequest(), FolderRequestSuccess);
+                    },
+                    1000);
+            }
         }
     }
 }

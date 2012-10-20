@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using afung.MangaWeb3.Common;
+using Newtonsoft.Json;
 
 namespace afung.MangaWeb3.Server
 {
@@ -40,6 +41,32 @@ namespace afung.MangaWeb3.Server
             private set;
         }
 
+        public int CacheStatus
+        {
+            get;
+            private set;
+        }
+
+        private string _folderCache;
+
+        public string FolderCache
+        {
+            get
+            {
+                if (CacheStatus == 0)
+                {
+                    if (_folderCache == null)
+                    {
+                        _folderCache = Convert.ToString(Database.Select("foldercache", "`id`='" + Id + "'")[0]["content"]);
+                    }
+
+                    return _folderCache;
+                }
+
+                return null;
+            }
+        }
+
         private static Dictionary<int, Collection> cache = new Dictionary<int, Collection>();
 
         private Collection()
@@ -54,6 +81,7 @@ namespace afung.MangaWeb3.Server
             newCollection.Path = path;
             newCollection.Public = public_;
             newCollection.AutoAdd = autoadd;
+            newCollection.CacheStatus = 1;
             return newCollection;
         }
 
@@ -72,6 +100,7 @@ namespace afung.MangaWeb3.Server
             collection.Path = Convert.ToString(data["path"]);
             collection.Public = Convert.ToInt32(data["public"]) == 1;
             collection.AutoAdd = Convert.ToInt32(data["autoadd"]) == 1;
+            collection.CacheStatus = Convert.ToInt32(data["cachestatus"]);
 
             cache[collection.Id] = collection;
             return collection;
@@ -206,6 +235,7 @@ namespace afung.MangaWeb3.Server
             data.Add("path", Path);
             data.Add("public", Public ? 1 : 0);
             data.Add("autoadd", AutoAdd ? 1 : 0);
+            data.Add("cachestatus", CacheStatus);
 
             if (Id == -1)
             {
@@ -244,9 +274,9 @@ namespace afung.MangaWeb3.Server
 
         public static void DeleteCollections(int[] ids)
         {
+            Manga.DeleteMangasFromCollectionIds(ids);
             Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
             Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
-            Manga.DeleteMangasFromCollectionIds(ids);
         }
 
         public static void SetCollectionsPublic(int[] ids, bool public_)
@@ -275,6 +305,68 @@ namespace afung.MangaWeb3.Server
             where += " AND (" + collectionSelect + ")";
 
             return Database.Select("collection", where, null, null, "`id`").Length > 0;
+        }
+
+        public void MarkFolderCacheDirty()
+        {
+            CacheStatus = 1;
+            Save();
+        }
+
+        public void ProcessFolderCache()
+        {
+            if (CacheStatus == 0 || CacheStatus == 2)
+            {
+                return;
+            }
+
+            CacheStatus = 2;
+            Save();
+
+            FolderJson folder = new FolderJson();
+            folder.name = Name;
+            folder.subfolders = new FolderJson[] { };
+            int collectionPathLength = Path.Length;
+            string separator = "\\";
+
+            Dictionary<string, FolderJson> folderDictionary = new Dictionary<string, FolderJson>();
+            Dictionary<string, object>[] resultSet = Database.Select("manga", "`cid`=" + Database.Quote(Id.ToString()), null, null, "`path`");
+            folderDictionary[""] = folder;
+
+            foreach (Dictionary<string, object> result in resultSet)
+            {
+                string path = Convert.ToString(result["path"]).Substring(collectionPathLength);
+                int i = 0, j = 0;
+
+                while ((i = path.IndexOf(separator, j)) != -1)
+                {
+                    string relativePath = path.Substring(0, i);
+                    if (!folderDictionary.ContainsKey(relativePath.ToLowerInvariant()))
+                    {
+                        FolderJson subfolder = new FolderJson();
+                        subfolder.name = path.Substring(j, i - j);
+                        subfolder.subfolders = new FolderJson[] { };
+                        folderDictionary[relativePath.ToLowerInvariant()] = subfolder;
+
+                        int k;
+                        FolderJson parentFolder = folderDictionary[(k = relativePath.LastIndexOf(separator)) == -1 ? "" : relativePath.Substring(0, k).ToLowerInvariant()];
+                        FolderJson[] newSubfolders = new FolderJson[parentFolder.subfolders.Length + 1];
+                        Array.Copy(parentFolder.subfolders, newSubfolders, parentFolder.subfolders.Length);
+                        newSubfolders[parentFolder.subfolders.Length] = subfolder;
+                        parentFolder.subfolders = newSubfolders;
+                    }
+
+                    j = i + 1;
+                }
+            }
+
+            Dictionary<string, object> cacheData = new Dictionary<string, object>();
+            cacheData.Add("id", Id);
+            cacheData.Add("content", _folderCache = JsonConvert.SerializeObject(folder));
+            Database.Replace("foldercache", cacheData);
+
+            CacheStatus = 0;
+            Save();
         }
     }
 }

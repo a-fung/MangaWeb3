@@ -53,6 +53,7 @@ namespace afung.MangaWeb3.Server.Handler
                 {
                     response.status = 0;
                     collection.Name = request.name;
+                    collection.MarkFolderCacheDirty();
                     collection.Save();
                 }
             }

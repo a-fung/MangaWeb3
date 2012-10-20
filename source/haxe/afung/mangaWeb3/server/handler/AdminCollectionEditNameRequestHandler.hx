@@ -57,6 +57,7 @@ class AdminCollectionEditNameRequestHandler extends HandlerBase
             {
                 response.status = 0;
                 collection.Name = request.name;
+                collection.MarkFolderCacheDirty();
                 collection.Save();
             }
         }

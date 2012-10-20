@@ -1,6 +1,8 @@
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.CollectionJson;
+import afung.mangaWeb3.common.FolderJson;
+import haxe.Json;
 import php.FileSystem;
 
 /**
@@ -20,6 +22,27 @@ class Collection
     
     public var AutoAdd(default, null):Bool;
     
+    public var CacheStatus(default, null):Int;
+    
+    private var _folderCache:String;
+    
+    public var FolderCache(get_FolderCache, never):String;
+    
+    private function get_FolderCache():String
+    {
+        if (CacheStatus == 0)
+        {
+            if (_folderCache == null)
+            {
+                _folderCache = Std.string(Database.Select("foldercache", "`id`='" + Id + "'")[0].get("content"));
+            }
+
+            return _folderCache;
+        }
+
+        return null;
+    }
+    
     private static var cache:IntHash<Collection> = new IntHash<Collection>();
 
     private function new()
@@ -34,6 +57,7 @@ class Collection
         newCollection.Path = path;
         newCollection.Public = public_;
         newCollection.AutoAdd = autoadd;
+        newCollection.CacheStatus = 1;
         return newCollection;
     }
     
@@ -52,6 +76,7 @@ class Collection
         collection.Path = Std.string(data.get("path"));
         collection.Public = Std.parseInt(data.get("public")) == 1;
         collection.AutoAdd = Std.parseInt(data.get("autoadd")) == 1;
+        collection.CacheStatus = Std.parseInt(data.get("cachestatus"));
         
         cache.set(collection.Id, collection);
         return collection;
@@ -184,6 +209,7 @@ class Collection
         data.set("path", Path);
         data.set("public", Public ? 1 : 0);
         data.set("autoadd", AutoAdd ? 1 : 0);
+        data.set("cachestatus", CacheStatus);
 
         if (Id == -1)
         {
@@ -222,9 +248,9 @@ class Collection
     
     public static function DeleteCollections(ids:Array<Int>):Void
     {
+        Manga.DeleteMangasFromCollectionIds(ids);
         Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
         Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
-        Manga.DeleteMangasFromCollectionIds(ids);
     }
     
     public static function SetCollectionsPublic(ids:Array<Int>, public_:Bool):Void
@@ -253,5 +279,64 @@ class Collection
         where += " AND (" + collectionSelect + ")";
 
         return Database.Select("collection", where, null, null, "`id`").length > 0;
+    }
+    
+    public function MarkFolderCacheDirty():Void
+    {
+        CacheStatus = 1;
+        Save();
+    }
+    
+    public function ProcessFolderCache():Void
+    {
+        if (CacheStatus == 0 || CacheStatus == 2)
+        {
+            return;
+        }
+
+        CacheStatus = 2;
+        Save();
+        
+        var folder:FolderJson = new FolderJson();
+        folder.name = Name;
+        folder.subfolders = [];
+        var collectionPathLength:Int = Path.length;
+        var separator:String = "/";
+
+        var folderDictionary:Hash<FolderJson> = new Hash<FolderJson>();
+        var resultSet:Array<Hash<Dynamic>> = Database.Select("manga", "`cid`=" + Database.Quote(Std.string(Id)), null, null, "`path`");
+        folderDictionary.set("", folder);
+        
+        for (result in resultSet)
+        {
+            var path:String = Std.string(result.get("path")).substr(collectionPathLength);
+            var i:Int = 0, j:Int = 0;
+            
+            while ((i = path.indexOf(separator, j)) != -1)
+            {
+                var relativePath = path.substr(0, i);
+                if (!folderDictionary.exists(relativePath))
+                {
+                    var subfolder:FolderJson = new FolderJson();
+                    subfolder.name = path.substr(j, i - j);
+                    subfolder.subfolders = [];
+                    folderDictionary.set(relativePath, subfolder);
+                    
+                    var k:Int;
+                    var parentFolder:FolderJson = folderDictionary.get((k = relativePath.lastIndexOf(separator)) == -1 ? "" : relativePath.substr(0, k));
+                    parentFolder.subfolders.push(subfolder);
+                }
+                
+                j = i + 1;
+            }
+        }
+        
+        var cacheData:Hash<Dynamic> = new Hash<Dynamic>();
+        cacheData.set("id", Id);
+        cacheData.set("content", _folderCache = Json.stringify(folder));
+        Database.Replace("foldercache", cacheData);
+
+        CacheStatus = 0;
+        Save();
     }
 }

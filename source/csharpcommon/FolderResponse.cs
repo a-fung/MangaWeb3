@@ -8,6 +8,7 @@ namespace afung.MangaWeb3.Common
 {
     public class FolderResponse : JsonResponse
     {
+        public int status;
         public FolderJson[] folders;
     }
 }

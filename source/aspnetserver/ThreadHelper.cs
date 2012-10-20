@@ -47,6 +47,9 @@ namespace afung.MangaWeb3.Server
                     case "ProcessAutoAddStage2":
                         ProcessAutoAddStage2(parameters);
                         break;
+                    case "CollectionProcessFolderCache":
+                        CollectionProcessFolderCache(parameters);
+                        break;
                     default:
                         return;
                 }
@@ -189,6 +192,7 @@ namespace afung.MangaWeb3.Server
                     if (path.IndexOf(collection.Path, StringComparison.InvariantCultureIgnoreCase) == 0 && Manga.CheckMangaType(path) != -1)
                     {
                         Manga.CreateNewManga(collection, path).Save();
+                        collection.MarkFolderCacheDirty();
                     }
                 }
             }
@@ -198,6 +202,17 @@ namespace afung.MangaWeb3.Server
             }
 
             ThreadHelper.Run("ProcessAutoAddStage2", files, index + 1);
+        }
+
+        private static void CollectionProcessFolderCache(object[] parameters)
+        {
+            int id = (int)parameters[0];
+            Collection collection = Collection.GetById(id);
+
+            if (collection != null)
+            {
+                collection.ProcessFolderCache();
+            }
         }
     }
 }
