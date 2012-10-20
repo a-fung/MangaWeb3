@@ -57,7 +57,10 @@ namespace afung.MangaWeb3.Client.Module
 
         protected override void OnShow()
         {
-            ChangePage(currentPage);
+            if (items.Length > 0)
+            {
+                ChangePage(currentPage);
+            }
         }
 
         [AlternateSignature]

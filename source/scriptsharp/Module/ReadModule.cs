@@ -82,10 +82,30 @@ namespace afung.MangaWeb3.Client.Module
         private Dictionary<int, MangaPage> loadedPages = new Dictionary<int, MangaPage>();
         private Dictionary<int, MangaPage> insertedPages = new Dictionary<int, MangaPage>();
         private Queue<MangaPage> loadQueue = new Queue<MangaPage>();
-        private bool loadingPage;
         private Date lastRefreshMangaArea;
         private int pagesHead = 0;
         private int pagesTail = 0;
+
+        private bool _loadingPage;
+        private bool LoadingPage
+        {
+            get
+            {
+                return _loadingPage;
+            }
+            set
+            {
+                _loadingPage = value;
+                if (value)
+                {
+                    jQuery.Select("#read-loading").AddClass("fade").AddClass("in");
+                }
+                else
+                {
+                    jQuery.Select("#read-loading").AddClass("fade").RemoveClass("in");
+                }
+            }
+        }
 
         private int _offset;
         private int Offset
@@ -437,7 +457,7 @@ namespace afung.MangaWeb3.Client.Module
 
         private void LoadNextPage()
         {
-            if (loadingPage)
+            if (LoadingPage)
             {
                 return;
             }
@@ -448,10 +468,10 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             MangaPage page = loadQueue.Dequeue();
-            loadingPage = true;
+            LoadingPage = true;
             page.Load(delegate
             {
-                loadingPage = false;
+                LoadingPage = false;
                 LoadNextPage();
                 RefreshMangaArea();
             });
@@ -482,7 +502,7 @@ namespace afung.MangaWeb3.Client.Module
                 UnloadPage(key);
             }
 
-            loadingPage = false;
+            LoadingPage = false;
         }
 
         private MangaPage GetMangaPage(int page)
