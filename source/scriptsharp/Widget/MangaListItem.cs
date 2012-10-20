@@ -23,13 +23,17 @@ namespace afung.MangaWeb3.Client.Widget
 
         private static bool sendingReadReqeust = false;
 
+        private static Queue<MangaListItem> loadQueue = new Queue<MangaListItem>();
+        private static SelfLimitingTimeout loadNextTimeout = new SelfLimitingTimeout();
+        private static Dictionary<int, string> coverCache = new Dictionary<int, string>();
+
         public MangaListItem(jQueryObject parent, MangaListItemJson data, int nextMangaId)
         {
             attachedObject = Template.Get("client", "mangas-list-item", true).AddClass("fade").AppendTo(parent);
             jQuery.Select(".mangas-list-item-title", attachedObject).Text(data.title);
             jQuery.Select(".mangas-list-item-pages", attachedObject).Text(data.pages.ToString());
             coverLoaded = false;
-            coverRequestDelay = 0;
+            coverRequestDelay = 500;
             this.nextMangaId = nextMangaId;
             this.data = data;
 
@@ -88,51 +92,97 @@ namespace afung.MangaWeb3.Client.Widget
                         attachedObject.AddClass("in"),
                         delegate
                         {
-                            coverRequest = new MangaListItemCoverRequest();
-                            coverRequest.id = data.id;
-                            Request.Send(coverRequest, CoverRequestSuccess);
+                            TryLoadFromCache();
                         });
                 },
                 1);
+        }
+
+        private void TryLoadFromCache()
+        {
+            if (coverCache.ContainsKey(data.id))
+            {
+                LoadCover(coverCache[data.id]);
+            }
+            else
+            {
+                loadQueue.Enqueue(this);
+                LoadNextItem();
+            }
+        }
+
+        public void Load()
+        {
+            if (attachedObject.Is(":visible"))
+            {
+                coverRequest = new MangaListItemCoverRequest();
+                coverRequest.id = data.id;
+                Request.Send(coverRequest, CoverRequestSuccess);
+            }
         }
 
         [AlternateSignature]
         private extern void CoverRequestSuccess(JsonResponse response);
         private void CoverRequestSuccess(MangaImageResponse response)
         {
-            if (!attachedObject.Is(":visible"))
+            if (response.status == 0)
             {
-                // do nothing
+                coverCache[data.id] = response.url;
+                if (attachedObject.Is(":visible"))
+                {
+                    LoadCover(coverCache[data.id]);
+                }
             }
-            else if (response.status == 0)
+            else if (response.status == 1 && attachedObject.Is(":visible"))
             {
-                jQueryObject wrap = jQuery.Select(".mangas-list-item-thumbnail-wrap", attachedObject);
-                wrap.Height(wrap.GetHeight());
-                jQueryObject placeholderThumbnail = jQuery.Select(".mangas-list-item-thumbnail", attachedObject);
-                jQueryObject thumbnail = placeholderThumbnail.Clone();
-                thumbnail.Attribute("src", response.url).One(
-                    "load",
-                    delegate(jQueryEvent e)
+                Window.SetTimeout(
+                    delegate
                     {
-                        if (!attachedObject.Is(":visible"))
-                        {
-                            thumbnail.Attribute("src", "");
-                            return;
-                        }
+                        Request.Send(coverRequest, CoverRequestSuccess);
+                    },
+                    coverRequestDelay = Math.Round(coverRequestDelay * 1.1));
+            }
+        }
 
-                        thumbnail.AddClass("fade");
-                        Utility.OnTransitionEnd(
-                            placeholderThumbnail.AddClass("fade"),
-                            delegate
+        private void LoadCover(string coverUrl)
+        {
+            jQueryObject wrap = jQuery.Select(".mangas-list-item-thumbnail-wrap", attachedObject);
+            wrap.Height(wrap.GetHeight());
+            jQueryObject placeholderThumbnail = jQuery.Select(".mangas-list-item-thumbnail", attachedObject);
+            jQueryObject thumbnail = placeholderThumbnail.Clone();
+            thumbnail.Attribute("src", coverUrl).One(
+                "load",
+                delegate(jQueryEvent e)
+                {
+                    if (!attachedObject.Is(":visible"))
+                    {
+                        thumbnail.Attribute("src", "");
+                        return;
+                    }
+
+                    thumbnail.AddClass("fade");
+                    Utility.OnTransitionEnd(
+                        placeholderThumbnail.AddClass("fade"),
+                        delegate
+                        {
+                            if (!attachedObject.Is(":visible"))
                             {
-                                if (!attachedObject.Is(":visible"))
+                                thumbnail.Attribute("src", "");
+                                return;
+                            }
+
+                            placeholderThumbnail.After(thumbnail);
+                            placeholderThumbnail.Remove();
+
+                            Action wrapChangeHeight = null;
+                            wrapChangeHeight = delegate
+                            {
+                                if (thumbnail.GetHeight() < 1)
                                 {
-                                    thumbnail.Attribute("src", "");
+                                    Window.SetTimeout(wrapChangeHeight, 100);
                                     return;
                                 }
 
-                                placeholderThumbnail.After(thumbnail);
-                                placeholderThumbnail.Remove();
                                 Utility.OnTransitionEnd(
                                     wrap.AddClass("height-transition").Height(thumbnail.GetHeight()),
                                     delegate
@@ -147,18 +197,11 @@ namespace afung.MangaWeb3.Client.Widget
                                                 jQuery.Select(".mangas-list-item-details-btn", attachedObject).RemoveClass("disabled");
                                             });
                                     });
-                            });
-                    });
-            }
-            else if (response.status == 1)
-            {
-                Window.SetTimeout(
-                    delegate
-                    {
-                        Request.Send(coverRequest, CoverRequestSuccess);
-                    },
-                    coverRequestDelay = coverRequestDelay + 1000);
-            }
+                            };
+
+                            wrapChangeHeight();
+                        });
+                });
         }
 
         private void DetailsButtonClicked(jQueryEvent e)
@@ -175,7 +218,7 @@ namespace afung.MangaWeb3.Client.Widget
                         buttonP.Remove();
 
                         MangaListItemDetailsRequest request = new MangaListItemDetailsRequest();
-                        request.id = coverRequest.id;
+                        request.id = data.id;
                         Request.Send(request, DetailsRequestSuccess);
                     });
             }
@@ -322,6 +365,22 @@ namespace afung.MangaWeb3.Client.Widget
         {
             sendingReadReqeust = false;
             ErrorModal.ShowError(error.ToString());
+        }
+
+        private static void LoadNextItem()
+        {
+            loadNextTimeout.Start(
+                delegate
+                {
+                    if (loadQueue.Count < 1)
+                    {
+                        return;
+                    }
+
+                    loadQueue.Dequeue().Load();
+                    LoadNextItem();
+                },
+                1000);
         }
     }
 }
