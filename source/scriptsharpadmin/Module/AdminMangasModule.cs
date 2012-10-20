@@ -71,6 +71,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
             }
 
             Request.Send(request, GetRequestSuccess);
+            jQuery.Select("#admin-mangas-tbody").Children().Remove();
+            Template.Get("admin", "loading-trow", true).AppendTo(jQuery.Select("#admin-mangas-tbody"));
         }
 
         [AlternateSignature]
@@ -100,6 +102,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             currentPage = page;
             jQuery.Select("#admin-mangas-tbody").Children().Remove();
+            if (mangas.Length == 0)
+            {
+                Template.Get("admin", "noitem-trow", true).AppendTo(jQuery.Select("#admin-mangas-tbody"));
+            }
+
             for (int i = (page - 1) * Environment.ElementsPerPage; i < mangas.Length && i < page * Environment.ElementsPerPage; i++)
             {
                 jQueryObject row = Template.Get("admin", "admin-mangas-trow", true).AppendTo(jQuery.Select("#admin-mangas-tbody"));

@@ -121,6 +121,7 @@ namespace afung.MangaWeb3.Client.Module
                 MangaListRequest request = new MangaListRequest();
                 request.filter = filter;
                 Request.Send(request, MangaListRequestSuccess);
+                Template.Get("client", "loading-well", true).AppendTo(jQuery.Select("#mangas-loading"));
             };
 
             if (!attachedObject.Is(":visible"))
@@ -152,12 +153,20 @@ namespace afung.MangaWeb3.Client.Module
         private extern void MangaListRequestSuccess(JsonResponse response);
         private void MangaListRequestSuccess(MangaListResponse response)
         {
+            jQuery.Select("#mangas-loading").Children().Remove();
+
             items = response.items;
 
             CompareCallback<MangaListItemJson> compare = null;
 
             switch (Settings.Sort)
             {
+                case 0:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return a.title.CompareTo(b.title);
+                    };
+                    break;
                 case 1:
                     compare = delegate(MangaListItemJson a, MangaListItemJson b)
                     {
@@ -182,7 +191,6 @@ namespace afung.MangaWeb3.Client.Module
                         return Math.Round(Math.Random() * 2 - 1);
                     };
                     break;
-                case 0:
                 default:
                     break;
             }
@@ -217,6 +225,15 @@ namespace afung.MangaWeb3.Client.Module
             Action onReady = delegate
             {
                 mangaList.Children().Remove();
+                if (items.Length == 0)
+                {
+                    jQueryObject noItem = Template.Get("client", "noitem-well", true).AppendTo(mangaList);
+                    if (currentFolder == "")
+                    {
+                        Template.Get("client", "noguest-warning", true).AppendTo(noItem);
+                    }
+                }
+
                 for (int i = (page - 1) * Environment.ElementsPerPage; i < items.Length && i < page * Environment.ElementsPerPage; i++)
                 {
                     if (j % Environment.MangaListItemPerRow == 0)

@@ -59,6 +59,11 @@ namespace afung.MangaWeb3.Client.Admin.Module
         {
             currentPage = page;
             jQuery.Select("#admin-users-tbody").Children().Remove();
+            if (users.Length == 0)
+            {
+                Template.Get("admin", "noitem-trow", true).AppendTo(jQuery.Select("#admin-users-tbody"));
+            }
+
             for (int i = (page - 1) * Environment.ElementsPerPage; i < users.Length && i < page * Environment.ElementsPerPage; i++)
             {
                 jQueryObject row = Template.Get("admin", "admin-users-trow", true).AppendTo(jQuery.Select("#admin-users-tbody"));
@@ -89,6 +94,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
         public void Refresh()
         {
             Request.Send(new AdminUsersGetRequest(), GetRequestSuccess);
+            jQuery.Select("#admin-users-tbody").Children().Remove();
+            Template.Get("admin", "loading-trow", true).AppendTo(jQuery.Select("#admin-users-tbody"));
         }
 
         [AlternateSignature]

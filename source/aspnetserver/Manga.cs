@@ -562,7 +562,6 @@ namespace afung.MangaWeb3.Server
                 objs.Add(manga.ToMangaListItemJson());
             }
 
-            objs.Sort((a, b) => Utility.StrCmpLogicalW(a.title, b.title));
             return objs.ToArray();
         }
 

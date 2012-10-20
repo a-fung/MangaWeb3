@@ -530,10 +530,6 @@ class Manga
             objs.push(manga.ToMangaListItemJson());
         }
         
-        objs.sort(function(a:MangaListItemJson, b:MangaListItemJson):Int
-        {
-            return untyped __call__("strnatcmp", a.title, b.title);
-        });
         return objs;
     }
     

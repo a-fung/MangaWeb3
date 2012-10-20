@@ -31,6 +31,7 @@ namespace afung.MangaWeb3.Client.Module
         {
             jQuery.Select("#folders-all-folders-btn").Click(AllFoldersButtonClicked);
             Request.Send(new FolderRequest(), FolderRequestSuccess);
+            Template.Get("client", "loading-well", true).AppendTo(jQuery.Select("#folders-area"));
         }
 
         protected override void OnShow()
@@ -48,6 +49,11 @@ namespace afung.MangaWeb3.Client.Module
         private void FolderRequestSuccess(FolderResponse response)
         {
             jQuery.Select("#folders-area").Children().Remove();
+            if (response.folders.Length == 0)
+            {
+                Template.Get("client", "noitem-well", true).AppendTo(jQuery.Select("#folders-area"));
+            }
+
             new FoldersWidget(jQuery.Select("#folders-area"), response.folders, "");
         }
     }
