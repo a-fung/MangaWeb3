@@ -21,6 +21,11 @@ namespace afung.MangaWeb3.Client.Widget
             string separator = Environment.ServerType == ServerType.AspNet ? "\\" : "/";
             attachedObject = Template.Get("client", "folders-table", true).AppendTo(parent).Attribute("data-path", folderPath);
 
+            ((List<FolderJson>)(object)folders).Sort(delegate(FolderJson a, FolderJson b)
+            {
+                return a.name.CompareTo(b.name); ;
+            });
+
             foreach (FolderJson folder in folders)
             {
                 string subfolderPath = folderPath + separator + folder.name;

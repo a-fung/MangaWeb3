@@ -76,6 +76,9 @@ namespace afung.MangaWeb3.Server.Install.Handler
             Settings.UsePdf = request.pdf;
             Settings.AllowGuest = true;
             Settings.LastAutoAddProcessTime = 0;
+            Settings.MangaPagePreProcessCount = 5;
+            Settings.MangaPagePreProcessDelay = 300;
+            Settings.MangaCacheSizeLimit = 200;
 
             // Delete Install files
             string[] filesToDelete = 

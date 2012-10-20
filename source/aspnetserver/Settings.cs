@@ -151,6 +151,42 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        public static int MangaPagePreProcessCount
+        {
+            get
+            {
+                return int.Parse(GetSettings()["mangapage_preprocess_count"]);
+            }
+            set
+            {
+                SetSetting("mangapage_preprocess_count", value.ToString());
+            }
+        }
+
+        public static int MangaPagePreProcessDelay
+        {
+            get
+            {
+                return int.Parse(GetSettings()["mangapage_preprocess_delay"]);
+            }
+            set
+            {
+                SetSetting("mangapage_preprocess_delay", value.ToString());
+            }
+        }
+
+        public static int MangaCacheSizeLimit
+        {
+            get
+            {
+                return int.Parse(GetSettings()["mangacache_sizelimit"]);
+            }
+            set
+            {
+                SetSetting("mangacache_sizelimit", value.ToString());
+            }
+        }
+
         private static bool? _sevenZipConfigOk = null;
 
         private static bool SevenZipConfigOk

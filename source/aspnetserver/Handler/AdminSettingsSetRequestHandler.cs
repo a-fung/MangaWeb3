@@ -28,6 +28,21 @@ namespace afung.MangaWeb3.Server.Handler
             Settings.UseRar = request.rar;
             Settings.UsePdf = request.pdf;
 
+            if (request.preprocessCount >= 0 && request.preprocessCount < 100)
+            {
+                Settings.MangaPagePreProcessCount = request.preprocessCount;
+            }
+
+            if (request.preprocessDelay >= 0 && request.preprocessDelay < 100000)
+            {
+                Settings.MangaPagePreProcessDelay = request.preprocessDelay;
+            }
+
+            if (request.cacheLimit >= 50 && request.cacheLimit < 100000)
+            {
+                Settings.MangaCacheSizeLimit = request.cacheLimit;
+            }
+
             ajax.ReturnJson(new JsonResponse());
         }
     }

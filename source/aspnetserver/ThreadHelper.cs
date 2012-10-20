@@ -86,15 +86,17 @@ namespace afung.MangaWeb3.Server
             {
                 int page = (int)parameters[1];
 
-                for (int i = 1; i <= 5; i++)
+                for (int i = 1; i <= Settings.MangaPagePreProcessCount; i++)
                 {
                     if (page + i >= 0 && page + i < manga.NumberOfPages)
                     {
+                        Thread.Sleep(Settings.MangaPagePreProcessDelay);
                         manga.GetPage(page + i, (int)parameters[2], (int)parameters[3], 0);
                     }
 
                     if (page - i >= 0 && page - i < manga.NumberOfPages)
                     {
+                        Thread.Sleep(Settings.MangaPagePreProcessDelay);
                         manga.GetPage(page - i, (int)parameters[2], (int)parameters[3], 0);
                     }
                 }

@@ -854,7 +854,7 @@ namespace afung.MangaWeb3.Server
             files.Sort((x, y) => (int)Math.Round((y.LastWriteTimeUtc - x.LastWriteTimeUtc).TotalSeconds));
 
             long totalSize = 0;
-            long sizeLimit = 209715200L; // 200 MB
+            long sizeLimit = 1048576L * Settings.MangaCacheSizeLimit; // 1048576 = 1MB
             foreach (FileInfo file in files)
             {
                 if (totalSize > sizeLimit || (totalSize += file.Length) > sizeLimit)

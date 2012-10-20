@@ -123,4 +123,43 @@ class Settings
         SetSetting("last_autoadd_time", Std.string(value));
         return value;
     }
+    
+    public static var MangaPagePreProcessCount(get_MangaPagePreProcessCount, set_MangaPagePreProcessCount):Int;
+    
+    private static function get_MangaPagePreProcessCount():Int
+    {
+        return Std.parseInt(GetSettings().get("mangapage_preprocess_count"));
+    }
+    
+    private static function set_MangaPagePreProcessCount(value:Int):Int
+    {
+        SetSetting("mangapage_preprocess_count", Std.string(value));
+        return value;
+    }
+    
+    public static var MangaPagePreProcessDelay(get_MangaPagePreProcessDelay, set_MangaPagePreProcessDelay):Int;
+    
+    private static function get_MangaPagePreProcessDelay():Int
+    {
+        return Std.parseInt(GetSettings().get("mangapage_preprocess_delay"));
+    }
+    
+    private static function set_MangaPagePreProcessDelay(value:Int):Int
+    {
+        SetSetting("mangapage_preprocess_delay", Std.string(value));
+        return value;
+    }
+    
+    public static var MangaCacheSizeLimit(get_MangaCacheSizeLimit, set_MangaCacheSizeLimit):Int;
+    
+    private static function get_MangaCacheSizeLimit():Int
+    {
+        return Std.parseInt(GetSettings().get("mangacache_sizelimit"));
+    }
+    
+    private static function set_MangaCacheSizeLimit(value:Int):Int
+    {
+        SetSetting("mangacache_sizelimit", Std.string(value));
+        return value;
+    }
 }

@@ -327,6 +327,30 @@
                     <input type="checkbox" id="admin-settings-pdf" /></label>
             </div>
         </div>
+        <div class="control-group">
+            <label class="msg msg-PreprocessCount control-label" for="admin-settings-preprocess-count"></label>
+            <div class="controls">
+                <input type="number" id="admin-settings-preprocess-count" class="input-small" maxlength="2" min="0" max="99">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-PreprocessDelay control-label" for="admin-settings-preprocess-delay"></label>
+            <div class="controls">
+                <div class="input-append">
+                    <input type="number" id="admin-settings-preprocess-delay" class="input-small" maxlength="5" min="0" max="99999">
+                    <span class="msg msg-Millisecond add-on"></span>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="msg msg-CacheLimit control-label" for="admin-settings-cachelimit"></label>
+            <div class="controls">
+                <div class="input-append">
+                    <input type="number" id="admin-settings-cachelimit" class="input-small" maxlength="5" min="50" max="99999">
+                    <span class="msg msg-MegaBytes add-on"></span>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <input class="val val-Apply btn btn-primary" id="admin-settings-submit" type="submit" />

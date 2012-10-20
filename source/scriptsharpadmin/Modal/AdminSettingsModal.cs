@@ -85,6 +85,10 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             {
                 jQuery.Select("#admin-settings-pdf").RemoveAttr("checked");
             }
+
+            jQuery.Select("#admin-settings-preprocess-count").Value(response.preprocessCount.ToString());
+            jQuery.Select("#admin-settings-preprocess-delay").Value(response.preprocessDelay.ToString());
+            jQuery.Select("#admin-settings-cachelimit").Value(response.cacheLimit.ToString());
         }
 
         private void SubmitForm(jQueryEvent e)
@@ -96,6 +100,9 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             request.zip = jQuery.Select("#admin-settings-zip").GetAttribute("checked") == "checked";
             request.rar = jQuery.Select("#admin-settings-rar").GetAttribute("checked") == "checked";
             request.pdf = jQuery.Select("#admin-settings-pdf").GetAttribute("checked") == "checked";
+            request.preprocessCount = Number.IsFinite(request.preprocessCount = int.Parse(jQuery.Select("#admin-settings-preprocess-count").GetValue())) ? request.preprocessCount : -1;
+            request.preprocessDelay = Number.IsFinite(request.preprocessDelay = int.Parse(jQuery.Select("#admin-settings-preprocess-delay").GetValue())) ? request.preprocessDelay : -1;
+            request.cacheLimit = Number.IsFinite(request.cacheLimit = int.Parse(jQuery.Select("#admin-settings-cachelimit").GetValue())) ? request.cacheLimit : -1;
 
             Request.Send(
                 request,

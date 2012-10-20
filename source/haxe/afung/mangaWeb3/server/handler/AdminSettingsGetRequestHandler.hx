@@ -2,6 +2,7 @@ package afung.mangaWeb3.server.handler;
 
 import afung.mangaWeb3.common.AdminSettingsGetRequest;
 import afung.mangaWeb3.common.AdminSettingsGetResponse;
+import afung.mangaWeb3.server.Settings;
 
 /**
  * ...
@@ -28,6 +29,9 @@ class AdminSettingsGetRequestHandler extends HandlerBase
         response.zip = Settings.UseZip;
         response.rar = Settings.UseRar;
         response.pdf = Settings.UsePdf;
+        response.preprocessCount = Settings.MangaPagePreProcessCount;
+        response.preprocessDelay = Settings.MangaPagePreProcessDelay;
+        response.cacheLimit = Settings.MangaCacheSizeLimit;
 
         ajax.ReturnJson(response);
     }

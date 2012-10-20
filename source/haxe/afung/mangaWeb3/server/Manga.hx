@@ -725,7 +725,7 @@ class Manga
     {
         if (!FileSystem.exists(outputPath))
         {
-            var lockFile:Dynamic;
+            var lockFile:Dynamic = null;
             try
             {
                 lockFile = untyped __call__("@fopen", lockPath, "x");
@@ -826,7 +826,7 @@ class Manga
         });
         
         var totalSize:Int = 0;
-        var sizeLimit:Int = 209715200; // 200 MB
+        var sizeLimit:Int = 1048576 * Settings.MangaCacheSizeLimit; // 1048576 = 1MB
         for (i in 0...files.length)
         {
             var fileStat:FileStat = files[i][1];

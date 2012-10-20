@@ -12,5 +12,8 @@ namespace afung.MangaWeb3.Common
         public bool zip;
         public bool rar;
         public bool pdf;
+        public int preprocessCount;
+        public int preprocessDelay;
+        public int cacheLimit;
     }
 }

@@ -392,7 +392,7 @@ namespace afung.MangaWeb3.Client.Widget
 
                     LoadNextItem();
                 },
-                1000);
+                350);
         }
     }
 }

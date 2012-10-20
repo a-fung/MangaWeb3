@@ -91,15 +91,17 @@ class ThreadHelper
         {
             var page:Int = parameters[1];
             
-            for (i in 1...6)
+            for (i in 1...(1 + Settings.MangaPagePreProcessCount))
             {
                 if (page + i >= 0 && page + i < manga.NumberOfPages)
                 {
+                    Sys.sleep(Settings.MangaPagePreProcessDelay / 1000);
                     manga.GetPage(page + i, parameters[2], parameters[3], 0);
                 }
 
                 if (page - i >= 0 && page - i < manga.NumberOfPages)
                 {
+                    Sys.sleep(Settings.MangaPagePreProcessDelay / 1000);
                     manga.GetPage(page - i, parameters[2], parameters[3], 0);
                 }
             }
