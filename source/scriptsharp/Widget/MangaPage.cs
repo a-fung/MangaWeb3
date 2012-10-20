@@ -20,6 +20,7 @@ namespace afung.MangaWeb3.Client.Widget
         private bool ltr;
         private int totalPages;
         private Action onload;
+        private Action onfailure;
         private jQueryObject imageObject;
         private jQueryObject imagePart1Object;
         private jQueryObject imagePart2Object;
@@ -116,7 +117,7 @@ namespace afung.MangaWeb3.Client.Widget
             unloaded = loading = loaded = false;
         }
 
-        public void Load(Action onload)
+        public void Load(Action onload, Action onfailure)
         {
             if (loaded)
             {
@@ -125,6 +126,7 @@ namespace afung.MangaWeb3.Client.Widget
             }
 
             this.onload = onload;
+            this.onfailure = onfailure;
 
             loading = true;
 
@@ -180,6 +182,7 @@ namespace afung.MangaWeb3.Client.Widget
             else
             {
                 ErrorModal.ShowError(Strings.Get("MangaNotAvailable"));
+                onfailure();
             }
         }
 
@@ -221,6 +224,7 @@ namespace afung.MangaWeb3.Client.Widget
             else
             {
                 ErrorModal.ShowError(Strings.Get("MangaNotAvailable"));
+                onfailure();
             }
         }
 
@@ -261,6 +265,7 @@ namespace afung.MangaWeb3.Client.Widget
             else
             {
                 ErrorModal.ShowError(Strings.Get("MangaNotAvailable"));
+                onfailure();
             }
         }
 

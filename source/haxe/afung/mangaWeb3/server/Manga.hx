@@ -726,7 +726,13 @@ class Manga
         if (!FileSystem.exists(outputPath))
         {
             var lockFile:Dynamic;
-            lockFile = untyped __call__("@fopen", lockPath, "x");
+            try
+            {
+                lockFile = untyped __call__("@fopen", lockPath, "x");
+            }
+            catch (ex:Dynamic)
+            {
+            }
             
             if (lockFile != false)
             {

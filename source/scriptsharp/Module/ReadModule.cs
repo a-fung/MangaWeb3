@@ -469,12 +469,17 @@ namespace afung.MangaWeb3.Client.Module
 
             MangaPage page = loadQueue.Dequeue();
             LoadingPage = true;
-            page.Load(delegate
-            {
-                LoadingPage = false;
-                LoadNextPage();
-                RefreshMangaArea();
-            });
+            page.Load(
+                delegate
+                {
+                    LoadingPage = false;
+                    LoadNextPage();
+                    RefreshMangaArea();
+                },
+                delegate
+                {
+                    Exit();
+                });
         }
 
         private void UnloadPage(int page)

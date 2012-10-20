@@ -146,6 +146,10 @@ namespace afung.MangaWeb3.Client.Widget
                     },
                     coverRequestDelay = Math.Round(coverRequestDelay * 1.1));
             }
+            else if (response.status == 2)
+            {
+                attachedObject.Remove();
+            }
         }
 
         private void LoadCover(string coverUrl)
