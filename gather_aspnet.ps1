@@ -54,7 +54,7 @@ copy source\aspnetserver\js\servertype.js $path\js
 
 
 # debug js files
-if ($true) {
+if ($false) {
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Admin.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Install.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.debug.js $path\js
@@ -95,7 +95,7 @@ copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.dll $path\bin
 
 
 # debug files
-if ($true) {
+if ($false) {
 copy source\aspnetserver\bin\*.pdb $path\bin
 copy source\aspnetserverinstall\bin\afung.MangaWeb3.Server.Install.pdb $path\bin
 }

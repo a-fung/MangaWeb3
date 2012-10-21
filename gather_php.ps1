@@ -55,7 +55,7 @@ copy source\php\js\servertype.js $path\js
 
 
 # debug js files
-if ($true) {
+if ($false) {
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Admin.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.Install.debug.js $path\js
 copy source\aspnetserver\js\afung.MangaWeb3.Client.debug.js $path\js
