@@ -676,7 +676,7 @@ namespace afung.MangaWeb3.Server
             string coverRelativePath = "cover/" + hash + ".jpg";
             string coverPath = Path.Combine(AjaxBase.DirectoryPath, "cover", hash + ".jpg");
 
-            if (File.Exists(lockPath))
+            if (CheckLockFile(lockPath))
             {
                 return null;
             }
@@ -709,7 +709,7 @@ namespace afung.MangaWeb3.Server
             string outputRelativePath = "mangacache/" + hash + ".jpg";
             string outputPath = Path.Combine(AjaxBase.DirectoryPath, "mangacache", hash + ".jpg");
 
-            if (File.Exists(lockPath))
+            if (CheckLockFile(lockPath))
             {
                 return null;
             }
@@ -722,6 +722,30 @@ namespace afung.MangaWeb3.Server
             {
                 return outputRelativePath;
             }
+        }
+
+        private bool CheckLockFile(string lockPath)
+        {
+            if (File.Exists(lockPath))
+            {
+                FileInfo lockFileInfo = new FileInfo(lockPath);
+                if (DateTime.UtcNow - lockFileInfo.CreationTimeUtc > TimeSpan.FromMinutes(3))
+                {
+                    try
+                    {
+                        lockFileInfo.Delete();
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Utility.TryLogError(ex);
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private string TryOutputFile(string content)

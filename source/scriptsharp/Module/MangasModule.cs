@@ -52,7 +52,10 @@ namespace afung.MangaWeb3.Client.Module
 
         protected override void OnBeforeShow()
         {
-            jQuery.Select("#mangas-list").Children().Remove();
+            if (items.Length > 0)
+            {
+                jQuery.Select("#mangas-list").Children().Remove();
+            }
         }
 
         protected override void OnShow()
@@ -159,6 +162,18 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select("#mangas-loading").Children().Remove();
 
             items = response.items;
+            SortItems();
+
+            ChangePage(1);
+            pagination.Refresh(true);
+        }
+
+        public void SortItems()
+        {
+            if (items.Length == 0)
+            {
+                return;
+            }
 
             CompareCallback<MangaListItemJson> compare = null;
 
@@ -209,9 +224,6 @@ namespace afung.MangaWeb3.Client.Module
             {
                 ((List<MangaListItemJson>)(object)items).Sort(compare);
             }
-
-            ChangePage(1);
-            pagination.Refresh(true);
         }
 
         private int GetTotalPage()

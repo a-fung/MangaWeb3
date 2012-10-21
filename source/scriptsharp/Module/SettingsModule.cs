@@ -51,7 +51,6 @@ namespace afung.MangaWeb3.Client.Module
         {
             e.PreventDefault();
 
-            Settings.Sort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
             Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").GetAttribute("checked") == "checked";
 
@@ -60,6 +59,14 @@ namespace afung.MangaWeb3.Client.Module
             {
                 Settings.UserLanguage = newLanguage;
                 Window.Location.Href = "index.html";
+                return;
+            }
+
+            int newSort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
+            if (newSort != Settings.Sort)
+            {
+                Settings.Sort = newSort;
+                MangasModule.Instance.SortItems();
             }
         }
     }

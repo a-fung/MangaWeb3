@@ -644,7 +644,7 @@ class Manga
         var coverRelativePath:String = "cover/" + hash + ".jpg";
         var coverPath:String = coverRelativePath;
 
-        if (FileSystem.exists(lockPath))
+        if (CheckLockFile(lockPath))
         {
             return null;
         }
@@ -677,7 +677,7 @@ class Manga
         var outputRelativePath:String = "mangacache/" + hash + ".jpg";
         var outputPath:String = outputRelativePath;
 
-        if (FileSystem.exists(lockPath))
+        if (CheckLockFile(lockPath))
         {
             return null;
         }
@@ -690,6 +690,29 @@ class Manga
         {
             return outputRelativePath;
         }
+    }
+    
+    private function CheckLockFile(lockPath:String):Bool
+    {
+        if (FileSystem.exists(lockPath))
+        {
+            if (Date.now().getTime() - FileSystem.stat(lockPath).ctime.getTime() > 180000)
+            {
+                try
+                {
+                    FileSystem.deleteFile(lockPath);
+                    return false;
+                }
+                catch (ex:Dynamic)
+                {
+                    Utility.TryLogError(ex);
+                }
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
     
     private function TryOutputFile(content:String):String
@@ -725,7 +748,7 @@ class Manga
     {
         if (!FileSystem.exists(outputPath))
         {
-            var lockFile:Dynamic = null;
+            var lockFile:Dynamic = false;
             try
             {
                 lockFile = untyped __call__("@fopen", lockPath, "x");
