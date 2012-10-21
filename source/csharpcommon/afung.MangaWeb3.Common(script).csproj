@@ -89,6 +89,7 @@
     <Compile Include="ChangePasswordResponse.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="CollectionUserJson.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ErrorLogJson.cs" />
     <Compile Include="FolderJson.cs" />
     <Compile Include="FolderRequest.cs" />

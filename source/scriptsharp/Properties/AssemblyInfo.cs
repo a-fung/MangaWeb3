@@ -13,10 +13,10 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("afung.MangaWeb3.Client")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright 2012 Man Kwan Liu")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion(afung.MangaWeb3.Common.Constants.Version)]
+[assembly: AssemblyFileVersion(afung.MangaWeb3.Common.Constants.Version)]
 
 [assembly: ScriptAssembly("afung.MangaWeb3.Client")]

@@ -9,46 +9,73 @@ using Newtonsoft.Json;
 
 namespace afung.MangaWeb3.Server
 {
+    /// <summary>
+    /// The Collection class
+    /// </summary>
     public class Collection
     {
+        /// <summary>
+        /// ID of the collection
+        /// </summary>
         public int Id
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Name of the collection
+        /// </summary>
         public string Name
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Path of the collection
+        /// </summary>
         public string Path
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Whether the collection is public
+        /// </summary>
         public bool Public
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Whether the collection uses auto add
+        /// </summary>
         public bool AutoAdd
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// The folder cache status of the collection
+        /// </summary>
         public int CacheStatus
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// The folder cache in json string
+        /// </summary>
         private string _folderCache;
 
+        /// <summary>
+        /// Getter the folder cache
+        /// </summary>
         public string FolderCache
         {
             get
@@ -67,13 +94,27 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        /// <summary>
+        /// The cache of collections
+        /// </summary>
         private static Dictionary<int, Collection> cache = new Dictionary<int, Collection>();
 
+        /// <summary>
+        /// Instantiate a new instance of Collection class
+        /// </summary>
         private Collection()
         {
             Id = -1;
         }
 
+        /// <summary>
+        /// Create a new collection
+        /// </summary>
+        /// <param name="name">The collection name</param>
+        /// <param name="path">The collection path</param>
+        /// <param name="public_">Whether the collection is public</param>
+        /// <param name="autoadd">Whether the collection uses auto add</param>
+        /// <returns>A new collection</returns>
         public static Collection CreateNewCollection(string name, string path, bool public_, bool autoadd)
         {
             Collection newCollection = new Collection();
@@ -85,6 +126,11 @@ namespace afung.MangaWeb3.Server
             return newCollection;
         }
 
+        /// <summary>
+        /// Create a new instance of Collection using data from database
+        /// </summary>
+        /// <param name="data">The data</param>
+        /// <returns>A collection from data</returns>
         private static Collection FromData(Dictionary<string, object> data)
         {
             int id = Convert.ToInt32(data["id"]);
@@ -106,6 +152,11 @@ namespace afung.MangaWeb3.Server
             return collection;
         }
 
+        /// <summary>
+        /// Get a collection from database by name
+        /// </summary>
+        /// <param name="name">The name</param>
+        /// <returns>A collection object or null if not found</returns>
         public static Collection GetByName(string name)
         {
             if (name != null && name != "")
@@ -121,6 +172,11 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        /// <summary>
+        /// Get a collection from database by ID
+        /// </summary>
+        /// <param name="name">The ID</param>
+        /// <returns>A collection object or null if not found</returns>
         public static Collection GetById(int id)
         {
             Collection collection;
@@ -139,6 +195,11 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        /// <summary>
+        /// Get a list of collections from database which is accessible by the current user
+        /// </summary>
+        /// <param name="ajax">The AjaxBase object which received the request</param>
+        /// <returns>A list of collections</returns>
         public static Collection[] GetAccessible(AjaxBase ajax)
         {
             User user = User.GetCurrentUser(ajax);
@@ -164,6 +225,10 @@ namespace afung.MangaWeb3.Server
             return collections.ToArray();
         }
 
+        /// <summary>
+        /// Get a list of collections from database which uses auto add
+        /// </summary>
+        /// <returns>A list of collections</returns>
         public static Collection[] GetAutoAdd()
         {
             Dictionary<string, object>[] resultSet = Database.Select("collection", "`autoadd`='1'");
@@ -177,6 +242,10 @@ namespace afung.MangaWeb3.Server
             return collections.ToArray();
         }
 
+        /// <summary>
+        /// Get all collections from database
+        /// </summary>
+        /// <returns>All collections</returns>
         public static Collection[] GetAllCollections()
         {
             Dictionary<string, object>[] resultSet = Database.Select("collection");
@@ -190,16 +259,30 @@ namespace afung.MangaWeb3.Server
             return collections.ToArray();
         }
 
+        /// <summary>
+        /// Get the names of all the collections from database
+        /// </summary>
+        /// <returns>An array of string containing all the names</returns>
         public static string[] GetAllCollectionNames()
         {
             return Database.GetDistinctStringValues("collection", "name");
         }
 
+        /// <summary>
+        /// Check whether a name can be used for creating a new collection
+        /// </summary>
+        /// <param name="name">The name</param>
+        /// <returns>True if the name is valid for new collection</returns>
         public static bool CheckNewCollectionName(string name)
         {
             return GetByName(name) == null;
         }
 
+        /// <summary>
+        /// Check whether a path can be used for creating a new collection
+        /// </summary>
+        /// <param name="name">The path (absolute or relative)</param>
+        /// <returns>null if the path is invalid, a normalized absolute path if the path is valid</returns>
         public static string CheckNewCollectionPath(string path)
         {
             path = Utility.GetFullPath(path);
@@ -228,6 +311,9 @@ namespace afung.MangaWeb3.Server
             return path;
         }
 
+        /// <summary>
+        /// Save the collection to database
+        /// </summary>
         public void Save()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -250,6 +336,10 @@ namespace afung.MangaWeb3.Server
             cache[Id] = this;
         }
 
+        /// <summary>
+        /// Get an object to be stringified and passed to client app
+        /// </summary>
+        /// <returns>A CollectionJson object</returns>
         public CollectionJson ToJson()
         {
             CollectionJson obj = new CollectionJson();
@@ -261,6 +351,11 @@ namespace afung.MangaWeb3.Server
             return obj;
         }
 
+        /// <summary>
+        /// Get an array of CollectionJson to be passed to client app
+        /// </summary>
+        /// <param name="collections">An array of collections</param>
+        /// <returns>An array of CollectionJson</returns>
         public static CollectionJson[] ToJsonArray(Collection[] collections)
         {
             List<CollectionJson> objs = new List<CollectionJson>();
@@ -272,6 +367,10 @@ namespace afung.MangaWeb3.Server
             return objs.ToArray();
         }
 
+        /// <summary>
+        /// Delete collections and all associated data from database
+        /// </summary>
+        /// <param name="ids">A list of collection IDs</param>
         public static void DeleteCollections(int[] ids)
         {
             Manga.DeleteMangasFromCollectionIds(ids);
@@ -279,6 +378,11 @@ namespace afung.MangaWeb3.Server
             Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
         }
 
+        /// <summary>
+        /// Set collections to be public/private
+        /// </summary>
+        /// <param name="ids">A list of collection IDs</param>
+        /// <param name="public_">Whether is public or private</param>
         public static void SetCollectionsPublic(int[] ids, bool public_)
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -286,6 +390,11 @@ namespace afung.MangaWeb3.Server
             Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
         }
 
+        /// <summary>
+        /// Get whether the current request can access the collection
+        /// </summary>
+        /// <param name="ajax">The AjaxBase object which received the request</param>
+        /// <returns>True if accessible</returns>
         public bool Accessible(AjaxBase ajax)
         {
             string where = "`id`=" + Database.Quote(Id.ToString());
@@ -307,12 +416,18 @@ namespace afung.MangaWeb3.Server
             return Database.Select("collection", where, null, null, "`id`").Length > 0;
         }
 
+        /// <summary>
+        /// Mark Folder Cache Dirty
+        /// </summary>
         public void MarkFolderCacheDirty()
         {
             CacheStatus = 1;
             Save();
         }
 
+        /// <summary>
+        /// Process folder cache and save it in database
+        /// </summary>
         public void ProcessFolderCache()
         {
             if (CacheStatus == 0 || CacheStatus == 2)

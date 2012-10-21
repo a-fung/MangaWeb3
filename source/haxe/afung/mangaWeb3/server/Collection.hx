@@ -10,24 +10,54 @@ import php.FileSystem;
  * @author a-fung
  */
 
+/// <summary>
+/// The Collection class
+/// </summary>
 class Collection 
 {
+    /// <summary>
+    /// ID of the collection
+    /// </summary>
     public var Id(default, null):Int;
     
+    /// <summary>
+    /// Name of the collection
+    /// </summary>
     public var Name(default, default):String;
     
+    /// <summary>
+    /// Path of the collection
+    /// </summary>
     public var Path(default, null):String;
     
+    /// <summary>
+    /// Whether the collection is public
+    /// </summary>
     public var Public(default, null):Bool;
     
+    /// <summary>
+    /// Whether the collection uses auto add
+    /// </summary>
     public var AutoAdd(default, null):Bool;
     
+    /// <summary>
+    /// The folder cache status of the collection
+    /// </summary>
     public var CacheStatus(default, null):Int;
     
+    /// <summary>
+    /// The folder cache in json string
+    /// </summary>
     private var _folderCache:String;
     
+    /// <summary>
+    /// Getter the folder cache
+    /// </summary>
     public var FolderCache(get_FolderCache, never):String;
     
+    /// <summary>
+    /// Getter function of the folder cache
+    /// </summary>
     private function get_FolderCache():String
     {
         if (CacheStatus == 0)
@@ -43,13 +73,27 @@ class Collection
         return null;
     }
     
+    /// <summary>
+    /// The cache of collections
+    /// </summary>
     private static var cache:IntHash<Collection> = new IntHash<Collection>();
 
+    /// <summary>
+    /// Instantiate a new instance of Collection class
+    /// </summary>
     private function new()
     {
         Id = -1;
     }
     
+    /// <summary>
+    /// Create a new collection
+    /// </summary>
+    /// <param name="name">The collection name</param>
+    /// <param name="path">The collection path</param>
+    /// <param name="public_">Whether the collection is public</param>
+    /// <param name="autoadd">Whether the collection uses auto add</param>
+    /// <returns>A new collection</returns>
     public static function CreateNewCollection(name:String, path:String, public_:Bool, autoadd:Bool):Collection
     {
         var newCollection:Collection = new Collection();
@@ -61,6 +105,11 @@ class Collection
         return newCollection;
     }
     
+    /// <summary>
+    /// Create a new instance of Collection using data from database
+    /// </summary>
+    /// <param name="data">The data</param>
+    /// <returns>A collection from data</returns>
     private static function FromData(data:Hash<Dynamic>):Collection
     {
         var id:Int = Std.parseInt(data.get("id"));
@@ -82,6 +131,11 @@ class Collection
         return collection;
     }
     
+    /// <summary>
+    /// Get a collection from database by name
+    /// </summary>
+    /// <param name="name">The name</param>
+    /// <returns>A collection object or null if not found</returns>
     public static function GetByName(name:String):Collection
     {
         if (name != null && name != "")
@@ -97,6 +151,11 @@ class Collection
         return null;
     }
     
+    /// <summary>
+    /// Get a collection from database by ID
+    /// </summary>
+    /// <param name="name">The ID</param>
+    /// <returns>A collection object or null if not found</returns>
     public static function GetById(id:Int):Collection
     {
         if (cache.exists(id))
@@ -114,6 +173,11 @@ class Collection
         return null;
     }
     
+    /// <summary>
+    /// Get a list of collections from database which is accessible by the current user
+    /// </summary>
+    /// <param name="ajax">The AjaxBase object which received the request</param>
+    /// <returns>A list of collections</returns>
     public static function GetAccessible(ajax:AjaxBase):Array<Collection>
     {
         var user:User = User.GetCurrentUser(ajax);
@@ -139,6 +203,10 @@ class Collection
         return collections;
     }
     
+    /// <summary>
+    /// Get a list of collections from database which uses auto add
+    /// </summary>
+    /// <returns>A list of collections</returns>
     public static function GetAutoAdd():Array<Collection>
     {
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", "`autoadd`='1'");
@@ -151,7 +219,11 @@ class Collection
         
         return collections;
     }
-    
+
+    /// <summary>
+    /// Get all collections from database
+    /// </summary>
+    /// <returns>All collections</returns>
     public static function GetAllCollections():Array<Collection>
     {
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection");
@@ -164,17 +236,31 @@ class Collection
         
         return collections;
     }
-    
+
+    /// <summary>
+    /// Get the names of all the collections from database
+    /// </summary>
+    /// <returns>An array of string containing all the names</returns>
     public static function GetAllCollectionNames():Array<String>
     {
         return Database.GetDistinctStringValues("collection", "name");
     }
     
+    /// <summary>
+    /// Check whether a name can be used for creating a new collection
+    /// </summary>
+    /// <param name="name">The name</param>
+    /// <returns>True if the name is valid for new collection</returns>
     public static function CheckNewCollectionName(name:String):Bool
     {
         return GetByName(name) == null;
     }
-    
+
+    /// <summary>
+    /// Check whether a path can be used for creating a new collection
+    /// </summary>
+    /// <param name="name">The path (absolute or relative)</param>
+    /// <returns>null if the path is invalid, a normalized absolute path if the path is valid</returns>
     public static function CheckNewCollectionPath(path:String):String
     {
         path = FileSystem.fullPath(path);
@@ -202,6 +288,9 @@ class Collection
         return path;
     }
     
+    /// <summary>
+    /// Save the collection to database
+    /// </summary>
     public function Save():Void
     {
         var data:Hash<Dynamic> = new Hash<Dynamic>();
@@ -223,7 +312,11 @@ class Collection
         
         cache.set(Id, this);
     }
-    
+
+    /// <summary>
+    /// Get an object to be stringified and passed to client app
+    /// </summary>
+    /// <returns>A CollectionJson object</returns>
     public function ToJson():CollectionJson
     {
         var obj:CollectionJson = new CollectionJson();
@@ -234,7 +327,12 @@ class Collection
         obj.autoadd = AutoAdd;
         return obj;
     }
-    
+
+    /// <summary>
+    /// Get an array of CollectionJson to be passed to client app
+    /// </summary>
+    /// <param name="collections">An array of collections</param>
+    /// <returns>An array of CollectionJson</returns>
     public static function ToJsonArray(collections:Array<Collection>):Array<CollectionJson>
     {
         var objs:Array<CollectionJson> = new Array<CollectionJson>();
@@ -246,13 +344,22 @@ class Collection
         return objs;
     }
     
+    /// <summary>
+    /// Delete collections and all associated data from database
+    /// </summary>
+    /// <param name="ids">A list of collection IDs</param>
     public static function DeleteCollections(ids:Array<Int>):Void
     {
         Manga.DeleteMangasFromCollectionIds(ids);
         Database.Delete("collection", Database.BuildWhereClauseOr("id", ids));
         Database.Delete("collectionuser", Database.BuildWhereClauseOr("cid", ids));
     }
-    
+
+    /// <summary>
+    /// Set collections to be public/private
+    /// </summary>
+    /// <param name="ids">A list of collection IDs</param>
+    /// <param name="public_">Whether is public or private</param>
     public static function SetCollectionsPublic(ids:Array<Int>, public_:Bool):Void
     {
         var data:Hash<Dynamic> = new Hash<Dynamic>();
@@ -260,6 +367,11 @@ class Collection
         Database.Update("collection", data, Database.BuildWhereClauseOr("id", ids));
     }
     
+    /// <summary>
+    /// Get whether the current request can access the collection
+    /// </summary>
+    /// <param name="ajax">The AjaxBase object which received the request</param>
+    /// <returns>True if accessible</returns>
     public function Accessible(ajax:AjaxBase):Bool
     {
         var where:String = "`id`=" + Database.Quote(Std.string(Id));
@@ -280,13 +392,19 @@ class Collection
 
         return Database.Select("collection", where, null, null, "`id`").length > 0;
     }
-    
+
+    /// <summary>
+    /// Mark Folder Cache Dirty
+    /// </summary>
     public function MarkFolderCacheDirty():Void
     {
         CacheStatus = 1;
         Save();
     }
     
+    /// <summary>
+    /// Process folder cache and save it in database
+    /// </summary>
     public function ProcessFolderCache():Void
     {
         if (CacheStatus == 0 || CacheStatus == 2)

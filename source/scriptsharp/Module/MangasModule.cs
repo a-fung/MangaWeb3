@@ -179,12 +179,6 @@ namespace afung.MangaWeb3.Client.Module
 
             switch (Settings.Sort)
             {
-                case 0:
-                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
-                    {
-                        return a.title.CompareTo(b.title);
-                    };
-                    break;
                 case 1:
                     compare = delegate(MangaListItemJson a, MangaListItemJson b)
                     {
@@ -216,7 +210,12 @@ namespace afung.MangaWeb3.Client.Module
 
                     items = (MangaListItemJson[])(object)list2;
                     break;
+                case 0:
                 default:
+                    compare = delegate(MangaListItemJson a, MangaListItemJson b)
+                    {
+                        return a.title.CompareTo(b.title);
+                    };
                     break;
             }
 

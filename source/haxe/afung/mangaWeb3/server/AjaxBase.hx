@@ -12,17 +12,30 @@ import php.Web;
  * @author a-fung
  */
 
+/// <summary>
+/// The base class for Http request server entry point
+/// </summary>
 class AjaxBase 
 {
+    /// <summary>
+    /// Instantiate a new instance of AjaxBase
+    /// </summary>
     public function new()
     {
     }
     
+    /// <summary>
+    /// Called when the page loads
+    /// </summary>
     public function Page_Load():Void
     {
         PageLoad();
     }
     
+    /// <summary>
+    /// Handle the json request using a list of handlers
+    /// </summary>
+    /// <param name="handlers">The array of handlers</param>
     public function HandleRequest(handlers:Array<HandlerBase>):Void
     {
         try
@@ -59,11 +72,19 @@ class AjaxBase
         }
     }
     
+    /// <summary>
+    /// Get the value of a request parameter
+    /// </summary>
+    /// <param name="name">The parameter name</param>
+    /// <returns>The value</returns>
     private function RequestParams(name:String):String
     {
         return Web.getParams().get(name);
     }
     
+    /// <summary>
+    /// Return "bad request" to the client app
+    /// </summary>
     public function BadRequest():Void
     {
         Web.setReturnCode(400);
@@ -72,6 +93,9 @@ class AjaxBase
         Lib.print("Bad Request");
     }
     
+    /// <summary>
+    /// Return "unauthorized" to the client app
+    /// </summary>
     public function Unauthorized():Void
     {
         Web.setReturnCode(401);
@@ -80,11 +104,10 @@ class AjaxBase
         Lib.print("Unauthorized");
     }
     
-    public function Redirect(url:String):Void
-    {
-        Web.redirect(url);
-    }
-    
+    /// <summary>
+    /// Return a Json response to the client app
+    /// </summary>
+    /// <param name="response">The response object to be stringify and return to client app</param>
     public function ReturnJson(response:JsonResponse):Void
     {
         var output:String = Json.stringify(response);
@@ -96,6 +119,10 @@ class AjaxBase
         Lib.print(output);
     }
     
+    /// <summary>
+    /// The PageLoad function is to be overriden by child class
+    /// In this function it should create a list of handlers and call the HandleRequest function
+    /// </summary>
     public function PageLoad():Void
     {
     }

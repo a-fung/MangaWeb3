@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,14 +9,25 @@ using Newtonsoft.Json;
 
 namespace afung.MangaWeb3.Server
 {
+    /// <summary>
+    /// The base class for Http request server entry point
+    /// </summary>
     public abstract class AjaxBase : System.Web.UI.Page
     {
+        /// <summary>
+        /// The Directory Path of the current page on the server. It's set when the server app handles the first request
+        /// </summary>
         public static string DirectoryPath
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Called when the page loads
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The event argument</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(DirectoryPath))
@@ -26,6 +38,10 @@ namespace afung.MangaWeb3.Server
             PageLoad();
         }
 
+        /// <summary>
+        /// Handle the json request using a list of handlers
+        /// </summary>
+        /// <param name="handlers">The array of handlers</param>
         protected void HandleRequest(HandlerBase[] handlers)
         {
             try
@@ -62,11 +78,19 @@ namespace afung.MangaWeb3.Server
             }
         }
 
+        /// <summary>
+        /// Get the value of a request parameter
+        /// </summary>
+        /// <param name="name">The parameter name</param>
+        /// <returns>The value</returns>
         private string RequestParams(string name)
         {
             return Request.Params[name];
         }
 
+        /// <summary>
+        /// Return "bad request" to the client app
+        /// </summary>
         public void BadRequest()
         {
             Response.StatusCode = 400;
@@ -74,6 +98,9 @@ namespace afung.MangaWeb3.Server
             Response.Write("Bad Request");
         }
 
+        /// <summary>
+        /// Return "unauthorized" to the client app
+        /// </summary>
         public void Unauthorized()
         {
             Response.StatusCode = 401;
@@ -81,11 +108,10 @@ namespace afung.MangaWeb3.Server
             Response.Write("Unauthorized");
         }
 
-        public void Redirect(string url)
-        {
-            Response.Redirect(url, true);
-        }
-
+        /// <summary>
+        /// Return a Json response to the client app
+        /// </summary>
+        /// <param name="response">The response object to be stringify and return to client app</param>
         public void ReturnJson(JsonResponse response)
         {
             string output = JsonConvert.SerializeObject(response);
@@ -96,6 +122,10 @@ namespace afung.MangaWeb3.Server
             Response.Write(output);
         }
 
+        /// <summary>
+        /// The PageLoad function is to be overriden by child class
+        /// In this function it should create a list of handlers and call the HandleRequest function
+        /// </summary>
         protected abstract void PageLoad();
     }
 }
