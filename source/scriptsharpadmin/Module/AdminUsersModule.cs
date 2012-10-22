@@ -17,7 +17,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
     {
         private UserJson[] users;
 
-        private int currentPage;
+        private int currentPage = 1;
         private Pagination pagination;
         private string currentUserName;
 
@@ -103,8 +103,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void GetRequestSuccess(AdminUsersGetResponse response)
         {
             users = response.users;
-            ChangePage(1);
-            pagination.Refresh(true);
+            ChangePage(currentPage);
+            pagination.Refresh();
         }
 
         private void CollectionsButtonClicked(jQueryEvent e)

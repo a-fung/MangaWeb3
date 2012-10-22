@@ -15,7 +15,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
     public class AdminMangasModule : AdminModuleBase
     {
         private MangaJson[] mangas;
-        private int currentPage;
+        private int currentPage = 1;
         private Pagination pagination;
         private int copiedMangaMetaId = -1;
 
@@ -84,8 +84,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
             {
                 return ((MangaJson)y).status - ((MangaJson)x).status;
             });
-            ChangePage(1);
-            pagination.Refresh(true);
+            ChangePage(currentPage);
+            pagination.Refresh();
         }
 
         private int GetTotalPage()

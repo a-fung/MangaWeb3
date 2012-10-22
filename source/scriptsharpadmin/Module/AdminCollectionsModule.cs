@@ -16,7 +16,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
     public class AdminCollectionsModule : AdminModuleBase
     {
         private CollectionJson[] collections;
-        private int currentPage;
+        private int currentPage = 1;
         private Pagination pagination;
 
         private static AdminCollectionsModule _instance = null;
@@ -70,8 +70,8 @@ namespace afung.MangaWeb3.Client.Admin.Module
         private void GetRequestSuccess(AdminCollectionsGetResponse response)
         {
             collections = response.collections;
-            ChangePage(1);
-            pagination.Refresh(true);
+            ChangePage(currentPage);
+            pagination.Refresh();
         }
 
         private void ChangePage(int page)
