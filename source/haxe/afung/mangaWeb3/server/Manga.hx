@@ -605,7 +605,7 @@ class Manga
                 tag = Utf8.sub(tag, 0, 100);
             }
 
-            if (Utility.ArrayStringContains(oldTags, tag))
+            if (!Utility.ArrayStringContains(oldTags, tag))
             {
                 if (Utility.ArrayStringContains(allTags, tag))
                 {
@@ -627,7 +627,7 @@ class Manga
 
         for (tag in oldTags)
         {
-            if (Utility.ArrayStringContains(tags, tag))
+            if (!Utility.ArrayStringContains(tags, tag))
             {
                 id = Std.parseInt(Database.Select("tag", "`name`=" + Database.Quote(tag))[0].get("id"));
                 Database.Delete("mangatag", "`tid`=" + Database.Quote(Std.string(id)) + " AND `mid`=" + Database.Quote(Std.string(Id)));

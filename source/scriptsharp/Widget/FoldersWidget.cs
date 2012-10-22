@@ -23,7 +23,7 @@ namespace afung.MangaWeb3.Client.Widget
 
             ((List<FolderJson>)(object)folders).Sort(delegate(FolderJson a, FolderJson b)
             {
-                return a.name.CompareTo(b.name); ;
+                return Utility.NaturalCompare(a.name, b.name);
             });
 
             foreach (FolderJson folder in folders)

@@ -215,7 +215,7 @@ namespace afung.MangaWeb3.Client.Module
                 default:
                     compare = delegate(MangaListItemJson a, MangaListItemJson b)
                     {
-                        return a.title.CompareTo(b.title);
+                        return Utility.NaturalCompare(a.title, b.title);
                     };
                     break;
             }

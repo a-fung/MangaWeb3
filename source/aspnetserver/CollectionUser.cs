@@ -1,4 +1,8 @@
-﻿using System;
+﻿// CollectionUser.cs
+// MangaWeb3 Project
+// Copyright 2012 Man Kwan Liu
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,32 +10,57 @@ using afung.MangaWeb3.Common;
 
 namespace afung.MangaWeb3.Server
 {
+    /// <summary>
+    /// The CollectionUser class
+    /// </summary>
     public class CollectionUser
     {
+        /// <summary>
+        /// Whether this object is new (not yet saved to database)
+        /// </summary>
         private bool isNew = false;
 
+        /// <summary>
+        /// Collection ID
+        /// </summary>
         public int CollectionId
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// User ID
+        /// </summary>
         public int UserId
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Allow/deny access
+        /// </summary>
         public bool Access
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Instantiate a new instance of CollectionUser class
+        /// </summary>
         private CollectionUser()
         {
         }
 
+        /// <summary>
+        /// Create a new CollectionUser object
+        /// </summary>
+        /// <param name="collection">The collection</param>
+        /// <param name="user">The user</param>
+        /// <param name="access">Allow/deny access</param>
+        /// <returns>The new CollectionUser object</returns>
         public static CollectionUser CreateNew(Collection collection, User user, bool access)
         {
             CollectionUser cu = new CollectionUser();
@@ -42,6 +71,11 @@ namespace afung.MangaWeb3.Server
             return cu;
         }
 
+        /// <summary>
+        /// Create a new instance of CollectionUser using data from database
+        /// </summary>
+        /// <param name="data">The data</param>
+        /// <returns>A CollectionUser object from data</returns>
         private static CollectionUser FromData(Dictionary<string, object> data)
         {
             CollectionUser cu = new CollectionUser();
@@ -51,6 +85,11 @@ namespace afung.MangaWeb3.Server
             return cu;
         }
 
+        /// <summary>
+        /// Get all CollectionUser objects associated to a collection
+        /// </summary>
+        /// <param name="collection">The collection</param>
+        /// <returns>An array of CollectionUser objects</returns>
         public static CollectionUser[] GetByCollection(Collection collection)
         {
             if (collection != null && collection.Id != -1)
@@ -61,6 +100,11 @@ namespace afung.MangaWeb3.Server
             return new CollectionUser[] { };
         }
 
+        /// <summary>
+        /// Get all CollectionUser objects associated to a user
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <returns>An array of CollectionUser objects</returns>
         public static CollectionUser[] GetByUser(User user)
         {
             if (user != null && user.Id != -1)
