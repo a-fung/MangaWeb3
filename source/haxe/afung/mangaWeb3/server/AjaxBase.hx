@@ -1,3 +1,7 @@
+// AjaxBase.hx
+// MangaWeb3 Project
+// Copyright 2012 Man Kwan Liu
+
 package afung.mangaWeb3.server;
 
 import afung.mangaWeb3.common.JsonRequest;

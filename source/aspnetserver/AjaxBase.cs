@@ -1,4 +1,7 @@
-﻿
+﻿// AjaxBase.cs
+// MangaWeb3 Project
+// Copyright 2012 Man Kwan Liu
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
