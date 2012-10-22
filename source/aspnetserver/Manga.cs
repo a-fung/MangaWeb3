@@ -243,6 +243,15 @@ namespace afung.MangaWeb3.Server
             return null;
         }
 
+        private static Manga[] GetSameFileName(int cid, string path)
+        {
+            string fileName = Database.Quote(path.Substring(path.LastIndexOf("\\")));
+            fileName = fileName.Substring(1, fileName.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+            string where = "`cid`=" + Database.Quote(cid.ToString()) + " AND `path` LIKE '%" + fileName + "'";
+
+            return GetMangas(where);
+        }
+
         private static Manga[] GetMangas(string where)
         {
             string additionalWhere = "`id` IN (SELECT `mid` FROM `meta`)";
@@ -486,6 +495,21 @@ namespace afung.MangaWeb3.Server
             {
                 Id = Database.InsertAndReturnId("manga", data);
                 Meta.Save();
+
+                // Check if this manga is moved from another path
+                foreach (Manga manga in Manga.GetSameFileName(ParentCollectionId, MangaPath))
+                {
+                    if (manga.Id != Id && manga.ParentCollectionId == ParentCollectionId && manga.Size == Size && manga.NumberOfPages == manga.NumberOfPages && manga.IsFileMissing())
+                    {
+                        View = manga.View;
+                        Title = manga.Title;
+                        Meta.Copy(manga.Meta);
+                        UpdateTags(manga.GetTags());
+                        Save();
+                        manga.Delete();
+                        break;
+                    }
+                }
             }
             else
             {
@@ -508,6 +532,11 @@ namespace afung.MangaWeb3.Server
                 data.Add("dimensions", JsonConvert.SerializeObject(_dimensions));
                 Database.Replace("mangadimensions", data);
             }
+        }
+
+        public bool IsFileMissing()
+        {
+            return !File.Exists(MangaPath);
         }
 
         public MangaListItemJson ToMangaListItemJson()

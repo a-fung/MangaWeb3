@@ -137,5 +137,15 @@ namespace afung.MangaWeb3.Server
         {
             return Database.GetDistinctStringValues("meta", "publisher");
         }
+
+        public void Copy(MangaMeta other)
+        {
+            Author = other.Author;
+            Volume = other.Volume;
+            Series = other.Series;
+            Year = other.Year;
+            Publisher = other.Publisher;
+            Save();
+        }
     }
 }

@@ -110,4 +110,14 @@ class MangaMeta
     {
         return Database.GetDistinctStringValues("meta", "publisher");
     }
+    
+    public function Copy(other:MangaMeta):Void
+    {
+        Author = other.Author;
+        Volume = other.Volume;
+        Series = other.Series;
+        Year = other.Year;
+        Publisher = other.Publisher;
+        Save();
+    }
 }

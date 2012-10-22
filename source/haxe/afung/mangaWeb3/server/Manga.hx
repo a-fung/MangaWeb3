@@ -206,6 +206,15 @@ class Manga
         return null;
     }
     
+    private static function GetSameFileName(cid:Int, path:String):Array<Manga>
+    {
+        var fileName:String = Database.Quote(path.substr(path.lastIndexOf("/")));
+        fileName = StringTools.replace(StringTools.replace(fileName.substr(1, fileName.length - 2), "\\", "\\\\"), "%", "\\%");
+        var where:String = "`cid`=" + Database.Quote(Std.string(cid)) + " AND `path` COLLATE utf8_bin LIKE '%" + fileName + "'";
+        
+        return GetMangas(where);
+    }
+    
     private static function GetMangas(where:String):Array<Manga>
     {
         var additionalWhere:String = "`id` IN (SELECT `mid` FROM `meta`)";
@@ -454,6 +463,20 @@ class Manga
         {
             Id = Database.InsertAndReturnId("manga", data);
             Meta.Save();
+            
+            for (manga in Manga.GetSameFileName(ParentCollectionId, MangaPath))
+            {
+                if (manga.Id != Id && manga.ParentCollectionId == ParentCollectionId && manga.Size == Size && manga.NumberOfPages == manga.NumberOfPages && manga.IsFileMissing())
+                {
+                    View = manga.View;
+                    Title = manga.Title;
+                    Meta.Copy(manga.Meta);
+                    UpdateTags(manga.GetTags());
+                    Save();
+                    manga.Delete();
+                    break;
+                }
+            }
         }
         else
         {
@@ -476,6 +499,11 @@ class Manga
             data.set("dimensions", Json.stringify(_dimensions));
             Database.Replace("mangadimensions", data);
         }
+    }
+    
+    public function IsFileMissing():Bool
+    {
+        return !FileSystem.exists(MangaPath);
     }
 
     public function ToMangaListItemJson():MangaListItemJson
