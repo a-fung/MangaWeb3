@@ -246,7 +246,8 @@ namespace afung.MangaWeb3.Server
         private static Manga[] GetSameFileName(int cid, string path)
         {
             string fileName = Database.Quote(path.Substring(path.LastIndexOf("\\")));
-            fileName = fileName.Substring(1, fileName.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+            fileName = Database.Quote(fileName.Substring(1, fileName.Length - 2));
+            fileName = fileName.Substring(1, fileName.Length - 2).Replace("%", "\\%");
             string where = "`cid`=" + Database.Quote(cid.ToString()) + " AND `path` LIKE '%" + fileName + "'";
 
             return GetMangas(where);
@@ -328,7 +329,8 @@ namespace afung.MangaWeb3.Server
                     if (filter.search.title != null && filter.search.title != "")
                     {
                         string title = Database.Quote(filter.search.title);
-                        title = title.Substring(1, title.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+                        title = Database.Quote(title.Substring(1, title.Length - 2));
+                        title = title.Substring(1, title.Length - 2).Replace("%", "\\%");
                         where += " AND `title` LIKE '%" + title + "%'";
                     }
 
@@ -383,7 +385,8 @@ namespace afung.MangaWeb3.Server
                     else
                     {
                         string actualPath = Database.Quote(index == -1 ? collection.Path.Substring(0, collection.Path.Length - 1) : collection.Path + relativePath);
-                        actualPath = actualPath.Substring(1, actualPath.Length - 2).Replace("\\", "\\\\").Replace("%", "\\%");
+                        actualPath = Database.Quote(actualPath.Substring(1, actualPath.Length - 2));
+                        actualPath = actualPath.Substring(1, actualPath.Length - 2).Replace("%", "\\%");
                         where += " AND `cid`=" + Database.Quote(collection.Id.ToString());
                         where += " AND `path` LIKE '" + actualPath + "\\\\\\\\%'" + (folderSetting == 2 ? " AND `path` NOT LIKE '" + actualPath + "\\\\\\\\%\\\\\\\\%'" : "");
                     }

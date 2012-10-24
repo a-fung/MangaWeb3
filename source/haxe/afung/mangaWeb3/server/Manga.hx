@@ -209,7 +209,8 @@ class Manga
     private static function GetSameFileName(cid:Int, path:String):Array<Manga>
     {
         var fileName:String = Database.Quote(path.substr(path.lastIndexOf("/")));
-        fileName = StringTools.replace(StringTools.replace(fileName.substr(1, fileName.length - 2), "\\", "\\\\"), "%", "\\%");
+        fileName = Database.Quote(fileName.substr(1, fileName.length - 2));
+        fileName = StringTools.replace(fileName.substr(1, fileName.length - 2), "%", "\\%");
         var where:String = "`cid`=" + Database.Quote(Std.string(cid)) + " AND `path` COLLATE utf8_bin LIKE '%" + fileName + "'";
         
         return GetMangas(where);
@@ -291,7 +292,8 @@ class Manga
                 if (filter.search.title != null && filter.search.title != "")
                 {
                     var title:String = Database.Quote(filter.search.title);
-                    title = StringTools.replace(StringTools.replace(title.substr(1, title.length - 2), "\\", "\\\\"), "%", "\\%");
+                    title = Database.Quote(title.substr(1, title.length - 2));
+                    title = StringTools.replace(title.substr(1, title.length - 2), "%", "\\%");
                     where += " AND `title` LIKE '%" + title + "%'";
                 }
 
@@ -346,7 +348,8 @@ class Manga
                 else
                 {
                     var actualPath:String = Database.Quote(index == -1 ? collection.Path.substr(0, collection.Path.length - 1) : collection.Path + relativePath);
-                    actualPath = StringTools.replace(StringTools.replace(actualPath.substr(1, actualPath.length - 2), "\\", "\\\\"), "%", "\\%");
+                    actualPath = Database.Quote(actualPath.substr(1, actualPath.length - 2));
+                    actualPath = StringTools.replace(actualPath.substr(1, actualPath.length - 2), "%", "\\%");
                     where += " AND `cid`=" + Database.Quote(Std.string(collection.Id));
                     where += " AND `path` COLLATE utf8_bin LIKE '" + actualPath + "/%'" + (folderSetting == 2 ? " AND `path` COLLATE utf8_bin NOT LIKE '" + actualPath + "/%/%'" : "");
                 }
