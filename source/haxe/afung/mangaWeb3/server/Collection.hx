@@ -194,7 +194,7 @@ class Collection
         if (user != null)
         {
             where += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='1')";
-            where = "(" + where + ") AND `cid` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='0')";
+            where = "(" + where + ") AND `id` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(Std.string(user.Id)) + " AND `access`='0')";
         }
         
         var resultSet:Array<Hash<Dynamic>> = Database.Select("collection", where);

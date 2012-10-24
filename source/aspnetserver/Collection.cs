@@ -216,7 +216,7 @@ namespace afung.MangaWeb3.Server
             if (user != null)
             {
                 where += " OR `id` IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='1')";
-                where = "(" + where + ") AND `cid` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='0')";
+                where = "(" + where + ") AND `id` NOT IN (SELECT `cid` FROM `collectionuser` WHERE `uid`=" + Database.Quote(user.Id.ToString()) + " AND `access`='0')";
             }
 
             Dictionary<string, object>[] resultSet = Database.Select("collection", where);

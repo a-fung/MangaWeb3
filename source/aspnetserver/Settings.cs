@@ -121,8 +121,9 @@ namespace afung.MangaWeb3.Server
 
                                     return (_usePdf = true).Value;
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
+                                    Utility.TryLogError(ex);
                                     return (_usePdf = false).Value;
                                 }
                             }
@@ -215,8 +216,9 @@ namespace afung.MangaWeb3.Server
 
                                 _sevenZipConfigOk = true;
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
+                                Utility.TryLogError(ex);
                                 _sevenZipConfigOk = false;
                             }
                         }
