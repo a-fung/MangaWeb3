@@ -268,7 +268,7 @@ namespace afung.MangaWeb3.Client.Module
                 }
             };
 
-            if (mangaList.Is(":visible") && BootstrapTransition.Support)
+            if (mangaList.Is(":visible") && Settings.UseAnimation)
             {
                 Utility.OnTransitionEnd(
                     mangaList.AddClass("fade"),

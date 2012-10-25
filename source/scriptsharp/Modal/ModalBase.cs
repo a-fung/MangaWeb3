@@ -16,6 +16,11 @@ namespace afung.MangaWeb3.Client.Modal
         {
             attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select("body"));
 
+            if (Settings.UseAnimation)
+            {
+                attachedObject.AddClass("fade");
+            }
+
             Initialize();
 
             attachedObject.Bind("shown", OnShown);

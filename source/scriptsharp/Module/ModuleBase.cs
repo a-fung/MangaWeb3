@@ -23,7 +23,7 @@ namespace afung.MangaWeb3.Client.Module
         {
             this.transition = Script.IsNullOrUndefined(transition) ? true : transition;
             attachedObject = Template.Get(template, templateId).AppendTo(jQuery.Select("body")).Hide();
-            if (this.transition && BootstrapTransition.Support)
+            if (this.transition && Settings.UseAnimation)
             {
                 attachedObject.AddClass("fade");
             }
@@ -47,7 +47,7 @@ namespace afung.MangaWeb3.Client.Module
                 OnBeforeShow();
                 attachedObject.Show();
 
-                if (transition && BootstrapTransition.Support)
+                if (transition && Settings.UseAnimation)
                 {
                     Window.SetTimeout(
                         delegate
@@ -80,7 +80,7 @@ namespace afung.MangaWeb3.Client.Module
                 callback();
             };
 
-            if (transition && BootstrapTransition.Support)
+            if (transition && Settings.UseAnimation)
             {
                 Utility.OnTransitionEnd(attachedObject.RemoveClass("in"), onHide);
             }

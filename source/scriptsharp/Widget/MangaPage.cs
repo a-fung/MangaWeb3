@@ -328,15 +328,21 @@ namespace afung.MangaWeb3.Client.Widget
 
         public void AppendTo(jQueryObject mangaArea, int offset, int sign, MangaPage otherPage)
         {
-            imageObject.AddClass("read-manga-page fade").AppendTo(mangaArea);
+            if (Settings.UseAnimation)
+            {
+                imageObject.AddClass("fade");
+                Window.SetTimeout(
+                    delegate
+                    {
+                        imageObject.AddClass("in");
+                    },
+                    1);
+            }
+
+            imageObject.AddClass("read-manga-page").AppendTo(mangaArea);
             Offset = offset + sign * otherPage.Width;
             OffsetY = Height > mangaArea.GetHeight() ? 0 : ((mangaArea.GetHeight() - Height) / 2);
-            Window.SetTimeout(
-                delegate
-                {
-                    imageObject.AddClass("in");
-                },
-                1);
+
         }
 
         public void Remove()

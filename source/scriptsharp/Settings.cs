@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Serialization;
 using System.Html;
+using jQueryApi;
 
 namespace afung.MangaWeb3.Client
 {
@@ -52,11 +53,23 @@ namespace afung.MangaWeb3.Client
         {
             get
             {
-                return Load("FixAutoDownscale") == "true";
+                return Load("FixAutoDownscale") != "false";
             }
             set
             {
                 Save("FixAutoDownscale", value ? "true" : "false");
+            }
+        }
+
+        public static bool UseAnimation
+        {
+            get
+            {
+                return Load("UseAnimation") == "true" && BootstrapTransition.Support;
+            }
+            set
+            {
+                Save("UseAnimation", value ? "true" : "false");
             }
         }
 

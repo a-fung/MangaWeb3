@@ -29,6 +29,16 @@ namespace afung.MangaWeb3.Client.Module
         {
             jQuery.Select("#settings-apply-btn").Click(ApplyChange);
             jQuery.Select("#settings-form").Submit(ApplyChange);
+
+            if (!Environment.IsiOS)
+            {
+                jQuery.Select("#settings-item-fix-auto-downscale").Hide();
+            }
+
+            if (!BootstrapTransition.Support)
+            {
+                jQuery.Select("#settings-item-animation").Hide();
+            }
         }
 
         protected override void OnShow()
@@ -45,6 +55,15 @@ namespace afung.MangaWeb3.Client.Module
             {
                 jQuery.Select("#settings-fix-auto-downscale").RemoveAttr("checked");
             }
+
+            if (Settings.UseAnimation)
+            {
+                jQuery.Select("#settings-animation").Attribute("checked", "checked");
+            }
+            else
+            {
+                jQuery.Select("#settings-animation").RemoveAttr("checked");
+            }
         }
 
         private void ApplyChange(jQueryEvent e)
@@ -54,19 +73,32 @@ namespace afung.MangaWeb3.Client.Module
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
             Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").GetAttribute("checked") == "checked";
 
-            string newLanguage = jQuery.Select("#settings-language").GetValue();
-            if (newLanguage != Settings.UserLanguage)
-            {
-                Settings.UserLanguage = newLanguage;
-                Window.Location.Href = "index.html";
-                return;
-            }
-
             int newSort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
             if (newSort != Settings.Sort)
             {
                 Settings.Sort = newSort;
                 MangasModule.Instance.SortItems();
+            }
+
+            bool needToRefresh = false;
+
+            string newLanguage = jQuery.Select("#settings-language").GetValue();
+            if (newLanguage != Settings.UserLanguage)
+            {
+                Settings.UserLanguage = newLanguage;
+                needToRefresh = true;
+            }
+
+            bool newUseAnimation = jQuery.Select("#settings-animation").GetAttribute("checked") == "checked";
+            if (newUseAnimation != Settings.UseAnimation)
+            {
+                Settings.UseAnimation = newUseAnimation;
+                needToRefresh = true;
+            }
+
+            if (needToRefresh)
+            {
+                Window.Location.Href = "index.html";
             }
         }
     }

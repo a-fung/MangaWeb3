@@ -1,4 +1,4 @@
-﻿<div id="error-modal" class="modal hide fade">
+﻿<div id="error-modal" class="modal hide">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">×</a>
         <h3 class="msg msg-Error"></h3>
@@ -7,7 +7,7 @@
         <p id="error-modal-msg"></p>
     </div>
 </div>
-<div id="login-modal" class="modal hide fade">
+<div id="login-modal" class="modal hide">
     <form class="form-horizontal" id="login-modal-form">
     <div class="modal-header">
         <h3 class="msg msg-Login"></h3>
@@ -37,7 +37,7 @@
         <li id="widget-pagination-page"><a href="#" class="widget-pagination-page-btn"></a></li>
     </ul>
 </div>
-<div id="confirm-modal" class="modal hide fade">
+<div id="confirm-modal" class="modal hide">
     <div class="modal-body">
         <p id="confirm-modal-msg"></p>
     </div>
@@ -273,8 +273,8 @@
         <div class="controls">
             <select id="search-folder">
                 <option value="0" class="msg msg-AllFolders"></option>
-                <option value="1" class="msg msg-CurrentFolderAndSubfolders">Current folder and subfolders</option>
-                <option value="2" class="msg msg-CurrentFolderOnly">Current folder only</option>
+                <option value="1" class="msg msg-CurrentFolderAndSubfolders"></option>
+                <option value="2" class="msg msg-CurrentFolderOnly"></option>
             </select>
         </div>
     </div>
@@ -384,11 +384,19 @@
             </select>
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="settings-item-fix-auto-downscale">
         <label class="msg msg-FixiOSAutoDownscale control-label" for="settings-fix-auto-downscale"></label>
         <div class="controls">
             <label class="checkbox">
                 <input type="checkbox" id="settings-fix-auto-downscale" />
+            </label>
+        </div>
+    </div>
+    <div class="control-group" id="settings-item-animation">
+        <label class="msg msg-AnimationEffect control-label" for="settings-animation"></label>
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" id="settings-animation" />
             </label>
         </div>
     </div>
@@ -399,7 +407,7 @@
     </div>
     </form>
 </div>
-<div id="change-password-modal" class="modal hide fade">
+<div id="change-password-modal" class="modal hide">
     <form id="change-password-form" class="form-horizontal">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">×</a>
@@ -452,23 +460,23 @@
         <span id="read-info-page"></span>
     </div>
     <div id="read-button-area">
-        <a href="#" class="fade arrow-btn arrow-btn-upper" data-direction="right">
+        <a href="#" class="arrow-btn arrow-btn-upper" data-direction="right">
             <span class="btn btn-mini">
                 <i class="icon-arrow-right"></i>
             </span>
-        </a><a href="#" class="fade arrow-btn" data-direction="left">
+        </a><a href="#" class="arrow-btn" data-direction="left">
             <span class="btn btn-mini">
                 <i class="icon-arrow-left"></i>
             </span>
-        </a><a href="#" class="fade arrow-btn arrow-btn-right arrow-btn-upper" data-direction="left">
+        </a><a href="#" class="arrow-btn arrow-btn-right arrow-btn-upper" data-direction="left">
             <span class="btn btn-mini">
                 <i class="icon-arrow-left"></i>
             </span>
-        </a><a href="#" class="fade arrow-btn arrow-btn-right" data-direction="right">
+        </a><a href="#" class="arrow-btn arrow-btn-right" data-direction="right">
             <span class="btn btn-mini">
                 <i class="icon-arrow-right"></i>
             </span>
-        </a><a href="#" class="fade btn btn-mini btn-info" id="read-info-btn">
+        </a><a href="#" class="btn btn-mini btn-info" id="read-info-btn">
             <i class="icon-info-sign icon-white"></i>
         </a>
     </div>

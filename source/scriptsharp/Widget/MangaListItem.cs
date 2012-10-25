@@ -29,7 +29,7 @@ namespace afung.MangaWeb3.Client.Widget
 
         public MangaListItem(jQueryObject parent, MangaListItemJson data, int nextMangaId)
         {
-            attachedObject = Template.Get("client", "mangas-list-item", true).AddClass("fade").AppendTo(parent);
+            attachedObject = Template.Get("client", "mangas-list-item", true).AppendTo(parent);
             jQuery.Select(".mangas-list-item-title", attachedObject).Text(data.title);
             jQuery.Select(".mangas-list-item-pages", attachedObject).Text(data.pages.ToString());
             coverLoaded = false;
@@ -85,6 +85,13 @@ namespace afung.MangaWeb3.Client.Widget
             jQuery.Select(".mangas-list-item-details-btn", attachedObject).AddClass("disabled").Click(DetailsButtonClicked);
             jQuery.Select(".mangas-list-item-thumbnail-link", attachedObject).Click(CoverClicked);
 
+            if (!Settings.UseAnimation)
+            {
+                TryLoadFromCache();
+                return;
+            }
+
+            attachedObject.AddClass("fade");
             Window.SetTimeout(
                 delegate
                 {
@@ -154,6 +161,18 @@ namespace afung.MangaWeb3.Client.Widget
 
         private void LoadCover(string coverUrl)
         {
+            if (!Settings.UseAnimation)
+            {
+                jQuery.Select(".mangas-list-item-thumbnail", attachedObject).Attribute("src", coverUrl).One(
+                    "load",
+                    delegate(jQueryEvent e)
+                    {
+                        coverLoaded = true;
+                        jQuery.Select(".mangas-list-item-details-btn", attachedObject).RemoveClass("disabled");
+                    });
+                return;
+            }
+
             jQueryObject wrap = jQuery.Select(".mangas-list-item-thumbnail-wrap", attachedObject);
             wrap.Height(wrap.GetHeight());
             jQueryObject placeholderThumbnail = jQuery.Select(".mangas-list-item-thumbnail", attachedObject);
@@ -217,18 +236,26 @@ namespace afung.MangaWeb3.Client.Widget
             e.PreventDefault();
             if (coverLoaded)
             {
-                jQuery.Select(".mangas-list-item-frame", attachedObject).AddClass("height-transition-suppress").Height(jQuery.Select(".mangas-list-item-inner", attachedObject).GetHeight());
                 jQueryObject buttonP = jQuery.Select(".mangas-list-item-details-p", attachedObject);
-                Utility.OnTransitionEnd(
-                    buttonP.AddClass("fade"),
-                    delegate
-                    {
-                        buttonP.Remove();
 
-                        MangaListItemDetailsRequest request = new MangaListItemDetailsRequest();
-                        request.id = data.id;
-                        Request.Send(request, DetailsRequestSuccess);
-                    });
+                Action removeButtonAndSendRequest = delegate
+                {
+                    buttonP.Remove();
+
+                    MangaListItemDetailsRequest request = new MangaListItemDetailsRequest();
+                    request.id = data.id;
+                    Request.Send(request, DetailsRequestSuccess);
+                };
+
+                if (Settings.UseAnimation)
+                {
+                    jQuery.Select(".mangas-list-item-frame", attachedObject).AddClass("height-transition-suppress").Height(jQuery.Select(".mangas-list-item-inner", attachedObject).GetHeight());
+                    Utility.OnTransitionEnd(buttonP.AddClass("fade"), removeButtonAndSendRequest);
+                }
+                else
+                {
+                    removeButtonAndSendRequest();
+                }
             }
         }
 
@@ -237,7 +264,12 @@ namespace afung.MangaWeb3.Client.Widget
         private void DetailsRequestSuccess(MangaListItemDetailsResponse response)
         {
             bool fadeIn = true;
-            jQueryObject detailsDiv = Template.Get("client", "mangas-list-item-details", true).AddClass("fade").AppendTo(jQuery.Select(".caption", attachedObject));
+            jQueryObject detailsDiv = Template.Get("client", "mangas-list-item-details", true).AppendTo(jQuery.Select(".caption", attachedObject));
+
+            if (Settings.UseAnimation)
+            {
+                detailsDiv.AddClass("fade");
+            }
 
             if (String.IsNullOrEmpty(response.author))
             {
@@ -311,6 +343,11 @@ namespace afung.MangaWeb3.Client.Widget
             {
                 detailsDiv.Remove();
                 fadeIn = false;
+            }
+
+            if (!Settings.UseAnimation)
+            {
+                return;
             }
 
             Action removeFrameHeight = delegate

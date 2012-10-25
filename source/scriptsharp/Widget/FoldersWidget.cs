@@ -43,7 +43,7 @@ namespace afung.MangaWeb3.Client.Widget
             if (folderPath != "")
             {
                 attachedObject.Hide();
-                if (BootstrapTransition.Support)
+                if (Settings.UseAnimation)
                 {
                     attachedObject.AddClass("fade");
                 }
@@ -76,7 +76,7 @@ namespace afung.MangaWeb3.Client.Widget
                     table.Show();
                     target.Children().RemoveClass("icon-plus").AddClass("icon-minus");
 
-                    if (BootstrapTransition.Support)
+                    if (Settings.UseAnimation)
                     {
                         inTransition = true;
                         int targetHeight = table.GetHeight();
@@ -104,7 +104,7 @@ namespace afung.MangaWeb3.Client.Widget
                 {
                     target.Children().AddClass("icon-plus").RemoveClass("icon-minus");
 
-                    if (BootstrapTransition.Support)
+                    if (Settings.UseAnimation)
                     {
                         inTransition = true;
 

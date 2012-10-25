@@ -96,13 +96,27 @@ namespace afung.MangaWeb3.Client.Module
             set
             {
                 _loadingPage = value;
-                if (value)
+                if (Settings.UseAnimation)
                 {
-                    jQuery.Select("#read-loading").AddClass("fade in");
+                    if (value)
+                    {
+                        jQuery.Select("#read-loading").AddClass("fade in");
+                    }
+                    else
+                    {
+                        jQuery.Select("#read-loading").RemoveClass("in");
+                    }
                 }
                 else
                 {
-                    jQuery.Select("#read-loading").RemoveClass("in");
+                    if (value)
+                    {
+                        jQuery.Select("#read-loading").Show();
+                    }
+                    else
+                    {
+                        jQuery.Select("#read-loading").Hide();
+                    }
                 }
             }
         }
@@ -203,6 +217,11 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Document.Keyup(OnKeyUp);
             jQuery.Document.Bind("mousewheel DOMMouseScroll", MouseWheelHandler);
             jQuery.Window.Resize(OnResize);
+
+            if (Settings.UseAnimation)
+            {
+                jQuery.Select("#read-button-area a").AddClass("fade");
+            }
         }
 
         protected override void OnShow()
@@ -329,26 +348,33 @@ namespace afung.MangaWeb3.Client.Module
 
         private void RemoveAllPages(Action callback)
         {
-            inTransition = true;
-            Utility.OnTransitionEnd(
-                mangaArea.AddClass("fade"),
-                delegate
+            Action removeAction = delegate
+            {
+                List<int> keys = new List<int>();
+                foreach (int key in insertedPages.Keys)
                 {
-                    List<int> keys = new List<int>();
-                    foreach (int key in insertedPages.Keys)
-                    {
-                        keys.Add(key);
-                    }
+                    keys.Add(key);
+                }
 
-                    foreach (int key in keys)
-                    {
-                        Remove(insertedPages[key]);
-                    }
+                foreach (int key in keys)
+                {
+                    Remove(insertedPages[key]);
+                }
 
-                    mangaArea.RemoveClass("fade");
-                    inTransition = false;
-                    callback();
-                });
+                mangaArea.RemoveClass("fade");
+                inTransition = false;
+                callback();
+            };
+
+            if (Settings.UseAnimation)
+            {
+                inTransition = true;
+                Utility.OnTransitionEnd(mangaArea.AddClass("fade"), removeAction);
+            }
+            else
+            {
+                removeAction();
+            }
         }
 
         [AlternateSignature]
@@ -623,14 +649,21 @@ namespace afung.MangaWeb3.Client.Module
                             touchScrollDirection = 2;
 
                             // try to snap to current page
-                            mangaArea.AddClass("navigate");
-                            Offset = -currentVerticalScrollPage.Offset;
-                            Utility.OnTransitionEnd(
-                                mangaArea,
-                                delegate
-                                {
-                                    mangaArea.RemoveClass("navigate");
-                                });
+                            if (Settings.UseAnimation)
+                            {
+                                mangaArea.AddClass("navigate");
+                                Offset = -currentVerticalScrollPage.Offset;
+                                Utility.OnTransitionEnd(
+                                    mangaArea,
+                                    delegate
+                                    {
+                                        mangaArea.RemoveClass("navigate");
+                                    });
+                            }
+                            else
+                            {
+                                Offset = -currentVerticalScrollPage.Offset;
+                            }
                         }
                     }
 
@@ -643,7 +676,7 @@ namespace afung.MangaWeb3.Client.Module
                         Offset = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
                         RefreshMangaArea(false);
 
-                        if (BootstrapTransition.Support)
+                        if (Settings.UseAnimation)
                         {
                             int index = 0;
 
@@ -713,7 +746,7 @@ namespace afung.MangaWeb3.Client.Module
                         int maxOffset = 0;
                         currentVerticalScrollPage.OffsetY = targetOffset < minOffset ? minOffset : targetOffset > maxOffset ? maxOffset : targetOffset;
 
-                        if (BootstrapTransition.Support)
+                        if (Settings.UseAnimation)
                         {
                             int index = 0;
 
@@ -926,6 +959,13 @@ namespace afung.MangaWeb3.Client.Module
                 if (Math.Abs(distance.Value) > attachedObject.GetWidth())
                 {
                     distance = attachedObject.GetWidth() * (distance.Value > 0 ? 1 : -1);
+                }
+
+                if (!Settings.UseAnimation)
+                {
+                    Offset -= distance.Value;
+                    RefreshMangaArea();
+                    return;
                 }
 
                 inTransition = true;
