@@ -45,6 +45,15 @@ namespace afung.MangaWeb3.Client
                 return jQuery.Browser.WebKit && (Window.Navigator.UserAgent.IndexOf("iPhone") != -1 || Window.Navigator.UserAgent.IndexOf("iPad") != -1 || Window.Navigator.UserAgent.IndexOf("iPod") != -1);
             }
         }
+
+
+        public static bool IsKindle
+        {
+            get
+            {
+                return jQuery.Browser.WebKit && Window.Navigator.UserAgent.IndexOf("Kindle") != -1;
+            }
+        }
     }
 
     /// <summary>

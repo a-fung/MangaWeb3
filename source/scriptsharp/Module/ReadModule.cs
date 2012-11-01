@@ -394,7 +394,6 @@ namespace afung.MangaWeb3.Client.Module
                 MangaPage page = GetMangaPage(CurrentPage);
                 if (!page.Loaded) return;
                 Insert(page);
-                RefreshMangaArea();
                 return;
             }
 
@@ -403,7 +402,6 @@ namespace afung.MangaWeb3.Client.Module
             if (pagesTail != manga.pages - 1 && (lastPagePlusOne = GetMangaPage(pagesTail + 1)).Loaded && Offset + lastPage.Offset + attachedObject.GetWidth() / 2 > 0)
             {
                 Insert(lastPagePlusOne);
-                RefreshMangaArea();
                 LoadPages(pagesTail);
                 return;
             }
@@ -413,7 +411,6 @@ namespace afung.MangaWeb3.Client.Module
             if (pagesHead != 0 && (firstPageMinusOne = GetMangaPage(pagesHead - 1)).Loaded && Offset + firstPage.Offset + firstPage.Width < attachedObject.GetWidth() * 1.5)
             {
                 Insert(firstPageMinusOne);
-                RefreshMangaArea();
                 LoadPages(pagesHead);
                 return;
             }
@@ -566,20 +563,39 @@ namespace afung.MangaWeb3.Client.Module
         {
             if (insertedPages.Count == 0)
             {
-                pagesTail = pagesHead = page.Page;
-                page.AppendTo(mangaArea, 0, 0, page);
+                Action insert = delegate
+                {
+                    pagesTail = pagesHead = page.Page;
+                    page.AppendTo(mangaArea, 0, 0, page);
 
-                if (attachedObject.GetWidth() > page.Width)
+                    if (attachedObject.GetWidth() > page.Width)
+                    {
+                        Offset = (jQuery.Window.GetWidth() - page.Width) / 2;
+                    }
+                    else if (manga.ltr)
+                    {
+                        Offset = 0;
+                    }
+                    else
+                    {
+                        Offset = jQuery.Window.GetWidth() - page.Width;
+                    }
+                };
+
+                Action callback = delegate
                 {
-                    Offset = (jQuery.Window.GetWidth() - page.Width) / 2;
-                }
-                else if (manga.ltr)
+                    insertedPages[page.Page] = page;
+                    RefreshMangaArea();
+                };
+
+                if (Settings.KindleRefreshDelay > 0)
                 {
-                    Offset = 0;
+                    KindleRefreshScreen(insert, callback);
                 }
                 else
                 {
-                    Offset = jQuery.Window.GetWidth() - page.Width;
+                    insert();
+                    callback();
                 }
             }
             else if (page.Page == pagesTail + 1)
@@ -587,19 +603,21 @@ namespace afung.MangaWeb3.Client.Module
                 MangaPage lastPage = GetMangaPage(pagesTail);
                 page.AppendTo(mangaArea, lastPage.Offset, -1, page);
                 pagesTail = page.Page;
+                insertedPages[page.Page] = page;
+                RefreshMangaArea();
             }
             else if (page.Page == pagesHead - 1)
             {
                 MangaPage firstPage = GetMangaPage(pagesHead);
                 page.AppendTo(mangaArea, firstPage.Offset, 1, firstPage);
                 pagesHead = page.Page;
+                insertedPages[page.Page] = page;
+                RefreshMangaArea();
             }
             else
             {
                 return;
             }
-
-            insertedPages[page.Page] = page;
         }
 
         private void Remove(MangaPage page)
@@ -963,6 +981,20 @@ namespace afung.MangaWeb3.Client.Module
 
                 if (!Settings.UseAnimation)
                 {
+                    if (Settings.KindleRefreshDelay > 0)
+                    {
+                        KindleRefreshScreen(
+                            delegate
+                            {
+                                Offset -= distance.Value;
+                            },
+                            delegate
+                            {
+                                RefreshMangaArea();
+                            });
+                        return;
+                    }
+
                     Offset -= distance.Value;
                     RefreshMangaArea();
                     return;
@@ -1100,6 +1132,40 @@ namespace afung.MangaWeb3.Client.Module
                     },
                     1000);
             }
+        }
+
+        private void KindleRefreshScreen(Action update, Action callback)
+        {
+            int delay = Settings.KindleRefreshDelay * 100;
+
+            jQueryObject kindleRefreshObj = jQuery.FromHtml("<div></div>")
+                .AppendTo(jQuery.Select("body"))
+                .Height(jQuery.Document.GetHeight())
+                .CSS(new System.Collections.Dictionary("z-index", "5000", "position", "absolute", "background", "white", "top", "0", "left", "0", "width", "100%"));
+
+            Window.SetTimeout(
+                delegate
+                {
+                    kindleRefreshObj.CSS("background", "black");
+                    update();
+
+                    Window.SetTimeout(
+                        delegate
+                        {
+                            kindleRefreshObj.CSS("background", "white");
+
+                            Window.SetTimeout(
+                                delegate
+                                {
+                                    kindleRefreshObj.Remove();
+                                    callback();
+                                },
+                                delay);
+                        },
+                        delay);
+                },
+                delay);
+
         }
     }
 }

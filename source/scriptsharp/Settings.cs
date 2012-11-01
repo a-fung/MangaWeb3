@@ -73,6 +73,36 @@ namespace afung.MangaWeb3.Client
             }
         }
 
+        public static int KindleRefreshDelay
+        {
+            get
+            {
+                if (!Environment.IsKindle)
+                {
+                    return 0;
+                }
+                else
+                {
+                    string value = Load("KindleRefreshDelay");
+                    if (String.IsNullOrEmpty(value))
+                    {
+                        return 2;
+                    }
+
+                    return int.Parse(value, 10);
+                }
+            }
+            set
+            {
+                if (!Number.IsFinite(value) || value < 0 || value > 9)
+                {
+                    value = 0;
+                }
+
+                Save("KindleRefreshDelay", value.ToString());
+            }
+        }
+
         public static string CurrentFolder
         {
             get
@@ -153,6 +183,5 @@ namespace afung.MangaWeb3.Client
 
             return null;
         }
-
     }
 }

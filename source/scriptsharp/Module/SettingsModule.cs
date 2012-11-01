@@ -39,6 +39,11 @@ namespace afung.MangaWeb3.Client.Module
             {
                 jQuery.Select("#settings-item-animation").Hide();
             }
+
+            if (!Environment.IsKindle)
+            {
+                jQuery.Select("#settings-item-kindlerefreshdelay").Hide();
+            }
         }
 
         protected override void OnShow()
@@ -46,6 +51,7 @@ namespace afung.MangaWeb3.Client.Module
             jQuery.Select("#settings-language").Value(Settings.UserLanguage);
             jQuery.Select("#settings-sort").Value(Settings.Sort.ToString());
             jQuery.Select("#settings-display-type").Value(Settings.DisplayType.ToString());
+            jQuery.Select("#settings-kindlerefreshdelay").Value(Settings.KindleRefreshDelay.ToString());
 
             if (Settings.FixAutoDownscale)
             {
@@ -72,6 +78,7 @@ namespace afung.MangaWeb3.Client.Module
 
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
             Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").GetAttribute("checked") == "checked";
+            Settings.KindleRefreshDelay = int.Parse(jQuery.Select("#settings-kindlerefreshdelay").GetValue(), 10);
 
             int newSort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
             if (newSort != Settings.Sort)
