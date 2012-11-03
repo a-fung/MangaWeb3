@@ -273,7 +273,7 @@ namespace afung.MangaWeb3.Server
 
             if (ex.InnerException != null)
             {
-                TryLogError(ex);
+                TryLogError(ex.InnerException);
             }
         }
     }
