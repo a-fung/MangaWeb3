@@ -10,5 +10,6 @@ namespace afung.MangaWeb3.Common
     {
         public string name;
         public FolderJson[] subfolders;
+        public int count;
     }
 }

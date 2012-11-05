@@ -25,7 +25,7 @@ namespace afung.MangaWeb3.Client.Module
         }
 
         private SettingsModule()
-            : base("settings-module")
+            : base("settings-module", null)
         {
             jQuery.Select("#settings-apply-btn").Click(ApplyChange);
             jQuery.Select("#settings-form").Submit(ApplyChange);

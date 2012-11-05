@@ -20,17 +20,31 @@ namespace afung.MangaWeb3.Client.Module
             {
                 if (_instance == null)
                 {
-                    _instance = new FoldersModule();
+                    Action loginRefreshCallback = delegate
+                    {
+                        if (_instance != null)
+                        {
+                            _instance.Refresh();
+                        }
+                    };
+
+                    _instance = new FoldersModule(loginRefreshCallback);
                 }
 
                 return _instance;
             }
         }
 
-        private FoldersModule()
-            : base("folders-module")
+        private FoldersModule(Action loginRefreshCallback)
+            : base("folders-module", loginRefreshCallback)
         {
             jQuery.Select("#folders-all-folders-btn").Click(AllFoldersButtonClicked);
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            jQuery.Select("#folders-area").Children().Remove();
             Request.Send(new FolderRequest(), FolderRequestSuccess);
             Template.Get("client", "loading-well", true).AppendTo(jQuery.Select("#folders-area"));
         }

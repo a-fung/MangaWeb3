@@ -433,11 +433,12 @@ class Collection
         for (result in resultSet)
         {
             var path:String = Std.string(result.get("path")).substr(collectionPathLength);
+            var lastFolderPath:String = null;
             var i:Int = 0, j:Int = 0;
             
             while ((i = path.indexOf(separator, j)) != -1)
             {
-                var relativePath = path.substr(0, i);
+                var relativePath:String = lastFolderPath = path.substr(0, i);
                 if (!folderDictionary.exists(relativePath))
                 {
                     var subfolder:FolderJson = new FolderJson();
@@ -451,6 +452,11 @@ class Collection
                 }
                 
                 j = i + 1;
+            }
+            
+            if (lastFolderPath != null)
+            {
+                folderDictionary.get(lastFolderPath).count++;
             }
         }
         

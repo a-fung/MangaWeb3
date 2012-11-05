@@ -456,11 +456,12 @@ namespace afung.MangaWeb3.Server
             foreach (Dictionary<string, object> result in resultSet)
             {
                 string path = Convert.ToString(result["path"]).Substring(collectionPathLength);
+                string lastFolderPath = null;
                 int i = 0, j = 0;
 
                 while ((i = path.IndexOf(separator, j)) != -1)
                 {
-                    string relativePath = path.Substring(0, i);
+                    string relativePath = lastFolderPath = path.Substring(0, i);
                     if (!folderDictionary.ContainsKey(relativePath.ToLowerInvariant()))
                     {
                         FolderJson subfolder = new FolderJson();
@@ -477,6 +478,11 @@ namespace afung.MangaWeb3.Server
                     }
 
                     j = i + 1;
+                }
+
+                if (lastFolderPath != null)
+                {
+                    folderDictionary[lastFolderPath.ToLowerInvariant()].count++;
                 }
             }
 

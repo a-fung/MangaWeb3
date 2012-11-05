@@ -32,7 +32,15 @@ namespace afung.MangaWeb3.Client.Module
             {
                 if (_instance == null)
                 {
-                    _instance = new MangasModule();
+                    Action loginRefreshCallback = delegate
+                    {
+                        if (_instance != null)
+                        {
+                            _instance.Refresh(null, true);
+                        }
+                    };
+
+                    _instance = new MangasModule(loginRefreshCallback);
                 }
 
                 return _instance;
@@ -41,8 +49,8 @@ namespace afung.MangaWeb3.Client.Module
 
         private int currentPage;
 
-        private MangasModule()
-            : base("mangas-module")
+        private MangasModule(Action loginRefreshCallback)
+            : base("mangas-module", loginRefreshCallback)
         {
             items = new MangaListItemJson[] { };
             currentPage = 1;
@@ -68,7 +76,9 @@ namespace afung.MangaWeb3.Client.Module
 
         [AlternateSignature]
         public extern void Refresh();
-        public void Refresh(MangaFilter filter)
+        [AlternateSignature]
+        public extern void Refresh(MangaFilter filter);
+        public void Refresh(MangaFilter filter, bool suppressShowModule)
         {
             if (Script.IsNullOrUndefined(filter))
             {
@@ -135,7 +145,14 @@ namespace afung.MangaWeb3.Client.Module
                 items = new MangaListItemJson[] { };
                 jQuery.Select(".mangas-pagination").Children().Remove();
                 jQuery.Select("#mangas-list").Children().Remove();
-                Show(onReady);
+                if (suppressShowModule)
+                {
+                    onReady();
+                }
+                else
+                {
+                    Show(onReady);
+                }
             }
             else
             {

@@ -15,10 +15,11 @@ namespace afung.MangaWeb3.Client.Widget
     {
         private jQueryObject loginButton;
         private jQueryObject logoutDropdown;
+        private Action refreshCallback;
 
         private static List<LoginWidget> instances;
 
-        public LoginWidget(jQueryObject parent)
+        public LoginWidget(jQueryObject parent, Action refreshCallback)
         {
             if (instances == null)
             {
@@ -27,6 +28,7 @@ namespace afung.MangaWeb3.Client.Widget
 
             loginButton = Template.Get("client", "nav-login-button", true).AppendTo(parent).Hide();
             logoutDropdown = Template.Get("client", "nav-logout-dropdown", true).AppendTo(parent).Hide();
+            this.refreshCallback = refreshCallback;
 
             jQuery.Select(".nav-login", loginButton).Click(LoginButtonClicked);
             jQuery.Select(".nav-logout", logoutDropdown).Click(LogoutButtonClicked);
@@ -52,21 +54,7 @@ namespace afung.MangaWeb3.Client.Widget
         private void LogoutButtonClicked(jQueryEvent e)
         {
             e.PreventDefault();
-
-            LoginRequest request = new LoginRequest();
-            request.password = "logout";
-
-            Request.Send(request, LogoutSuccessful, LogoutSuccessful);
-        }
-
-        [AlternateSignature]
-        private extern void LogoutSuccessful(Exception error);
-        [AlternateSignature]
-        private extern void LogoutSuccessful(JsonResponse response);
-        private void LogoutSuccessful()
-        {
-            // redirect to index.html
-            Window.Location.Href = "index.html";
+            LoginModal.Logout();
         }
 
         private void ChangePasswordButtonClicked(jQueryEvent e)
@@ -75,7 +63,9 @@ namespace afung.MangaWeb3.Client.Widget
             ChangePasswordModal.ShowDialog();
         }
 
-        public void Refresh()
+        [AlternateSignature]
+        public extern void Refresh();
+        public void Refresh(bool callRefreshCallback)
         {
             LoginModal.GetUserName(delegate(LoginResponse userinfo)
             {
@@ -90,6 +80,11 @@ namespace afung.MangaWeb3.Client.Widget
                     logoutDropdown.Show();
                     jQuery.Select(".nav-user-username", logoutDropdown).Text(userinfo.username);
                 }
+
+                if (callRefreshCallback && refreshCallback != null)
+                {
+                    refreshCallback();
+                }
             });
         }
 
@@ -99,7 +94,7 @@ namespace afung.MangaWeb3.Client.Widget
             {
                 foreach (LoginWidget instance in instances)
                 {
-                    instance.Refresh();
+                    instance.Refresh(true);
                 }
             }
         }

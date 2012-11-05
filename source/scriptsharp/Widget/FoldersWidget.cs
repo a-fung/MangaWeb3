@@ -30,7 +30,7 @@ namespace afung.MangaWeb3.Client.Widget
             {
                 string subfolderPath = folderPath + separator + folder.name;
                 jQueryObject row = Template.Get("client", "folders-trow", true).AppendTo(attachedObject.Children());
-                jQueryObject btn = jQuery.Select(".folders-btn", row).Text(folder.name).Click(FolderButtonClick).Attribute("data-path", subfolderPath);
+                jQueryObject btn = jQuery.Select(".folders-btn", row).Click(FolderButtonClick).Attribute("data-path", subfolderPath).Text(folder.count == 0 ? folder.name : String.Format("{0} ({1})", folder.name, folder.count));
                 jQueryObject expandBtn = jQuery.Select(".folders-expand-btn", row).Click(ExpandButtonClick);
 
                 if (folder.subfolders != null && folder.subfolders.Length > 0)
@@ -76,7 +76,7 @@ namespace afung.MangaWeb3.Client.Widget
                     table.Show();
                     target.Children().RemoveClass("icon-plus").AddClass("icon-minus");
 
-                    if (Settings.UseAnimation)
+                    if (Settings.UseAnimation && table.Is(":visible"))
                     {
                         inTransition = true;
                         int targetHeight = table.GetHeight();
@@ -104,7 +104,7 @@ namespace afung.MangaWeb3.Client.Widget
                 {
                     target.Children().AddClass("icon-plus").RemoveClass("icon-minus");
 
-                    if (Settings.UseAnimation)
+                    if (Settings.UseAnimation && table.Is(":visible"))
                     {
                         inTransition = true;
 

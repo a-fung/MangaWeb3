@@ -168,5 +168,20 @@ namespace afung.MangaWeb3.Client.Modal
             jQuery.Select("#login-modal-password").Value("");
             Hide();
         }
+
+        public static void Logout()
+        {
+            LoginRequest request = new LoginRequest();
+            request.password = "logout";
+            Request.Send(request, LogoutSuccessful);
+        }
+
+        [AlternateSignature]
+        private extern static void LogoutSuccessful(JsonResponse response);
+        private static void LogoutSuccessful(LoginResponse response)
+        {
+            userInfo = response;
+            LoginWidget.RefreshAll();
+        }
     }
 }

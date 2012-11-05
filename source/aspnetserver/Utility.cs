@@ -251,7 +251,7 @@ namespace afung.MangaWeb3.Server
 
         public static void TryLogError(Exception ex)
         {
-            if (!Config.IsInstalled)
+            if (!Config.IsInstalled || ex.GetType() == typeof(System.Threading.ThreadAbortException))
             {
                 return;
             }

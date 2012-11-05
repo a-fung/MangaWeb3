@@ -9,6 +9,7 @@ class FolderJson
 {
     public var name:String;
     public var subfolders:Array<FolderJson>;
+    public var count:Int;
     
     public function new()
     {

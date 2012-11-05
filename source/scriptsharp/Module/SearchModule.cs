@@ -26,7 +26,7 @@ namespace afung.MangaWeb3.Client.Module
         }
 
         private SearchModule()
-            : base("search-module")
+            : base("search-module", null)
         {
             jQuery.Select("#search-submit").Click(SubmitSearchForm);
             jQuery.Select("#search-form").Submit(SubmitSearchForm);
