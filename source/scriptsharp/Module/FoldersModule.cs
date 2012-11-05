@@ -72,6 +72,7 @@ namespace afung.MangaWeb3.Client.Module
                 }
 
                 new FoldersWidget(jQuery.Select("#folders-area"), response.folders, "");
+                FoldersWidget.ExpandToFolder(MangasModule.Instance.CurrentFolder);
             }
             else
             {

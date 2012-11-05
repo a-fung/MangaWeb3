@@ -14,7 +14,7 @@ namespace afung.MangaWeb3.Client.Widget
     public class FoldersWidget
     {
         private jQueryObject attachedObject;
-        private bool inTransition = false;
+        private static Dictionary<string, bool> inTransitions = new Dictionary<string, bool>();
 
         public FoldersWidget(jQueryObject parent, FolderJson[] folders, string folderPath)
         {
@@ -30,7 +30,7 @@ namespace afung.MangaWeb3.Client.Widget
             {
                 string subfolderPath = folderPath + separator + folder.name;
                 jQueryObject row = Template.Get("client", "folders-trow", true).AppendTo(attachedObject.Children());
-                jQueryObject btn = jQuery.Select(".folders-btn", row).Click(FolderButtonClick).Attribute("data-path", subfolderPath).Text(folder.count == 0 ? folder.name : String.Format("{0} ({1})", folder.name, folder.count));
+                jQueryObject btn = jQuery.Select(".folders-btn", row).Click(FolderButtonClick).Attribute("data-path", subfolderPath).Text(folder.count == 0 ? folder.name : String.Format("{0} ({1})", folder.name, folder.count)).Attribute("data-count", folder.count.ToString());
                 jQueryObject expandBtn = jQuery.Select(".folders-expand-btn", row).Click(ExpandButtonClick);
 
                 if (folder.subfolders != null && folder.subfolders.Length > 0)
@@ -54,11 +54,17 @@ namespace afung.MangaWeb3.Client.Widget
         {
             e.PreventDefault();
             string dataPath = jQuery.FromElement(e.Target).GetAttribute("data-path");
+            bool emptyFolder = jQuery.FromElement(e.Target).GetAttribute("data-count") == "0";
             if (!String.IsNullOrEmpty(dataPath))
             {
                 MangaFilter filter = new MangaFilter();
                 filter.folder = dataPath.Substr(1);
-                MangasModule.Instance.Refresh(filter);
+                MangasModule.Instance.Refresh(filter, emptyFolder);
+
+                if (emptyFolder)
+                {
+                    ExpandCollapseFolder(dataPath, true);
+                }
             }
         }
 
@@ -68,45 +74,77 @@ namespace afung.MangaWeb3.Client.Widget
             jQueryObject target = jQuery.FromElement(e.Target);
             while (!target.Is("a")) target = target.Parent();
             string dataPath = target.GetAttribute("data-path");
-            if (!String.IsNullOrEmpty(dataPath) && !inTransition)
+
+            if (!String.IsNullOrEmpty(dataPath))
             {
-                jQueryObject table = jQuery.Select("table[data-path=\"" + dataPath.Replace("\\", "\\\\") + "\"]", attachedObject);
-                if (target.Children().HasClass("icon-plus"))
+                ExpandCollapseFolder(dataPath, target.Children().HasClass("icon-plus"));
+            }
+        }
+
+        private static void ExpandCollapseFolder(string dataPath, bool expand)
+        {
+            if (!String.IsNullOrEmpty(dataPath) && !inTransitions[dataPath])
+            {
+                jQueryObject table = jQuery.Select("table[data-path=\"" + dataPath.Replace("\\", "\\\\") + "\"]");
+                jQueryObject expandButton = jQuery.Select("a.folders-expand-btn[data-path=\"" + dataPath.Replace("\\", "\\\\") + "\"]");
+                if (table.Length == 0)
                 {
-                    table.Show();
-                    target.Children().RemoveClass("icon-plus").AddClass("icon-minus");
+                    return;
+                }
 
-                    if (Settings.UseAnimation && table.Is(":visible"))
+                if (expand)
+                {
+                    if (table.Is(":visible"))
                     {
-                        inTransition = true;
-                        int targetHeight = table.GetHeight();
-                        table.Height(0);
+                        return;
+                    }
 
-                        Window.SetTimeout(
-                            delegate
-                            {
-                                Utility.OnTransitionEnd(
-                                    table.AddClass("height-transition").Height(targetHeight),
-                                    delegate
-                                    {
-                                        Utility.OnTransitionEnd(
-                                            table.RemoveClass("height-transition").CSS("height", "").AddClass("in"),
-                                            delegate
-                                            {
-                                                inTransition = false;
-                                            });
-                                    });
-                            },
-                            1);
+                    table.Show();
+                    expandButton.Children().RemoveClass("icon-plus").AddClass("icon-minus");
+
+                    if (Settings.UseAnimation)
+                    {
+                        if (table.Is(":visible"))
+                        {
+                            inTransitions[dataPath] = true;
+                            int targetHeight = table.GetHeight();
+                            table.Height(0);
+
+                            Window.SetTimeout(
+                                delegate
+                                {
+                                    Utility.OnTransitionEnd(
+                                        table.AddClass("height-transition").Height(targetHeight),
+                                        delegate
+                                        {
+                                            Utility.OnTransitionEnd(
+                                                table.RemoveClass("height-transition").CSS("height", "").AddClass("in"),
+                                                delegate
+                                                {
+                                                    inTransitions[dataPath] = false;
+                                                });
+                                        });
+                                },
+                                1);
+                        }
+                        else
+                        {
+                            table.AddClass("in");
+                        }
                     }
                 }
-                else if (target.Children().HasClass("icon-minus"))
+                else
                 {
-                    target.Children().AddClass("icon-plus").RemoveClass("icon-minus");
+                    if (!table.Is(":visible"))
+                    {
+                        return;
+                    }
+
+                    expandButton.Children().AddClass("icon-plus").RemoveClass("icon-minus");
 
                     if (Settings.UseAnimation && table.Is(":visible"))
                     {
-                        inTransition = true;
+                        inTransitions[dataPath] = true;
 
                         Utility.OnTransitionEnd(
                             table.RemoveClass("in").Height(table.GetHeight()),
@@ -117,16 +155,35 @@ namespace afung.MangaWeb3.Client.Widget
                                     delegate
                                     {
                                         table.Hide().CSS("height", "");
-                                        inTransition = false;
+                                        inTransitions[dataPath] = false;
                                     });
                             });
                     }
                     else
                     {
-                        table.Hide();
+                        table.Hide().RemoveClass("in");
                     }
                 }
             }
+        }
+
+        public static void ExpandToFolder(string folder)
+        {
+            int i = 0, j = 0;
+            string separator = Environment.ServerType == ServerType.AspNet ? "\\" : "/";
+            folder = separator + folder;
+
+            while ((i = folder.IndexOf(separator, j)) != -1)
+            {
+                string path = folder.Substr(0, i);
+                j = i + 1;
+
+                if (path.Length != 0)
+                {
+                    ExpandCollapseFolder(path, true);
+                }
+            }
+
         }
     }
 }

@@ -138,6 +138,7 @@ namespace afung.MangaWeb3.Client.Module
                 request.filter = filter;
                 Request.Send(request, MangaListRequestSuccess);
                 Template.Get("client", "loading-well", true).AppendTo(jQuery.Select("#mangas-loading"));
+                FoldersWidget.ExpandToFolder(currentFolder);
             };
 
             if (!attachedObject.Is(":visible"))
