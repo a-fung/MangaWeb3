@@ -42,7 +42,7 @@ namespace afung.MangaWeb3.Client
         {
             get
             {
-                return jQuery.Browser.WebKit && (Window.Navigator.UserAgent.IndexOf("iPhone") != -1 || Window.Navigator.UserAgent.IndexOf("iPad") != -1 || Window.Navigator.UserAgent.IndexOf("iPod") != -1);
+                return Window.Navigator.UserAgent.IndexOf("iPhone") != -1 || Window.Navigator.UserAgent.IndexOf("iPad") != -1 || Window.Navigator.UserAgent.IndexOf("iPod") != -1;
             }
         }
 
@@ -51,7 +51,38 @@ namespace afung.MangaWeb3.Client
         {
             get
             {
-                return jQuery.Browser.WebKit && Window.Navigator.UserAgent.IndexOf("Kindle") != -1;
+                return Window.Navigator.UserAgent.IndexOf("Kindle") != -1;
+            }
+        }
+
+        public static bool IsIE9OrLower
+        {
+            get
+            {
+                int index = Window.Navigator.UserAgent.IndexOf("MSIE");
+                if (index == -1)
+                {
+                    return false;
+                }
+
+                string versionString = Window.Navigator.UserAgent.Substr(index + 4);
+                int version = int.Parse(versionString, 10);
+
+                if (version > 9)
+                {
+                    return false;
+                }
+                else if (version == 7)
+                {
+                    // compatibility mode?
+                    index = Window.Navigator.UserAgent.IndexOf("Trident/");
+                    versionString = Window.Navigator.UserAgent.Substr(index + 8);
+                    version = int.Parse(versionString, 10);
+
+                    return version <= 5;
+                }
+
+                return true;
             }
         }
     }

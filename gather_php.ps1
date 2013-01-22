@@ -46,7 +46,7 @@ copy source\aspnetserver\js\afung.MangaWeb3.Common.js $path\js
 copy source\aspnetserver\js\mscorlib.js $path\js
 
 copy source\aspnetserver\js\bootstrap.min.js $path\js
-copy source\aspnetserver\js\jquery-1.8.2.min.js $path\js
+copy source\aspnetserver\js\jquery-1.9.0.min.js $path\js
 copy source\aspnetserver\js\jquery.touch.js $path\js
 copy source\aspnetserver\js\json2.js $path\js
 copy source\aspnetserver\js\add2home.js $path\js

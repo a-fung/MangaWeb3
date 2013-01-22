@@ -401,7 +401,7 @@ namespace afung.MangaWeb3.Client.Widget
 
         private void UpdateCssTransform()
         {
-            if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
+            if (Environment.IsIE9OrLower)
             {
                 string cssValue = "translate(" + _offset + "px," + _offsetY + "px)";
                 imageObject.CSS("transform", cssValue).CSS("-ms-transform", cssValue);

@@ -131,7 +131,7 @@ namespace afung.MangaWeb3.Client.Module
             set
             {
                 _offset = Math.Round(value);
-                if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
+                if (Environment.IsIE9OrLower)
                 {
                     string cssValue = "translate(" + _offset + "px,0)";
                     mangaArea.CSS("transform", cssValue).CSS("-ms-transform", cssValue);
@@ -154,7 +154,7 @@ namespace afung.MangaWeb3.Client.Module
             set
             {
                 _sliderOffset = Math.Round(value);
-                if (jQuery.Browser.MSIE && float.Parse(jQuery.Browser.Version) < 10)
+                if (Environment.IsIE9OrLower)
                 {
                     string cssValue = "translate(" + _sliderOffset + "px,0)";
                     sliderHandle.CSS("transform", cssValue).CSS("-ms-transform", cssValue);
