@@ -65,7 +65,12 @@ namespace afung.MangaWeb3.Client
         {
             get
             {
-                return Load("UseAnimation") == "true" && BootstrapTransition.Support;
+                if (BootstrapTransition.Support)
+                {
+                    return Load("UseAnimation") == "true";
+                }
+
+                return false;
             }
             set
             {
@@ -112,6 +117,18 @@ namespace afung.MangaWeb3.Client
             set
             {
                 Save("CurrentFolder", value);
+            }
+        }
+
+        public static int SearchFolderSetting
+        {
+            get
+            {
+                return int.Parse(Load("SearchFolderSetting"), 10);
+            }
+            set
+            {
+                Save("SearchFolderSetting", value.ToString());
             }
         }
 

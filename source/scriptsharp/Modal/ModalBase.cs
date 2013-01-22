@@ -40,7 +40,6 @@ namespace afung.MangaWeb3.Client.Modal
                 new Dictionary<string, object>(
                     "keyboard",
                     false));
-            FixVerticalCenter();
         }
 
         protected void ShowStatic()
@@ -51,20 +50,11 @@ namespace afung.MangaWeb3.Client.Modal
                     "static",
                     "keyboard",
                     false));
-            FixVerticalCenter();
         }
 
         protected void Hide()
         {
             ((jQueryBootstrap)attachedObject).Modal("hide");
-        }
-
-        private void FixVerticalCenter()
-        {
-            attachedObject.CSS(
-                new Dictionary<string, object>(
-                    "margin-top",
-                    attachedObject.GetOuterHeight() / -2));
         }
     }
 }

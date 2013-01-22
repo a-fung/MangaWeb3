@@ -170,7 +170,9 @@ namespace afung.MangaWeb3.Server
 
         public static string GetTempFileName()
         {
-            return Path.GetTempFileName();
+            string path = Path.GetTempFileName();
+            File.Delete(path);
+            return path;
         }
 
         public static int ToUnixTimeStamp(DateTime date)

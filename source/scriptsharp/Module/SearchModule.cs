@@ -35,6 +35,7 @@ namespace afung.MangaWeb3.Client.Module
 
         protected override void OnShow()
         {
+            jQuery.Select("#search-folder").Value(Settings.SearchFolderSetting.ToString());
         }
 
         [AlternateSignature]
@@ -64,7 +65,7 @@ namespace afung.MangaWeb3.Client.Module
             MangaFilter filter = new MangaFilter();
             MangaSearchFilter search = filter.search = new MangaSearchFilter();
             search.title = jQuery.Select("#search-title").GetValue();
-            search.folderSetting = int.Parse(jQuery.Select("#search-folder").GetValue(), 10);
+            search.folderSetting = Settings.SearchFolderSetting = int.Parse(jQuery.Select("#search-folder").GetValue(), 10);
             search.folder = MangasModule.Instance.CurrentFolder;
             search.author = jQuery.Select("#search-author").GetValue();
             search.series = jQuery.Select("#search-series").GetValue();

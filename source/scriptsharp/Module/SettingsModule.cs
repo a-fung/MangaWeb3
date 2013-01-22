@@ -77,7 +77,7 @@ namespace afung.MangaWeb3.Client.Module
             e.PreventDefault();
 
             Settings.DisplayType = int.Parse(jQuery.Select("#settings-display-type").GetValue(), 10);
-            Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").GetAttribute("checked") == "checked";
+            Settings.FixAutoDownscale = jQuery.Select("#settings-fix-auto-downscale").Is(":checked");
             Settings.KindleRefreshDelay = int.Parse(jQuery.Select("#settings-kindlerefreshdelay").GetValue(), 10);
 
             int newSort = int.Parse(jQuery.Select("#settings-sort").GetValue(), 10);
@@ -96,7 +96,7 @@ namespace afung.MangaWeb3.Client.Module
                 needToRefresh = true;
             }
 
-            bool newUseAnimation = jQuery.Select("#settings-animation").GetAttribute("checked") == "checked";
+            bool newUseAnimation = jQuery.Select("#settings-animation").Is(":checked");
             if (newUseAnimation != Settings.UseAnimation)
             {
                 Settings.UseAnimation = newUseAnimation;

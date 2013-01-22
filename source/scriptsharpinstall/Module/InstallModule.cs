@@ -509,9 +509,9 @@ namespace afung.MangaWeb3.Client.Install.Module
 
             request.sevenZipPath = jQuery.Select("#install-sevenzip-dll").GetValue();
 
-            request.zip = jQuery.Select("#install-zip-checkbox").GetAttribute("checked") == "checked";
-            request.rar = jQuery.Select("#install-rar-checkbox").GetAttribute("checked") == "checked";
-            request.pdf = jQuery.Select("#install-pdf-checkbox").GetAttribute("checked") == "checked";
+            request.zip = jQuery.Select("#install-zip-checkbox").Is(":checked");
+            request.rar = jQuery.Select("#install-rar-checkbox").Is(":checked");
+            request.pdf = jQuery.Select("#install-pdf-checkbox").Is(":checked");
 
             request.admin = username;
             request.password = password;

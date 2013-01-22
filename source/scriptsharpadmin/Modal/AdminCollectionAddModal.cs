@@ -74,8 +74,8 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             AdminCollectionAddRequest request = new AdminCollectionAddRequest();
             request.name = name;
             request.path = path;
-            request.public_ = jQuery.Select("#admin-collection-add-public").GetAttribute("checked") == "checked";
-            request.autoadd = jQuery.Select("#admin-collection-add-autoadd").GetAttribute("checked") == "checked";
+            request.public_ = jQuery.Select("#admin-collection-add-public").Is(":checked");
+            request.autoadd = jQuery.Select("#admin-collection-add-autoadd").Is(":checked");
 
             Request.Send(request, SubmitSuccess, SubmitFailure);
         }

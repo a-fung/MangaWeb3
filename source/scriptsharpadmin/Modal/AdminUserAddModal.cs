@@ -83,7 +83,7 @@ namespace afung.MangaWeb3.Client.Admin.Modal
             request.username = name;
             request.password = password;
             request.password2 = password2;
-            request.admin = jQuery.Select("#admin-user-add-administrator").GetAttribute("checked") == "checked";
+            request.admin = jQuery.Select("#admin-user-add-administrator").Is(":checked");
 
             Request.Send(request, SubmitSuccess, SubmitFailure);
         }
