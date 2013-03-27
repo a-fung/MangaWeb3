@@ -20,6 +20,7 @@ namespace afung.MangaWeb3.Client.Widget
         private int coverRequestDelay;
         private int nextMangaId;
         private MangaListItemJson data;
+        private Action callback;
 
         private static bool sendingReadReqeust = false;
 
@@ -27,7 +28,7 @@ namespace afung.MangaWeb3.Client.Widget
         private static SelfLimitingTimeout loadNextTimeout = new SelfLimitingTimeout();
         private static Dictionary<int, string> coverCache = new Dictionary<int, string>();
 
-        public MangaListItem(jQueryObject parent, MangaListItemJson data, int nextMangaId)
+        public MangaListItem(jQueryObject parent, MangaListItemJson data, int nextMangaId, Action loadFinishCallback)
         {
             attachedObject = Template.Get("client", "mangas-list-item", true).AppendTo(parent);
             jQuery.Select(".mangas-list-item-title", attachedObject).Text(data.title);
@@ -36,6 +37,7 @@ namespace afung.MangaWeb3.Client.Widget
             coverRequestDelay = 500;
             this.nextMangaId = nextMangaId;
             this.data = data;
+            callback = loadFinishCallback;
 
             double size = data.size;
             string unit;
@@ -156,6 +158,7 @@ namespace afung.MangaWeb3.Client.Widget
             else if (response.status == 2)
             {
                 attachedObject.Remove();
+                callback();
             }
         }
 
@@ -169,6 +172,7 @@ namespace afung.MangaWeb3.Client.Widget
                     {
                         coverLoaded = true;
                         jQuery.Select(".mangas-list-item-details-btn", attachedObject).RemoveClass("disabled");
+                        callback();
                     });
                 return;
             }
@@ -222,6 +226,7 @@ namespace afung.MangaWeb3.Client.Widget
                                                 wrap.RemoveClass("height-transition").CSS("height", "");
                                                 coverLoaded = true;
                                                 jQuery.Select(".mangas-list-item-details-btn", attachedObject).RemoveClass("disabled");
+                                                callback();
                                             });
                                     });
                             };

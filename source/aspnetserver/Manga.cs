@@ -794,6 +794,12 @@ namespace afung.MangaWeb3.Server
                 this.Status = 1;
                 this.Save();
             }
+            catch (DirectoryNotFoundException ex)
+            {
+                Utility.TryLogError(ex);
+                this.Status = 1;
+                this.Save();
+            }
             catch (MangaWrongFormatException ex)
             {
                 Utility.TryLogError(ex);

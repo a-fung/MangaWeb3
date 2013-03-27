@@ -31,11 +31,17 @@ namespace afung.MangaWeb3.Client.Widget
 
         [AlternateSignature]
         public extern void Refresh();
-        public void Refresh(bool resetPage)
+        [AlternateSignature]
+        public extern void Refresh(bool resetPage);
+        public void Refresh(bool resetPage, int setPage)
         {
             if (resetPage)
             {
                 currentPage = 1;
+            }
+            else if (!Script.IsNullOrUndefined(setPage))
+            {
+                currentPage = setPage;
             }
 
             parent.Children().Remove();

@@ -49,12 +49,17 @@ namespace afung.MangaWeb3.Client.Module
 
         private int currentPage;
 
+        private bool autoChangePage = false;
+        private MangaFilter lastFilter = null;
+
         private MangasModule(Action loginRefreshCallback)
             : base("mangas-module", loginRefreshCallback)
         {
             items = new MangaListItemJson[] { };
             currentPage = 1;
             pagination = new Pagination(jQuery.Select(".mangas-pagination", attachedObject), ChangePage, GetTotalPage, "centered");
+            jQuery.Document.Keyup(OnKeyUp);
+            jQuery.Document.Click(DocumentClick);
             Refresh();
         }
 
@@ -135,7 +140,7 @@ namespace afung.MangaWeb3.Client.Module
             Action onReady = delegate
             {
                 MangaListRequest request = new MangaListRequest();
-                request.filter = filter;
+                lastFilter = request.filter = filter;
                 Request.Send(request, MangaListRequestSuccess);
                 Template.Get("client", "loading-well", true).AppendTo(jQuery.Select("#mangas-loading"));
                 FoldersWidget.ExpandToFolder(currentFolder);
@@ -262,6 +267,25 @@ namespace afung.MangaWeb3.Client.Module
             jQueryObject mangaList = jQuery.Select("#mangas-list");
             List<MangaListItem> listItems = new List<MangaListItem>();
 
+            int loadedItems = 0;
+            Action itemLoadFinishCallback = delegate
+            {
+                if (autoChangePage && page * Environment.ElementsPerPage < items.Length)
+                {
+                    loadedItems++;
+                    if (loadedItems >= Environment.ElementsPerPage)
+                    {
+                        pagination.Refresh(false, currentPage + 1);
+                        ChangePage(currentPage + 1);
+                    }
+                }
+            };
+
+            if (autoChangePage && page * Environment.ElementsPerPage >= items.Length)
+            {
+                DisableAutoChangePage();
+            }
+
             Action onReady = delegate
             {
                 mangaList.Children().Remove();
@@ -281,7 +305,7 @@ namespace afung.MangaWeb3.Client.Module
                         row = Template.Get("client", "mangas-list-row", true).AppendTo(jQuery.Select("#mangas-list"));
                     }
 
-                    listItems.Add(new MangaListItem(row, items[i], i + 1 < items.Length ? items[i + 1].id : -1));
+                    listItems.Add(new MangaListItem(row, items[i], i + 1 < items.Length ? items[i + 1].id : -1, itemLoadFinishCallback));
                     j++;
                 }
             };
@@ -313,6 +337,55 @@ namespace afung.MangaWeb3.Client.Module
             }
 
             return -1;
+        }
+
+        private void OnKeyUp(jQueryEvent keyEvent)
+        {
+            if (attachedObject.Is(":visible"))
+            {
+                if (Script.IsNullOrUndefined(keyEvent))
+                {
+                    keyEvent = (jQueryEvent)(object)Window.Event;
+                }
+
+                ElementEvent evt = (ElementEvent)(object)keyEvent;
+
+                if (evt.CtrlKey && evt.AltKey && evt.KeyCode == 39)
+                {
+                    if (autoChangePage)
+                    {
+                        DisableAutoChangePage();
+                    }
+                    else
+                    {
+                        EnableAutoChangePage();
+                    }
+                }
+            }
+        }
+
+        private void DocumentClick(jQueryEvent e)
+        {
+            if (attachedObject.Is(":visible") && autoChangePage)
+            {
+                DisableAutoChangePage();
+            }
+        }
+
+        private void EnableAutoChangePage()
+        {
+            if (lastFilter != null)
+            {
+                autoChangePage = true;
+                Document.Title = Strings.Get("AutoChangePage") + Document.Title;
+                Refresh(lastFilter);
+            }
+        }
+
+        private void DisableAutoChangePage()
+        {
+            autoChangePage = false;
+            Document.Title = Document.Title.Replace(Strings.Get("AutoChangePage"), "");
         }
     }
 }
