@@ -771,6 +771,12 @@ class Manga
             this.Status = 3;
             this.Save();
         }
+        catch (ex:Exception)
+        {
+            Utility.TryLogError(ex);
+            this.Status = 99;
+            this.Save();
+        }
         
         return tempFilePath;
     }

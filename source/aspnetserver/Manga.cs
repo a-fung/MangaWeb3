@@ -812,6 +812,12 @@ namespace afung.MangaWeb3.Server
                 this.Status = 3;
                 this.Save();
             }
+            catch (Exception ex)
+            {
+                Utility.TryLogError(ex);
+                this.Status = 99;
+                this.Save();
+            }
 
             return tempFilePath;
         }

@@ -117,7 +117,7 @@ namespace afung.MangaWeb3.Client.Admin.Module
                 jQuery.Select(".admin-mangas-path", row).Text(mangas[i].path);
                 jQuery.Select(".admin-mangas-type", row).Text(mangas[i].type == 0 ? Strings.Get("Zip") : mangas[i].type == 1 ? Strings.Get("RAR") : Strings.Get("PDF"));
                 jQuery.Select(".admin-mangas-views", row).Text(mangas[i].view.ToString());
-                jQuery.Select(".admin-mangas-status", row).Text(mangas[i].status == 0 ? Strings.Get("OK") : mangas[i].status == 1 ? Strings.Get("FileMissing") : mangas[i].status == 2 ? Strings.Get("WrongFormat") : Strings.Get("ContentMismatch"));
+                jQuery.Select(".admin-mangas-status", row).Text(mangas[i].status == 0 ? Strings.Get("OK") : mangas[i].status == 1 ? Strings.Get("FileMissing") : mangas[i].status == 2 ? Strings.Get("WrongFormat") : mangas[i].status == 3 ? Strings.Get("ContentMismatch") : Strings.Get("UnknownStatus"));
             }
         }
 
