@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ScriptSharp.Lib.HTML</id>
+    <version>0.7.5.0</version>
+    <title>Script# HTML5 Reference Assembly</title>
+    <authors>Nikhil Kothari</authors>
+    <owners>Nikhil Kothari</owners>
+    <licenseUrl>https://raw.github.com/nikhilk/scriptsharp/master/License.txt</licenseUrl>
+    <projectUrl>http://www.scriptsharp.com</projectUrl>
+    <iconUrl>https://github.com/nikhilk/scriptsharp/raw/master/docs/PackageLib.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This package contains contains the Script.Web assembly that allows you to reference and program against DOM and related APIs when creating HTML5/browser-based applications with Script#.</description>
+    <summary>Allows you to reference HTML DOM and related APIs to create browser-based Script# applications.</summary>
+    <copyright>Copyright (c) 2012, Nikhil Kothari</copyright>
+    <language>en-US</language>
+    <tags>script javascript ajax html html5 scriptsharp</tags>
+    <dependencies>
+      <dependency id="ScriptSharp" version="0.7.5.0" />
+    </dependencies>
+  </metadata>
+</package>

@@ -5,23 +5,18 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3EC0878A-C555-4D59-A8B9-013AC1A4C0D4}</ProjectGuid>
+    <ProjectGuid>{6C313034-A505-4EB8-B872-F82EDB156A0C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <NoStdLib>True</NoStdLib>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <LangVersion>ISO-2</LangVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>afung.MangaWeb3.Common</RootNamespace>
     <AssemblyName>afung.MangaWeb3.Common</AssemblyName>
-    <TemplateFile>Properties\afung.MangaWeb3.Common.script</TemplateFile>
-    <CodeAnalysisRuleSet>Properties\afung.MangaWeb3.Common.ruleset</CodeAnalysisRuleSet>
-    <ReferencePath>$(ProgramFiles)\ScriptSharp\v1.0\Framework\</ReferencePath>
+    <ScriptTemplate>Properties\Script.template</ScriptTemplate>
+    <CodeAnalysisRuleSet>Properties\FxCop.ruleset</CodeAnalysisRuleSet>
+    <GenerateScript>True</GenerateScript>
+    <GenerateResources>True</GenerateResources>
     <DeploymentPath>..\aspnetserver\js</DeploymentPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
     <OutputPath>scriptbin\Debug\</OutputPath>
     <DefineConstants>DEBUG;CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -30,8 +25,6 @@
     <DocumentationFile>scriptbin\Debug\afung.MangaWeb3.Common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
     <OutputPath>scriptbin\Release\</OutputPath>
     <DefineConstants>CODE_ANALYSIS;SCRIPTSHARP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -40,10 +33,12 @@
     <DocumentationFile>scriptbin\Release\afung.MangaWeb3.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL" />
-    <Reference Include="Script.Web" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="SearchModuleRequest.cs" />
+    <Compile Include="SearchModuleResponse.cs" />
+    <Compile Include="UserJson.cs" />
+    <None Include="packages.config" />
+    <None Include="Properties\FxCop.ruleset" />
+    <None Include="Properties\Script.template" />
     <Compile Include="AdminCollectionAddRequest.cs" />
     <Compile Include="AdminCollectionAddResponse.cs" />
     <Compile Include="AdminCollectionEditNameRequest.cs" />
@@ -70,8 +65,8 @@
     <Compile Include="AdminMangaFilterResponse.cs" />
     <Compile Include="AdminMangaMetaEditRequest.cs" />
     <Compile Include="AdminMangaMetaGetRequest.cs" />
-    <Compile Include="AdminMangaMetaJson.cs" />
     <Compile Include="AdminMangaMetaGetResponse.cs" />
+    <Compile Include="AdminMangaMetaJson.cs" />
     <Compile Include="AdminMangasDeleteRequest.cs" />
     <Compile Include="AdminMangasGetRequest.cs" />
     <Compile Include="AdminMangasGetResponse.cs" />
@@ -87,13 +82,22 @@
     <Compile Include="AdminUsersSetAdminRequest.cs" />
     <Compile Include="ChangePasswordRequest.cs" />
     <Compile Include="ChangePasswordResponse.cs" />
+    <Compile Include="CheckMySqlSettingRequest.cs" />
+    <Compile Include="CheckMySqlSettingResponse.cs" />
+    <Compile Include="CheckOtherComponentRequest.cs" />
+    <Compile Include="CheckOtherComponentResponse.cs" />
     <Compile Include="CollectionJson.cs" />
     <Compile Include="CollectionUserJson.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ErrorLogJson.cs" />
+    <Compile Include="ErrorResponse.cs" />
     <Compile Include="FolderJson.cs" />
     <Compile Include="FolderRequest.cs" />
     <Compile Include="FolderResponse.cs" />
+    <Compile Include="InstallRequest.cs" />
+    <Compile Include="InstallResponse.cs" />
+    <Compile Include="JsonRequest.cs" />
+    <Compile Include="JsonResponse.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="LoginResponse.cs" />
     <Compile Include="MangaDirectionRequest.cs" />
@@ -110,23 +114,18 @@
     <Compile Include="MangaReadRequest.cs" />
     <Compile Include="MangaReadResponse.cs" />
     <Compile Include="MangaSearchFilter.cs" />
-    <Compile Include="SearchModuleRequest.cs" />
-    <Compile Include="SearchModuleResponse.cs" />
-    <Compile Include="UserJson.cs" />
-    <Content Include="Properties\afung.MangaWeb3.Common.ruleset" />
-    <Content Include="Properties\afung.MangaWeb3.Common.script" />
-    <Compile Include="CheckMySqlSettingRequest.cs" />
-    <Compile Include="CheckMySqlSettingResponse.cs" />
-    <Compile Include="CheckOtherComponentRequest.cs" />
-    <Compile Include="CheckOtherComponentResponse.cs" />
-    <Compile Include="ErrorResponse.cs" />
-    <Compile Include="InstallRequest.cs" />
-    <Compile Include="InstallResponse.cs" />
-    <Compile Include="JsonRequest.cs" />
-    <Compile Include="JsonResponse.cs" />
     <Compile Include="PreInstallCheckRequest.cs" />
     <Compile Include="PreInstallCheckResponse.cs" />
     <Compile Include="Properties\AssemblyInfoScript.cs" />
   </ItemGroup>
-  <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />
+  <ItemGroup>
+    <Reference Include="Script.jQuery">
+      <HintPath>..\packages\ScriptSharp.Lib.jQuery.0.7.5.0\lib\Script.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="Script.Web">
+      <HintPath>..\packages\ScriptSharp.Lib.HTML.0.7.5.0\lib\Script.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets" Condition="Exists('..\packages\ScriptSharp.0.7.5.1\tools\ScriptSharp.targets')" />
 </Project>

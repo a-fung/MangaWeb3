@@ -1,0 +1,12 @@
+//! MangaWeb3 #= ScriptFile ##
+//! https://github.com/a-fung/MangaWeb3
+//! 
+//! Copyright 2012 Man Kwan Liu
+//! Released under the Apache License Version 2.0
+//! http://www.apache.org/licenses/
+
+(function() {
+#include[as-is] "%code%"
+})();
+
+//! This script was generated using Script# v#= CompilerVersion ##

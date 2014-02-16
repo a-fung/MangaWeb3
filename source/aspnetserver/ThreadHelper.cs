@@ -137,7 +137,6 @@ namespace afung.MangaWeb3.Server
 
             foreach (Collection collection in collections)
             {
-                Dictionary<string, object>[] resultSet = Database.Select("manga", "`cid`=" + Database.Quote(collection.Id.ToString()), null, null, "`path`");
                 List<FileInfo> filesUnderCollection = new List<FileInfo>();
                 DirectoryInfo collectionDirectory = new DirectoryInfo(collection.Path);
                 FileInfo[] empty = { };
@@ -153,21 +152,14 @@ namespace afung.MangaWeb3.Server
                         continue;
                     }
 
-                    bool hit = false;
-                    foreach (Dictionary<string, object> result in resultSet)
-                    {
-                        if (fileUnderCollection.FullName.Equals(Convert.ToString(result["path"]), StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            hit = true;
-                            break;
-                        }
-                    }
+                    Dictionary<string, object>[] resultSet = Database.Select("manga", "`path`=" + Database.Quote(fileUnderCollection.FullName), null, null, "`path`");
 
-                    if (!hit)
+                    if (resultSet.Length == 0)
                     {
                         files.Add(new object[] { fileUnderCollection.FullName, collection.Id });
                     }
                 }
+
             }
 
             ThreadHelper.Run("ProcessAutoAddStage2", files.ToArray(), 0);
@@ -216,5 +208,30 @@ namespace afung.MangaWeb3.Server
                 collection.ProcessFolderCache();
             }
         }
+
+        /*
+        public static void LogErrorInText(string message)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo("C:\\mangaweb\\error");
+
+            try
+            {
+                if (!dirInfo.Exists)
+                {
+                    dirInfo.Create();
+                }
+            }
+            catch
+            {
+            }
+
+            string filename = String.Format("C:\\mangaweb\\error\\error.txt");
+
+            using (StreamWriter sw = new StreamWriter(new FileStream(filename, FileMode.Append)))
+            {
+                sw.WriteLine(message);
+            }
+        }
+        //*/
     }
 }
